@@ -16,4 +16,5 @@ urlpatterns=[
     path('configuration_room/<int:pk>/', views.RoomAPIView.as_view(), name = "delete_update_room"),
     path('configuration_node/', views.ConfigurationNode, name = 'configuration_node'),
     path('set_actuator/', views.SetActuator, name = 'set_actuator'),
+    path("aqi_ref/", views.GetAqiRef, name = 'aqi_ref'),
 ]

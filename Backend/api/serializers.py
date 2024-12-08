@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import (EmployeePermission, Room, RegistrationNode, NodeConfigurationBuffer, ControlSetpoint)
+from .models import (EmployeePermission, Room, RegistrationNode, NodeConfigurationBuffer, ControlSetpoint,
+                    AqiRef)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 
@@ -65,21 +66,36 @@ class ChangePassWordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required = True)
 
 class RoomSerializer(serializers.ModelSerializer):
+
     class Meta:
+
         model = Room
         fields = "__all__"
 
 class RegistrationNodeSerializer(serializers.ModelSerializer):
+
     class Meta:
+
         model = RegistrationNode
         fields = "__all__"
 
 class NodeConfigurationBufferSerializer(serializers.ModelSerializer):
+
     class Meta:
+
         model = NodeConfigurationBuffer
         fields = "__all__"
 
 class ControlSetpointSerializer(serializers.ModelSerializer):
+
     class Meta:
+
         model = ControlSetpoint
+        fields = "__all__"
+
+class AqiRefSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = AqiRef
         fields = "__all__"

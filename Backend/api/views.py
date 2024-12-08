@@ -15,8 +15,9 @@ from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import (EmployeePermissionSerializer, RegistrationNodeSerializer,
                             UserSerializer, ResetPassWordSerializer, ChangePassWordSerializer,
-                            NodeConfigurationBufferSerializer, RoomSerializer, ControlSetpointSerializer)
-from .models import (EmployeePermission, RegistrationNode, Room)
+                            NodeConfigurationBufferSerializer, RoomSerializer, ControlSetpointSerializer,
+                            AqiRefSerializer)
+from .models import (EmployeePermission, RegistrationNode, Room, AqiRef)
 from threading import Thread
 from .mqtt_client import SendNodeToGateway, SendSetUpActuatorToGateway, client
 
@@ -239,7 +240,7 @@ def ConfigurationNode(request, *args, **kwargs):
             return Response({"Update Successfully"}, status = status.HTTP_200_OK)
         return Response({"Errors": serializer_data.errors}, status = status.HTTP_400_BAD_REQUEST)
 
-@api_view(["GET", "POST", "DELETE", "PUT"])
+@api_view(["POST"])
 @authentication_classes([jwtauthentication.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def SetActuator(request, *args, **kwargs):
@@ -260,3 +261,11 @@ def SetActuator(request, *args, **kwargs):
     else:
         return Response({"Errors": serializer.errors}, status = status.HTTP_400_BAD_REQUEST)
 
+@api_view(["GET"])
+def GetAqiRef(request, *args, **kwargs):
+
+    if AqiRef.objects.count() == 0:
+        return Response({"Response": "No data"}, status = status.HTTP_200_OK)
+    latest_data_aqiref = AqiRefSerializer(AqiRef.objects.order_by("-time"), many = True).data[0]
+    return Response(latest_data_aqiref, status = status.HTTP_200_OK)
+    
