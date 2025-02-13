@@ -51,9 +51,9 @@ def DataForAqiRef():
                 try:
                     connect_to_database = psycopg2.connect(
                         database = "server_version_3",
-                        user = os.environ.get('username_db'),
-                        password = os.environ.get('password_db'),
-                        host = "localhost",
+                        user = os.environ.get('POSTGRES_USER'),
+                        password = os.environ.get('POSTGRES_PASSWORD'),
+                        host = "my-postgres",
                         port = "5432",
                     )
                     print("Successfully to connect database in function DataForAqiRef")
@@ -115,7 +115,7 @@ def DataForAqiRef():
 def DataFromSensorNode():
 
     client = ClientMQTT([backend_topic_dictionary["sensor_data"],])
-    mqtt_broker = "127.0.0.1"
+    mqtt_broker = "test.mosquitto.org"
     mqtt_port = 1883
     client.connect(mqtt_broker, mqtt_port)
     client.loop_start()
@@ -134,9 +134,9 @@ def DataFromSensorNode():
                     try:
                         connect_to_database = psycopg2.connect(
                             database = "server_version_3",
-                            user = os.environ.get('username_db'),
-                            password = os.environ.get('password_db'),
-                            host = "localhost",
+                            user = os.environ.get('POSTGRES_USER'),
+                            password = os.environ.get('POSTGRES_PASSWORD'),
+                            host = "my-postgres",
                             port = "5432",
                         )
                         print("Successfully to connect database in function DataFromSensorNode")
@@ -182,9 +182,9 @@ def DataFromSensorNode():
                     try:
                         connect_to_database = psycopg2.connect(
                             database = "server_version_3",
-                            user = os.environ.get('username_db'),
-                            password = os.environ.get('password_db'),
-                            host = "localhost",
+                            user = os.environ.get('POSTGRES_USER'),
+                            password = os.environ.get('POSTGRES_PASSWORD'),
+                            host = "my-postgres",
                             port = "5432",
                         )
                         print("Successfully to connect database in function DataFromSensorNode")
@@ -227,7 +227,7 @@ def DataFromSensorNode():
 def DataFromActuator():
 
     client = ClientMQTT([backend_topic_dictionary["actuator_data"]],)
-    mqtt_broker = "127.0.0.1"
+    mqtt_broker = "test.mosquitto.org"
     mqtt_port = 1883
     client.connect(mqtt_broker, mqtt_port)
     client.loop_start()
@@ -245,9 +245,9 @@ def DataFromActuator():
                     try:
                         connect_to_database = psycopg2.connect(
                             database = "server_version_3",
-                            user = os.environ.get('username_db'),
-                            password = os.environ.get('password_db'),
-                            host = "localhost",
+                            user = os.environ.get('POSTGRES_USER'),
+                            password = os.environ.get('POSTGRES_PASSWORD'),
+                            host = "my-postgres",
                             port = "5432",
                         )
                         print("Successfully to connect database in function DataFromActuator")

@@ -9,7 +9,7 @@ backend_topic_dictionary = {
                         }
 
 client = ClientMQTT([backend_topic_dictionary["node_sync_backend_gateway"], backend_topic_dictionary["set_actuator"]])
-mqtt_broker = "127.0.0.1"
+mqtt_broker = "test.mosquitto.org"
 mqtt_port = 1883
 client.connect(mqtt_broker, mqtt_port)
 client.loop_start()

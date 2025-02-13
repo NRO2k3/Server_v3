@@ -1,0 +1,114 @@
+2025-02-13 02:01:39,252 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:01:39,255 INFO supervisord started with pid 1
+2025-02-13 02:01:40,294 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:01:40,296 INFO spawned: 'django' with pid 12
+2025-02-13 02:01:40,503 WARN exited: data_from_gateway (exit status 1; not expected)
+2025-02-13 02:01:41,506 INFO spawned: 'data_from_gateway' with pid 16
+2025-02-13 02:01:41,507 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:01:41,813 WARN exited: data_from_gateway (exit status 1; not expected)
+2025-02-13 02:01:44,587 INFO spawned: 'data_from_gateway' with pid 21
+2025-02-13 02:01:44,782 WARN exited: data_from_gateway (exit status 1; not expected)
+2025-02-13 02:01:47,790 INFO spawned: 'data_from_gateway' with pid 22
+2025-02-13 02:01:48,079 WARN exited: data_from_gateway (exit status 1; not expected)
+2025-02-13 02:01:49,081 INFO gave up: data_from_gateway entered FATAL state, too many start retries too quickly
+2025-02-13 02:08:15,845 WARN received SIGTERM indicating exit request
+2025-02-13 02:08:15,847 INFO waiting for django to die
+2025-02-13 02:08:15,936 INFO stopped: django (exit status 0)
+2025-02-13 02:11:07,274 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:11:07,277 INFO supervisord started with pid 1
+2025-02-13 02:11:08,308 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:11:08,311 INFO spawned: 'django' with pid 12
+2025-02-13 02:11:09,313 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:11:09,313 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:13:05,122 WARN received SIGTERM indicating exit request
+2025-02-13 02:13:05,122 INFO waiting for data_from_gateway, django to die
+2025-02-13 02:13:05,197 INFO stopped: django (exit status 0)
+2025-02-13 02:13:06,200 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 02:14:42,497 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:14:42,499 INFO supervisord started with pid 1
+2025-02-13 02:14:43,538 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:14:43,540 INFO spawned: 'django' with pid 12
+2025-02-13 02:14:44,541 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:14:44,542 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:17:38,690 WARN received SIGTERM indicating exit request
+2025-02-13 02:17:38,691 INFO waiting for data_from_gateway, django to die
+2025-02-13 02:17:38,766 INFO stopped: django (exit status 0)
+2025-02-13 02:17:39,769 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 02:19:31,602 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:19:31,605 INFO supervisord started with pid 1
+2025-02-13 02:19:32,647 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:19:32,650 INFO spawned: 'django' with pid 12
+2025-02-13 02:19:33,651 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:19:33,652 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:23:14,774 WARN received SIGTERM indicating exit request
+2025-02-13 02:23:14,775 INFO waiting for data_from_gateway, django to die
+2025-02-13 02:23:14,851 INFO stopped: django (exit status 0)
+2025-02-13 02:23:15,854 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 02:24:56,447 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:24:56,453 INFO supervisord started with pid 1
+2025-02-13 02:24:57,503 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:24:57,506 INFO spawned: 'django' with pid 12
+2025-02-13 02:24:58,511 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:24:58,511 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:29:27,754 WARN received SIGTERM indicating exit request
+2025-02-13 02:29:27,755 INFO waiting for data_from_gateway, django to die
+2025-02-13 02:29:27,837 INFO stopped: django (exit status 0)
+2025-02-13 02:29:28,840 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 02:31:06,296 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:31:06,299 INFO supervisord started with pid 1
+2025-02-13 02:31:07,333 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:31:07,336 INFO spawned: 'django' with pid 12
+2025-02-13 02:31:08,336 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:31:08,336 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:46:04,224 WARN received SIGTERM indicating exit request
+2025-02-13 02:46:04,224 INFO waiting for data_from_gateway, django to die
+2025-02-13 02:46:04,306 INFO stopped: django (exit status 0)
+2025-02-13 02:46:05,310 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 02:47:59,522 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:47:59,526 INFO supervisord started with pid 1
+2025-02-13 02:48:00,566 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:48:00,568 INFO spawned: 'django' with pid 12
+2025-02-13 02:48:01,569 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:48:01,570 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:50:20,013 WARN received SIGTERM indicating exit request
+2025-02-13 02:50:20,013 INFO waiting for data_from_gateway, django to die
+2025-02-13 02:50:20,100 INFO stopped: django (exit status 0)
+2025-02-13 02:50:21,102 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 02:52:01,473 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 02:52:01,477 INFO supervisord started with pid 1
+2025-02-13 02:52:02,521 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 02:52:02,524 INFO spawned: 'django' with pid 12
+2025-02-13 02:52:03,525 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 02:52:03,525 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 03:04:06,812 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 03:04:06,814 INFO supervisord started with pid 1
+2025-02-13 03:04:07,837 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 03:04:07,839 INFO spawned: 'django' with pid 12
+2025-02-13 03:04:08,840 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 03:04:08,841 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 03:40:55,076 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 03:40:55,078 INFO supervisord started with pid 1
+2025-02-13 03:40:56,108 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 03:40:56,112 INFO spawned: 'django' with pid 12
+2025-02-13 03:40:57,114 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 03:40:57,115 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 06:01:03,849 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 06:01:03,852 INFO supervisord started with pid 1
+2025-02-13 06:01:04,874 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 06:01:04,877 INFO spawned: 'django' with pid 12
+2025-02-13 06:01:05,879 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 06:01:05,879 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 06:04:40,848 WARN received SIGTERM indicating exit request
+2025-02-13 06:04:40,848 INFO waiting for data_from_gateway, django to die
+2025-02-13 06:04:40,928 INFO stopped: django (exit status 0)
+2025-02-13 06:04:41,931 WARN stopped: data_from_gateway (terminated by SIGTERM)
+2025-02-13 06:05:22,526 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-02-13 06:05:22,529 INFO supervisord started with pid 1
+2025-02-13 06:05:23,548 INFO spawned: 'data_from_gateway' with pid 11
+2025-02-13 06:05:23,551 INFO spawned: 'django' with pid 12
+2025-02-13 06:05:24,553 INFO success: data_from_gateway entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 06:05:24,553 INFO success: django entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-02-13 06:06:49,760 WARN received SIGTERM indicating exit request
+2025-02-13 06:06:49,761 INFO waiting for data_from_gateway, django to die
+2025-02-13 06:06:49,835 INFO stopped: django (exit status 0)
+2025-02-13 06:06:50,837 WARN stopped: data_from_gateway (terminated by SIGTERM)
