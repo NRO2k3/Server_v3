@@ -10,5 +10,6 @@ python-decouple==3.8
 python-dotenv==1.0.1
 rest-framework-simplejwt==0.0.2
 requests
+python-dotenv
 
 

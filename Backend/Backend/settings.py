@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'server_version_3',
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'my-postgres',
+        'HOST': os.environ.get('HOST_NAME'),
         'PORT': '5432',
     }
 }

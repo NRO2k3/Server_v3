@@ -16,10 +16,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import (EmployeePermissionSerializer, RegistrationNodeSerializer,
                             UserSerializer, ResetPassWordSerializer, ChangePassWordSerializer,
                             NodeConfigurationBufferSerializer, RoomSerializer, ControlSetpointSerializer,
-                            AqiRefSerializer)
-from .models import (EmployeePermission, RegistrationNode, Room, AqiRef)
+                            AqiRefSerializer, RawSensorMonitorSerializer, EnergyDataSerializer)
+from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSensorMonitor, EnergyData)
 from threading import Thread
-from .mqtt_client import SendNodeToGateway, SendSetUpActuatorToGateway, client
+from .mqtt_server_to_gateway import SendNodeToGateway, SendSetUpActuatorToGateway, client
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -267,5 +267,148 @@ def GetAqiRef(request, *args, **kwargs):
     if AqiRef.objects.count() == 0:
         return Response({"Response": "No data"}, status = status.HTTP_200_OK)
     latest_data_aqiref = AqiRefSerializer(AqiRef.objects.order_by("-time"), many = True).data[0]
-    return Response(latest_data_aqiref, status = status.HTTP_200_OK)
-    
+    return Response({"Response": latest_data_aqiref}, status = status.HTTP_200_OK)
+
+@api_view(["GET"])
+def GetRoomInformation(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+
+        if RawSensorMonitor.objects.count() != 0:
+
+            if ( RegistrationNode.objects.filter(room_id = room_id, function = "sensor", status = "sync").count() == 0):
+                parameter_key_list = {
+                    "co2",
+                    "temp",
+                    "hum",
+                    "light",
+                    "dust",
+                    "sound",
+                    "red",
+                    "green",
+                    "blue",
+                    "tvoc",
+                    "motion",
+                }
+                average_data_to_return = {}
+                for i in parameter_key_list:
+                    average_data_to_return[i] = -1
+                    average_data_to_return["time"] = 0
+                return Response(average_data_to_return, status=status.HTTP_200_OK)
+            
+            all_node_id = RegistrationNode.objects.filter(room_id = room_id, function = "sensor", status = "sync")
+            all_node_id_serializer = RegistrationNodeSerializer(all_node_id, many = True)
+
+            all_node_id_list = [
+                i["node_id"] for i in all_node_id_serializer.data
+            ]
+
+            latest_data_of_each_node_id = []
+            for each_node_id in all_node_id_list:
+                if RawSensorMonitor.objects.filter(room_id = room_id, node_id = each_node_id).exists():
+
+                    data_of_this_node_id = RawSensorMonitor.objects.filter(
+                        room_id = room_id, node_id=each_node_id
+                    ).order_by("-time")[0]
+                    latest_data_of_each_node_id.append(
+                        RawSensorMonitorSerializer(data_of_this_node_id).data
+                    )
+                else:
+                    continue
+
+            parameter_key_list = {
+                "co2",
+                "temp",
+                "hum",
+                "light",
+                "dust",
+                "sound",
+                "red",
+                "green",
+                "blue",
+                "tvoc",
+                "motion",
+            }
+            average_data_to_return = {}
+
+            latest_time = max(
+                data["time"] for data in latest_data_of_each_node_id
+            )
+            average_data_to_return["time"] = latest_time
+
+            sum_count = {para: {"sum": 0, "count": 0} for para in parameter_key_list}
+
+            for data in latest_data_of_each_node_id:
+                for para in parameter_key_list:
+                    if data[para] != -1:
+                        sum_count[para]["sum"] += data[para]
+                        sum_count[para]["count"] += 1
+
+            for para in parameter_key_list:
+                average_data_to_return[para] = []
+            for para in parameter_key_list:
+                if sum_count[para]["count"] > 0:
+                    average_data_to_return[para].append(
+                        int(sum_count[para]["sum"] / sum_count[para]["count"])
+                    )
+                else:
+                    average_data_to_return[para] = -1
+
+            sensor_node_information_in_this_room_list = RegistrationNodeSerializer(
+                RegistrationNode.objects.filter(
+                    room_id = room_id, function = "sensor", status = "sync"
+                ),
+                many=True,
+            ).data
+
+            actuator_node_information_in_this_room_list = RegistrationNodeSerializer(
+                RegistrationNode.objects.filter(room_id = room_id, status = "sync"), many=True
+            ).data
+
+            real_actuator_node_information_in_this_room_list = []
+            for i in actuator_node_information_in_this_room_list:
+                if i["function"] != "sensor":
+                    real_actuator_node_information_in_this_room_list.append(i)
+
+            average_data_to_return["node_info"] = {
+                "sensor": sensor_node_information_in_this_room_list,
+                "actuator": real_actuator_node_information_in_this_room_list,
+            }
+
+            room_size_data = RoomSerializer(
+                Room.objects.filter(room_id=room_id), many=True
+            ).data
+            average_data_to_return["room_size"] = {
+                "x_length": room_size_data[0]["x_length"],
+                "y_length": room_size_data[0]["y_length"],
+            }
+            return Response(average_data_to_return, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"Response": "No content!"}, status=status.HTTP_204_NO_CONTENT
+            )
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+def GetEnergyData(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        data_energy = EnergyData.objects.filter(room_id=room_id).order_by("-time").first()
+        data_energy_serializer = EnergyDataSerializer(data_energy)
+        data_energy_array = [
+            value
+            for key, value in data_energy_serializer.data.items()
+            if key != "id" and key != "room_id"
+        ]
+        return Response(data_energy_array,status=status.HTTP_200_OK,)
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

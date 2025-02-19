@@ -668,7 +668,7 @@ ALTER TABLE public.token_blacklist_outstandingtoken ALTER COLUMN id ADD GENERATE
 --
 
 COPY public.api_aqiref (id, aqi, pm25, pm10, o3, no2, so2, co, t, p, h, w, "time", dew, wg) FROM stdin;
-1	119	119	-1	4	1	3	0	22	1018	64	4	1739448000	15	-1
+1	122	122	-1	5	1	3	0	20	1016	68	4	1739458800	14	-1
 \.
 
 
@@ -908,42 +908,42 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 --
 
 COPY public.django_migrations (id, app, name, applied) FROM stdin;
-1	contenttypes	0001_initial	2025-02-13 06:05:21.782949+00
-2	contenttypes	0002_remove_content_type_name	2025-02-13 06:05:21.789085+00
-3	auth	0001_initial	2025-02-13 06:05:21.811211+00
-4	auth	0002_alter_permission_name_max_length	2025-02-13 06:05:21.816571+00
-5	auth	0003_alter_user_email_max_length	2025-02-13 06:05:21.82266+00
-6	auth	0004_alter_user_username_opts	2025-02-13 06:05:21.82839+00
-7	auth	0005_alter_user_last_login_null	2025-02-13 06:05:21.833753+00
-8	auth	0006_require_contenttypes_0002	2025-02-13 06:05:21.836256+00
-9	auth	0007_alter_validators_add_error_messages	2025-02-13 06:05:21.841314+00
-10	auth	0008_alter_user_username_max_length	2025-02-13 06:05:21.846826+00
-11	auth	0009_alter_user_last_name_max_length	2025-02-13 06:05:21.852516+00
-12	auth	0010_alter_group_name_max_length	2025-02-13 06:05:21.859227+00
-13	auth	0011_update_proxy_permissions	2025-02-13 06:05:21.864218+00
-14	auth	0012_alter_user_first_name_max_length	2025-02-13 06:05:21.869948+00
-15	api	0001_initial	2025-02-13 06:05:21.923933+00
-16	admin	0001_initial	2025-02-13 06:05:21.938893+00
-17	admin	0002_logentry_remove_auto_add	2025-02-13 06:05:21.947827+00
-18	admin	0003_logentry_add_action_flag_choices	2025-02-13 06:05:21.956098+00
-19	api	0002_remove_energydata_function	2025-02-13 06:05:21.963076+00
-20	api	0003_controlsetpoint	2025-02-13 06:05:21.97522+00
-21	authtoken	0001_initial	2025-02-13 06:05:21.988384+00
-22	authtoken	0002_auto_20160226_1747	2025-02-13 06:05:22.011667+00
-23	authtoken	0003_tokenproxy	2025-02-13 06:05:22.015332+00
-24	authtoken	0004_alter_tokenproxy_options	2025-02-13 06:05:22.020492+00
-25	sessions	0001_initial	2025-02-13 06:05:22.028373+00
-26	token_blacklist	0001_initial	2025-02-13 06:05:22.050202+00
-27	token_blacklist	0002_outstandingtoken_jti_hex	2025-02-13 06:05:22.064842+00
-28	token_blacklist	0003_auto_20171017_2007	2025-02-13 06:05:22.081001+00
-29	token_blacklist	0004_auto_20171017_2013	2025-02-13 06:05:22.091435+00
-30	token_blacklist	0005_remove_outstandingtoken_jti	2025-02-13 06:05:22.100937+00
-31	token_blacklist	0006_auto_20171017_2113	2025-02-13 06:05:22.111136+00
-32	token_blacklist	0007_auto_20171017_2214	2025-02-13 06:05:22.134138+00
-33	token_blacklist	0008_migrate_to_bigautofield	2025-02-13 06:05:22.158197+00
-34	token_blacklist	0010_fix_migrate_to_bigautofield	2025-02-13 06:05:22.171846+00
-35	token_blacklist	0011_linearizes_history	2025-02-13 06:05:22.174541+00
-36	token_blacklist	0012_alter_outstandingtoken_user	2025-02-13 06:05:22.182999+00
+1	contenttypes	0001_initial	2025-02-13 08:23:30.950031+00
+2	contenttypes	0002_remove_content_type_name	2025-02-13 08:23:30.955939+00
+3	auth	0001_initial	2025-02-13 08:23:30.977962+00
+4	auth	0002_alter_permission_name_max_length	2025-02-13 08:23:30.982905+00
+5	auth	0003_alter_user_email_max_length	2025-02-13 08:23:30.988258+00
+6	auth	0004_alter_user_username_opts	2025-02-13 08:23:30.993699+00
+7	auth	0005_alter_user_last_login_null	2025-02-13 08:23:30.999513+00
+8	auth	0006_require_contenttypes_0002	2025-02-13 08:23:31.001253+00
+9	auth	0007_alter_validators_add_error_messages	2025-02-13 08:23:31.006569+00
+10	auth	0008_alter_user_username_max_length	2025-02-13 08:23:31.012024+00
+11	auth	0009_alter_user_last_name_max_length	2025-02-13 08:23:31.01764+00
+12	auth	0010_alter_group_name_max_length	2025-02-13 08:23:31.024849+00
+13	auth	0011_update_proxy_permissions	2025-02-13 08:23:31.030346+00
+14	auth	0012_alter_user_first_name_max_length	2025-02-13 08:23:31.036343+00
+15	api	0001_initial	2025-02-13 08:23:31.12926+00
+16	admin	0001_initial	2025-02-13 08:23:31.157878+00
+17	admin	0002_logentry_remove_auto_add	2025-02-13 08:23:31.17031+00
+18	admin	0003_logentry_add_action_flag_choices	2025-02-13 08:23:31.182319+00
+19	api	0002_remove_energydata_function	2025-02-13 08:23:31.192916+00
+20	api	0003_controlsetpoint	2025-02-13 08:23:31.211632+00
+21	authtoken	0001_initial	2025-02-13 08:23:31.229683+00
+22	authtoken	0002_auto_20160226_1747	2025-02-13 08:23:31.267461+00
+23	authtoken	0003_tokenproxy	2025-02-13 08:23:31.270328+00
+24	authtoken	0004_alter_tokenproxy_options	2025-02-13 08:23:31.27583+00
+25	sessions	0001_initial	2025-02-13 08:23:31.284445+00
+26	token_blacklist	0001_initial	2025-02-13 08:23:31.318443+00
+27	token_blacklist	0002_outstandingtoken_jti_hex	2025-02-13 08:23:31.330114+00
+28	token_blacklist	0003_auto_20171017_2007	2025-02-13 08:23:31.351138+00
+29	token_blacklist	0004_auto_20171017_2013	2025-02-13 08:23:31.363251+00
+30	token_blacklist	0005_remove_outstandingtoken_jti	2025-02-13 08:23:31.373272+00
+31	token_blacklist	0006_auto_20171017_2113	2025-02-13 08:23:31.383831+00
+32	token_blacklist	0007_auto_20171017_2214	2025-02-13 08:23:31.417429+00
+33	token_blacklist	0008_migrate_to_bigautofield	2025-02-13 08:23:31.445729+00
+34	token_blacklist	0010_fix_migrate_to_bigautofield	2025-02-13 08:23:31.46116+00
+35	token_blacklist	0011_linearizes_history	2025-02-13 08:23:31.463165+00
+36	token_blacklist	0012_alter_outstandingtoken_user	2025-02-13 08:23:31.472891+00
 \.
 
 
