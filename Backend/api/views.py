@@ -406,9 +406,54 @@ def GetEnergyData(request, *args, **kwargs):
             for key, value in data_energy_serializer.data.items()
             if key != "id" and key != "room_id"
         ]
-        return Response(data_energy_array,status=status.HTTP_200_OK,)
+        return Response(data_energy_array, status=status.HTTP_200_OK,)
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+def HeatMapData(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        node_id = RegistrationNode.objects.filter(room_id = room_id, status = "sync")
+        node_id_serializer = RegistrationNodeSerializer(node_id, many = True)
+        room_obj = RoomSerializer(Room.objects.filter(room_id = room_id).first(), many = False)
+        HeatMapData = []
+        area = [room_obj.data["x_length"], room_obj.data["y_length"]]
+        node_id = []
+        node_type = []
+        x_axis = []
+        y_axis = []
+        temp = []
+
+        for node in node_id_serializer.data:
+            lastest_node = (
+                RawSensorMonitor.objects.all()
+                .filter(room_id = room_id, node_id = node["node_id"])
+                .order_by("-time").first()
+            )
+            lastest_node_data = RawSensorMonitorSerializer(lastest_node, many = False)
+
+            node_id.append(node["node_id"])
+            node_type.append(node["function"])
+            x_axis.append(node["x_axis"])
+            y_axis.append(node["y_axis"])
+            temp.append(lastest_node_data.data["temp"])
+
+        HeatMapData.append(area)
+        HeatMapData.append(node_id)
+        HeatMapData.append(node_type)
+        HeatMapData.append(x_axis)
+        HeatMapData.append(y_axis)
+        HeatMapData.append(temp)
+        return Response(HeatMapData)
+
+
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

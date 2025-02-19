@@ -11,6 +11,7 @@ urlpatterns=[
     path('signup',views.SignUp, name = 'sign_up'),
     path('reset_password', views.ResetPassword, name="reset_password"),
     path('change_password', views.ChangePassword, name = 'change_password'),
+
     path('employee_permission/<int:pk>', views.EmployeePermissionAPIView.as_view(), name = 'delete_update_employee'),
     path('employee_permission', views.EmployeePermissionAPIView.as_view(), name = 'list_post_employee'),
     path('configuration_room', views.RoomAPIView.as_view(), name = "list_post_room"),
@@ -19,5 +20,6 @@ urlpatterns=[
     path('set_actuator', views.SetActuator, name = 'set_actuator'),
     path('aqi_ref', views.GetAqiRef, name = 'aqi_ref'),
     path('room/information_tag', views.GetRoomInformation, name= 'information_room'),
-    path('energy_data', views.GetEnergyData, name = 'energy_data')
+    path('energy_data', views.GetEnergyData, name = 'energy_data'),
+    path("heatmap", views.HeatMapData, name = 'heat_map'),
 ]
