@@ -28,7 +28,7 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
                                                                             mac = latest_data_in_buffer.mac,
                                                                             ).first()
         new_data = None
-
+        print(latest_data_in_buffer.mac)
         if command == "add":
             new_data = {
                         "operator": "server_add",
@@ -67,7 +67,7 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
 
         while True:
 
-            if int((datetime.datetime.now()).timestamp()) - current_time > 30:
+            if int((datetime.datetime.now()).timestamp()) - current_time > 60:
 
                 if action == 1:
                     latest_data_in_node_registration.delete()

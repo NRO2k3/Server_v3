@@ -16,8 +16,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import (EmployeePermissionSerializer, RegistrationNodeSerializer,
                             UserSerializer, ResetPassWordSerializer, ChangePassWordSerializer,
                             NodeConfigurationBufferSerializer, RoomSerializer, ControlSetpointSerializer,
-                            AqiRefSerializer, RawSensorMonitorSerializer, EnergyDataSerializer)
-from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSensorMonitor, EnergyData)
+                            AqiRefSerializer, RawSensorMonitorSerializer, EnergyDataSerializer, RawActuatorMonitorSerializer)
+from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSensorMonitor, EnergyData, RawActuatorMonitor,)
 from threading import Thread
 from .mqtt_server_to_gateway import SendNodeToGateway, SendSetUpActuatorToGateway, client
 
@@ -180,18 +180,18 @@ def ConfigurationNode(request, *args, **kwargs):
         data["status"] = "sync"
         serializer_data = RegistrationNodeSerializer(data = data)
         serializer_data_buffer = NodeConfigurationBufferSerializer(data = data_buffer)
-
+        
         if serializer_data.is_valid():
             serializer_data.save()
-
             if serializer_data_buffer.is_valid():
                 serializer_data_buffer.save()
                 t = Thread(target = SendNodeToGateway, args = (client, "add"))
                 t.start()
                 return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
-
+            else:
+                return Response({"Errors": serializer_data_buffer.errors}, status=status.HTTP_400_BAD_REQUEST)
         else:
-                return Response({"Errors": serializer_data_buffer.errors}, status = status.HTTP_400_BAD_REQUEST)
+                return Response({"Errors": serializer_data.errors}, status = status.HTTP_400_BAD_REQUEST)
     
     if request.method == "DELETE":
         data = json.loads(request.body)
@@ -220,8 +220,8 @@ def ConfigurationNode(request, *args, **kwargs):
             return Response({"Errors": serializer_data_buffer.errors}, status = status.HTTP_400_BAD_REQUEST)
         
     if request.method == "GET":
-        data = json.loads(request.body)
-        all_node_in_room = RegistrationNode.objects.filter(room_id = data["room_id"])
+        room_id = request.GET["room_id"]
+        all_node_in_room = RegistrationNode.objects.filter(room_id = room_id)
         serializer_data = RegistrationNodeSerializer(all_node_in_room, many = True)
         return Response(serializer_data.data, status = status.HTTP_200_OK)
 
@@ -252,7 +252,6 @@ def SetActuator(request, *args, **kwargs):
         return Response({"Errors": "Node doesn't exist please singup first"}, status = status.HTTP_400_BAD_REQUEST)
 
     data_save = SendSetUpActuatorToGateway(client, data)
-    print(data_save["info"])
     serializer = ControlSetpointSerializer(data = data_save["info"])
 
     if serializer.is_valid():
@@ -264,17 +263,22 @@ def SetActuator(request, *args, **kwargs):
 @api_view(["GET"])
 def GetAqiRef(request, *args, **kwargs):
 
-    if AqiRef.objects.count() == 0:
-        return Response({"Response": "No data"}, status = status.HTTP_200_OK)
-    latest_data_aqiref = AqiRefSerializer(AqiRef.objects.order_by("-time"), many = True).data[0]
-    return Response({"Response": latest_data_aqiref}, status = status.HTTP_200_OK)
+    try:
+        if AqiRef.objects.count() == 0:
+            return Response({"Response": "No data"}, status = status.HTTP_200_OK)
+        latest_data_aqiref = AqiRefSerializer(AqiRef.objects.order_by("-time"), many = True).data[0]
+        return Response({"Response": latest_data_aqiref}, status = status.HTTP_200_OK)
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 @api_view(["GET"])
 def GetRoomInformation(request, *args, **kwargs):
 
     try:
         room_id = request.GET["room_id"]
-
         if RawSensorMonitor.objects.count() != 0:
 
             if ( RegistrationNode.objects.filter(room_id = room_id, function = "sensor", status = "sync").count() == 0):
@@ -399,7 +403,7 @@ def GetEnergyData(request, *args, **kwargs):
 
     try:
         room_id = request.GET["room_id"]
-        data_energy = EnergyData.objects.filter(room_id=room_id).order_by("-time").first()
+        data_energy = EnergyData.objects.filter(room_id = room_id).order_by("-time").first()
         data_energy_serializer = EnergyDataSerializer(data_energy)
         data_energy_array = [
             value
@@ -411,6 +415,72 @@ def GetEnergyData(request, *args, **kwargs):
         return Response(
             {"Response": "Error on server!"},
             status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+def GetEnergyDataChart(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        year = datetime.datetime.now().year
+        offset_energy = 17.02
+
+        def end_of_month_unixtimestamp(year, month):
+            if month == 12:
+                next_month = 1
+                next_year = year + 1
+            else:
+                next_month = month + 1
+                next_year = year
+            first_day_of_next_month = datetime.datetime(next_year, next_month, 1)
+            end_of_month = first_day_of_next_month - datetime.timedelta(seconds=1)
+            return int(end_of_month.timestamp() - 7 * 60 * 60)
+        
+        dataFirstObj = EnergyDataSerializer(EnergyData.objects.filter(room_id = room_id).first(), many = False)
+        month_start = datetime.datetime.fromtimestamp(dataFirstObj.data["time"]).month
+        dataLastObj = EnergyDataSerializer(EnergyData.objects.filter(room_id = room_id).last(), many = False)
+        month_end = datetime.datetime.fromtimestamp(dataLastObj.data["time"]).month
+    
+        data_return = []
+        for month in range(month_start, month_end + 1):
+
+            obj = (
+                EnergyData.objects.filter(
+                    time__lte = end_of_month_unixtimestamp(year, month),
+                    room_id = room_id).order_by("-time").first()
+            )
+            data_return.append(obj)
+        data_return_serializer = EnergyDataSerializer(data_return, many = True)
+    
+        month_year_list = []
+        active_power_list = []
+        time_activeEnergy_List = []
+        
+        for item in data_return_serializer.data:
+            month_year_list.append(
+                f"{datetime.datetime.fromtimestamp(item['time']).month}_{datetime.datetime.fromtimestamp(item['time']).year}"
+            )
+            active_power_list.append(item["active_energy"])
+
+        active_power_list[0] -= offset_energy
+        energy_consumption_in_month = [active_power_list[0]]
+        
+        for i in range(1, len(active_power_list)):
+            if i == 1:
+                adjusted_value = active_power_list[i] - active_power_list[i - 1]
+            else:
+                adjusted_value = active_power_list[i] - (
+                    active_power_list[i - 1] - active_power_list[i - 2]
+                )
+            energy_consumption_in_month.append(adjusted_value)
+        time_activeEnergy_List.append(month_year_list)
+        time_activeEnergy_List.append(energy_consumption_in_month)
+        
+        return Response(time_activeEnergy_List, status = status.HTTP_200_OK)
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["GET"])
@@ -456,4 +526,322 @@ def HeatMapData(request, *args, **kwargs):
         return Response(
             {"Response": "Error on server!"},
             status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+def GetEnviromentData(request, *args, **kwargs):
+    try:
+
+        room_id = request.GET["room_id"]
+        filter = int(request.GET["filter"])
+        node_id = int(request.GET["node_id"])
+        ctime = int((datetime.datetime.now()).timestamp()) + (
+            7 * 60 * 60
+        )
+
+        filter_time = 0
+
+        if filter == 1:
+            filter_time = ctime - ctime % (24 * 60 * 60)  # 24 hours
+        elif filter == 2:
+            filter_time = ctime - ctime % (24 * 60 * 60) - 24 * 60 * 60 * 7  # 1 Week
+        elif filter == 3:
+            filter_time = ctime - ctime % (24 * 60 * 60) - 24 * 60 * 60 * 31  # 1 Month
+        elif filter == 4:
+            filter_time = (ctime - ctime % (24 * 60 * 60) - 24 * 60 * 60 * 31 * 6)  # 6 Month
+        elif filter == 5:
+            filter_time = (ctime - ctime % (24 * 60 * 60) - 24 * 60 * 60 * 31 * 12)  # 1 Year
+        else:
+            filter_time = ctime - ctime % (24 * 60 * 60)  # default 24 hour
+
+        parameter_key_list = [
+            "co2",
+            "temp",
+            "hum",
+            "light",
+            "dust",
+            "sound",
+            "red",
+            "green",
+            "blue",
+            "tvoc",
+            "motion",
+            "time",
+        ]
+        sensor_node_id_list = [
+            i["node_id"]
+            for i in RegistrationNodeSerializer(RegistrationNode.objects.filter(room_id = room_id, function="sensor"),many=True,).data
+        ]
+        total_list = []
+        if node_id == 0:
+
+            for each_node_id in sensor_node_id_list:
+                if (
+                    RawSensorMonitor.objects.filter(
+                        time__gt = filter_time, room_id = room_id, node_id = each_node_id
+                    ).count()
+                    > 0
+                ):
+                    data = RawSensorMonitorSerializer(
+                        RawSensorMonitor.objects.filter(
+                            time__gt = filter_time, room_id = room_id, node_id = each_node_id
+                        ).order_by("time"),
+                        many=True,
+                    ).data
+                    total_list.append(data)
+        else:
+
+            if (
+                RawSensorMonitor.objects.filter(
+                    time__gt = filter_time, room_id = room_id, node_id = node_id
+                ).count()
+                > 0
+            ):
+                data = RawSensorMonitorSerializer(
+                    RawSensorMonitor.objects.filter(
+                        time__gt = filter_time, room_id = room_id, node_id = node_id
+                    ).order_by("time"),
+                    many=True,
+                ).data
+                total_list.append(data)
+
+        if len(total_list) == 0:
+            return_data = {}
+            for i in parameter_key_list:
+                return_data[i] = []
+            return Response(return_data, status=status.HTTP_204_NO_CONTENT)
+
+        max_len_of_array_in_total_list = max([len(i) for i in total_list])
+
+        for i in total_list:
+            if len(i) < max_len_of_array_in_total_list:
+                for j in range(0, max_len_of_array_in_total_list - len(i)):
+                    i.insert(0, {k: -1 for k in parameter_key_list})
+
+        return_data = {}
+        buffer = {}
+
+        for i in parameter_key_list:
+            return_data[i] = []
+            if i != "time":
+                buffer[i] = {"value": 0, "number": 0}
+            else:
+                buffer[i] = []
+
+        for i in range(len(total_list[0])):
+
+            for each_element_in_total_list in total_list:
+                for j in parameter_key_list:
+                    if j != "time" and each_element_in_total_list[i][j] >= 0:
+                        buffer[j]["value"] = (
+                            buffer[j]["value"] + each_element_in_total_list[i][j]
+                        )
+                        buffer[j]["number"] = buffer[j]["number"] + 1
+                    elif j == "time" and each_element_in_total_list[i][j] >= 0:
+                        buffer[j].append(each_element_in_total_list[i][j])
+                    else:
+                        continue
+
+            for j in parameter_key_list:
+                if j == "time":
+                    return_data[j].append(max(buffer[j]))
+                    buffer[j] = []
+                else:
+                    if buffer[j]["number"] != 0:
+                        return_data[j].append(
+                            round(buffer[j]["value"] / (buffer[j]["number"]), 2)
+                        )
+                    else:
+                        return_data[j].append(0)
+                    buffer[j]["value"] = 0
+                    buffer[j]["number"] = 0
+        return Response(return_data, status=status.HTTP_200_OK)
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+    
+@api_view(["GET"])
+def AQIdustpm2_5(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        pm2_5_table = [
+            {
+                "conclo": 0.0,
+                "conchi": 12.0,
+                "aqilo": 0,
+                "aqihi": 50,
+            },
+            {
+                "conclo": 12.1,
+                "conchi": 35.4,
+                "aqilo": 51,
+                "aqihi": 100,
+            },
+            {
+                "conclo": 35.5,
+                "conchi": 55.4,
+                "aqilo": 101,
+                "aqihi": 150,
+            },
+            {
+                "conclo": 55.5,
+                "conchi": 150.4,
+                "aqilo": 151,
+                "aqihi": 200,
+            },
+            {
+                "conclo": 150.5,
+                "conchi": 250.4,
+                "aqilo": 201,
+                "aqihi": 300,
+            },
+            {
+                "conclo": 250.5,
+                "conclo": 500.4,
+                "aqilo": 301,
+                "aqihi": 500,
+            },
+        ]
+
+        latest_time = int(RawSensorMonitor.objects.order_by("-time")[0].time)
+        filter_time = latest_time - 12 * 60 * 60
+        hourly_dust_data = RawSensorMonitorSerializer(
+            RawSensorMonitor.objects.filter(
+                room_id = room_id, time__gt = filter_time, dust__gt = 0.01
+            ),
+            many=True,
+        ).data
+    
+        if len(hourly_dust_data) != 0:
+    
+            extracted_data = [
+                {"time": data["time"], "dust": data["dust"]}
+                for data in hourly_dust_data
+            ]
+
+            extracted_data.sort(key=lambda x: x["time"])
+
+            power_index = 0
+            pre_row = None
+            l = []
+            first_record_flag = True
+
+            for data in extracted_data:
+                data_time = datetime.datetime.fromtimestamp(data["time"])
+                data_hour = data_time.hour
+                if first_record_flag:
+                    pre_row = data_hour
+                    l.append({"value": data["dust"], "pow": power_index})
+                    first_record_flag = False
+                else:
+                    dif = pre_row - data_hour
+                    pre_row = data_hour
+                    power_index = int(power_index + dif)
+                    l.append({"value": data["dust"], "pow": power_index})
+
+            temp_list = [i["value"] for i in l]
+            range_value = round(max(temp_list) - min(temp_list), 1)
+            scaled_rate_of_change = range_value / max(temp_list)
+            weight_factor = 1 - scaled_rate_of_change
+            weight_factor = 0.5 if weight_factor < 0.5 else round(weight_factor, 1)
+
+            sum_value = 0
+            sum_of_power = 0
+
+            for i in l:
+                sum_value += i["value"] * (weight_factor ** i["pow"])
+                sum_of_power += weight_factor ** i["pow"]
+
+            hourly_dust = round(sum_value / sum_of_power, 1)
+
+            for i in pm2_5_table:
+                if round(hourly_dust) > 500:
+                    hourly_dust = 500
+                    break
+                if (
+                    round(hourly_dust) <= i["conchi"]
+                    and round(hourly_dust) >= i["conclo"]
+                ):
+                    conclo = i["conclo"]
+                    conchi = i["conchi"]
+                    aqilo = i["aqilo"]
+                    aqihi = i["aqihi"]
+                    hourly_dust = round(
+                        (aqihi - aqilo) * (hourly_dust - conclo) / (conchi - conclo)
+                        + aqilo
+                    )
+                    break
+
+            return Response(
+                {
+                    "hourly": hourly_dust,
+                    "daily": 0,
+                    "time": hourly_dust_data[-1]["time"],
+                },
+                status=200,
+            )
+        else:
+            return Response(
+                {"Response": "No data available!"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+def GetActuatorStatus(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        node_id = request.GET["node_id"]
+
+        if (
+            RegistrationNode.objects.filter(
+                room_id = room_id, node_id = node_id, status = "sync"
+            ).count()
+            == 0
+        ):
+            return Response(
+                {"Response": "Actuator not available"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        actuator_node = RegistrationNodeSerializer(
+            RegistrationNode.objects.filter(room_id = room_id, node_id = node_id, status = "sync"),
+            many = True,
+        ).data
+        data_actuator_node = actuator_node[0]
+
+        if (
+            RawActuatorMonitor.objects.filter(
+                node_id = data_actuator_node["node_id"], room_id = data_actuator_node["room_id"]
+            ).count()
+            == 0
+        ):
+
+            return Response(
+                {"Response": "No actutor status data"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        status_record = RawActuatorMonitorSerializer(
+            RawActuatorMonitor.objects.filter(
+                node_id=data_actuator_node["node_id"], room_id=data_actuator_node["room_id"]
+            )
+            .order_by("-time")
+            .first()
+        ).data
+
+        return Response({"Response": status_record}, status=status.HTTP_200_OK)
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
