@@ -802,41 +802,20 @@ def GetActuatorStatus(request, *args, **kwargs):
         room_id = request.GET["room_id"]
         node_id = request.GET["node_id"]
 
-        if (
-            RegistrationNode.objects.filter(
-                room_id = room_id, node_id = node_id, status = "sync"
-            ).count()
-            == 0
-        ):
+        if (RegistrationNode.objects.filter(room_id = room_id, node_id = node_id, status = "sync").count() == 0):
             return Response(
                 {"Response": "Actuator not available"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        actuator_node = RegistrationNodeSerializer(
-            RegistrationNode.objects.filter(room_id = room_id, node_id = node_id, status = "sync"),
-            many = True,
-        ).data
-        data_actuator_node = actuator_node[0]
-
-        if (
-            RawActuatorMonitor.objects.filter(
-                node_id = data_actuator_node["node_id"], room_id = data_actuator_node["room_id"]
-            ).count()
-            == 0
-        ):
-
+        if (RawActuatorMonitor.objects.filter(node_id = node_id, room_id = room_id).count()== 0):
             return Response(
                 {"Response": "No actutor status data"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         status_record = RawActuatorMonitorSerializer(
-            RawActuatorMonitor.objects.filter(
-                node_id=data_actuator_node["node_id"], room_id=data_actuator_node["room_id"]
-            )
-            .order_by("-time")
-            .first()
+            RawActuatorMonitor.objects.filter(node_id = node_id, room_id = room_id).order_by("-time").first()
         ).data
 
         return Response({"Response": status_record}, status=status.HTTP_200_OK)

@@ -70,13 +70,9 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
                 let newActuatorStatus = actuatorStatus;
                 newActuatorStatus[node_id] = 1;
                 setActuatorStatus(newActuatorStatus);
-                if(data_response["Response"]["speed"] > 0)
+                if(data_response["Response"]["current_value"] > 0)
                 {
-                    setSpeed(data_response["Response"]["speed"]);
-                }
-                else if(data_response["Response"]["temp"] > 0)
-                {
-                    setSpeed(data_response["Response"]["temp"]);
+                    setSpeed(data_response["Response"]["current_value"]);
                 }
                 console.log(status);
                 setIsLoading(false);
