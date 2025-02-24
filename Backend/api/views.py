@@ -246,6 +246,8 @@ def ConfigurationNode(request, *args, **kwargs):
 def SetActuator(request, *args, **kwargs):
 
     data = json.loads(request.body)
+    print(data)
+    print(data["node_id"])
     check_node = RegistrationNode.objects.filter(node_id = data["node_id"])
 
     if not check_node.exists():
