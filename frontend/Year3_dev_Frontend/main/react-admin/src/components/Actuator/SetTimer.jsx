@@ -16,7 +16,7 @@ const SetTimer = ({actuatorStatus,
 {
     const [startTimeInSetTimer, setStartTimeInSetTimer] = useState(null);
     const [endTimeInSetTimer, setEndTimeInSetTimer] = useState(null);
-    const url = `http://${host}/api/actuator_command`;
+    const url = `http://${host}/api/set_actuator`;
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -36,17 +36,15 @@ const SetTimer = ({actuatorStatus,
             "Content-Type": "application/json",
             "Authorization": `Bearer ${access_token}`,
         }
-        const data = { 
-            "operator": 1, 
-            "info": { 
-              "room_id": room_id, 
-              "node_id": node_id, 
-              "power": null, 
-              "temp": null, 
-              "start_time": startTimeInSetTimer, 
-              "end_time": endTimeInSetTimer, 
+        const data = {
+                "room_id": room_id,
+                "node_id": node_id,
+                "setpoint": 1,
+                "temp": null,
+                "mode": "timer",
+                "start_time": startTimeInSetTimer,
+                "end_time": endTimeInSetTimer,
             } 
-          } 
         const fetch_option = {
             "method": "POST",
             "headers": headers,

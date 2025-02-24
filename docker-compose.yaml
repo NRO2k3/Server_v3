@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  nginx:
+    container_name: webserver
+    build:
+      context: ./frontend/Year3_dev_Frontend/main/react-admin/nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./frontend/Year3_dev_Frontend/main/react-admin/build:/usr/share/nginx/html
+      - ./frontend/Year3_dev_Frontend/main/react-admin/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - mynetwork
+  backend:
+    container_name: smartfarm
+    build:
+      context: ./Backend
+    volumes:
+      - ./Backend:/usr/src/app/
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    depends_on:
+      - my-postgres
+    env_file:
+      - ./Backend/.env
+    networks:
+      - mynetwork
+
+  my-postgres:
+    image: postgres
+    container_name: database
+    volumes:
+      - psql-db:/var/lib/postgresql/data
+    env_file:
+      - ./Backend/.env
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+volumes:
+  psql-db:

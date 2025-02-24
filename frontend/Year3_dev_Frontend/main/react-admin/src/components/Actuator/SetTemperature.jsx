@@ -14,7 +14,7 @@ export default function SetTemperature({actuatorStatus, node_id, callbackSetSign
 {
     const [temperatureInSetTemperature, setTemperatureInSetTemperature] = useState(16);
     const theme = useTheme();
-    const url = `http://${host}/api/actuator_command`;
+    const url = `http://${host}/api/set_actuator`;
 
     const handleIncreTemp = () => {
         if (temperatureInSetTemperature === 30) setTemperatureInSetTemperature(30);
@@ -44,17 +44,15 @@ export default function SetTemperature({actuatorStatus, node_id, callbackSetSign
             "Content-Type": "application/json",
             "Authorization": `Bearer ${access_token}`,
         }
-        const data = { 
-            "operator": 1, 
-            "info": { 
-              "room_id": room_id, 
-              "node_id": node_id, 
-              "power": null, 
-              "temp": temperatureInSetTemperature, 
-              "start_time": null, 
-              "end_time": null, 
-            } 
-          } 
+        const data = {
+                "room_id": room_id,
+                "node_id": node_id,
+                "setpoint": null,
+                "mode": "manual",
+                "temp": temperatureInSetTemperature,
+                "start_time": null,
+                "end_time": null,
+        }
         const fetch_option = {
             "method": "POST",
             "headers": headers,

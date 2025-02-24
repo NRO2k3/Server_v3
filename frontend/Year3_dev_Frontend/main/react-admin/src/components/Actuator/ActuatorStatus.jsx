@@ -18,7 +18,7 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
     const [status, setStatus] = useState(null);
     const [speed, setSpeed] = useState(0);
     const url = `http://${host}/api/actuator_status?room_id=${room_id}&node_id=${node_id}`;
-    const url_set_command = `http://${host}/api/actuator_command`;
+    const url_set_command = `http://${host}/api/set_actuator`;
     const [isLoading, setIsLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [accessToken, getAccessToken] = useState(null);
@@ -104,15 +104,13 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
             "Authorization": `Bearer ${access_token}`,
         }
         const data = { 
-            "operator": 1, 
-            "info": { 
-                "room_id": room_id, 
-                "node_id": node_id, 
-                "power": command, 
-                "temp": 25, 
-                "start_time": -1, 
-                "end_time": -1, 
-            } 
+                "room_id": room_id,
+                "node_id": node_id,
+                "setpoint": command,
+                "mode": "manual",
+                "temp": 25,
+                "start_time": -1,
+                "end_time": -1,
         } 
         const fetch_option = {
             "method": "POST",
