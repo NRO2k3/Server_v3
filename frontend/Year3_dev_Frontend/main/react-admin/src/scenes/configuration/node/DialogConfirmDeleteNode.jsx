@@ -7,11 +7,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { host } from '../../../App';
-
+import verifyAccessToken from '../../../function/verifyAccessToken';
+import verifyRefreshToken from '../../../function/verifyRefreshToken';
 
 export default function DialogConfirmDeleteNode({callbackSetSignIn, NodeConfigLoading, id}) 
 {
-    const api = `http://${host}/api/configuration_node`;
+    const api = `http://${host}/api/configuration_node_ble_mesh`;
 
     const deleteNode = async (url, access_token, id, NodeConfigLoading) => 
     {
@@ -31,13 +32,13 @@ export default function DialogConfirmDeleteNode({callbackSetSignIn, NodeConfigLo
         {
             const data_response = await response.json();
             alert(data_response.Response)
-            NodeConfigLoading[1](!NodeConfigLoading[0]);
+            // NodeConfigLoading[1](!NodeConfigLoading[0]);
         }
         else
         {
             const data_response = await response.json();
             alert(data_response.Response)
-            NodeConfigLoading[1](NodeConfigLoading[0]);
+            // NodeConfigLoading[1](NodeConfigLoading[0]);
         }
     }
 
@@ -56,74 +57,7 @@ export default function DialogConfirmDeleteNode({callbackSetSignIn, NodeConfigLo
             throw new Error("There is no access token and refresh token ....");
         }
 
-        const verifyAccessToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_access_token_API_endpoint = `http://${backend_host}/api/token/verify`
-            const verify_access_token_API_data = 
-            {
-                "token": token.access_token,
-            }
-            const verify_access_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_access_token_API_data),
-
-            }
-            const verify_access_token_API_response = await fetch(verify_access_token_API_endpoint, 
-                                                                verify_access_token_API_option,);
-            if(verify_access_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        /*
-        *brief: this function is to verify the refresh-token and refresh the access-token if the refresh-token is still valid
-        */
-        const verifyRefreshToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_refresh_token_API_endpoint = `http://${backend_host}/api/token/refresh`
-            const verify_refresh_token_API_data = 
-            {
-                "refresh": token.refresh_token,
-            }
-            const verify_refresh_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_refresh_token_API_data),
-
-            }
-            const verify_refresh_token_API_response = await fetch(verify_refresh_token_API_endpoint, 
-                                                                    verify_refresh_token_API_option,);
-            const verify_refresh_token_API_response_data = await verify_refresh_token_API_response.json();
-            if(verify_refresh_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            else if(verify_refresh_token_API_response.status === 200 &&  verify_refresh_token_API_response_data.hasOwnProperty("access"))
-            {
-                localStorage.setItem("access", verify_refresh_token_API_response_data["access"]);
-                localStorage.setItem("refresh", verify_refresh_token_API_response_data["refresh"]);
-                return true
-            }
-            else
-            {
-                throw new Error("Can not get new access token ....");
-            }
-        }
-
-        const  verifyAccessToken_response = await verifyAccessToken();
+        const  verifyAccessToken_response = await verifyAccessToken(backend_host, token);
 
         if(verifyAccessToken_response === true)
         {
@@ -136,7 +70,7 @@ export default function DialogConfirmDeleteNode({callbackSetSignIn, NodeConfigLo
             let verifyRefreshToken_response = null;
             try
             {
-                verifyRefreshToken_response = await verifyRefreshToken();
+                verifyRefreshToken_response = await verifyRefreshToken(backend_host, token);
             }
             catch(err)
             {

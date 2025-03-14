@@ -23,8 +23,8 @@ import StepLabel from '@mui/material/StepLabel';
 import DialogConfirmSettingNewNode from './DialogConfirmSettingNewNode';
 import DialogConfirmSettingNewNodeConfirm from './DialogConfirmSettingNewNodeConfirm';
 import CloseIcon from '@mui/icons-material/Close';
-
-
+import verifyAccessToken from '../../../function/verifyAccessToken';
+import verifyRefreshToken from '../../../function/verifyRefreshToken';
 import { host } from '../../../App';
 
 const steps = ['Setting Node', 'Confirm'];
@@ -50,7 +50,7 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
 {
 
     let remain_node_id_configurationNodeAll = [];
-    console.log(configurationNodeAll)
+
     if(configurationNodeAll !== undefined && configurationNodeAll.length > 0)
     {
         for(let i=0; i<configurationNodeAll.length; ++i)
@@ -58,7 +58,6 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
             if(configurationNodeAll[i].node_id != row.node_id)
             {
                 remain_node_id_configurationNodeAll.push(configurationNodeAll[i].node_id);
-                console.log(remain_node_id_configurationNodeAll);
             }
         }
     }
@@ -109,74 +108,7 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
             throw new Error("There is no access token and refresh token ....");
         }
 
-        const verifyAccessToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_access_token_API_endpoint = `http://${backend_host}/api/token/verify`
-            const verify_access_token_API_data = 
-            {
-                "token": token.access_token,
-            }
-            const verify_access_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_access_token_API_data),
-
-            }
-            const verify_access_token_API_response = await fetch(verify_access_token_API_endpoint, 
-                                                                verify_access_token_API_option,);
-            if(verify_access_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        /*
-        *brief: this function is to verify the refresh-token and refresh the access-token if the refresh-token is still valid
-        */
-        const verifyRefreshToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_refresh_token_API_endpoint = `http://${backend_host}/api/token/refresh`
-            const verify_refresh_token_API_data = 
-            {
-                "refresh": token.refresh_token,
-            }
-            const verify_refresh_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_refresh_token_API_data),
-
-            }
-            const verify_refresh_token_API_response = await fetch(verify_refresh_token_API_endpoint, 
-                                                                    verify_refresh_token_API_option,);
-            const verify_refresh_token_API_response_data = await verify_refresh_token_API_response.json();
-            if(verify_refresh_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            else if(verify_refresh_token_API_response.status === 200 &&  verify_refresh_token_API_response_data.hasOwnProperty("access"))
-            {
-                localStorage.setItem("access", verify_refresh_token_API_response_data["access"]);
-                localStorage.setItem("refresh", verify_refresh_token_API_response_data["refresh"]);
-                return true
-            }
-            else
-            {
-                throw new Error("Can not get new access token ....");
-            }
-        }
-
-        const  verifyAccessToken_response = await verifyAccessToken();
+        const  verifyAccessToken_response = await verifyAccessToken(backend_host, token);
 
         if(verifyAccessToken_response === true)
         {
@@ -189,7 +121,7 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
             let verifyRefreshToken_response = null;
             try
             {
-                verifyRefreshToken_response = await verifyRefreshToken();
+                verifyRefreshToken_response = await verifyRefreshToken(backend_host, token);
             }
             catch(err)
             {
@@ -218,7 +150,6 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
     };
 
     const handleConfirm = () => {
-        console.log(dataNodeSetting)
         verify_and_get_data(settingNode, callbackSetSignIn, host, api, dataNodeSetting, NodeConfigLoading)
         setOpen(false);
     }

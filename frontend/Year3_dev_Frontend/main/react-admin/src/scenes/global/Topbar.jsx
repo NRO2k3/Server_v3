@@ -9,7 +9,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import logo from '../../assets/logo_lab.png'
 import { useMode } from "../../theme";
-
+import { host } from "../../App"; 
 const Topbar = ({setIsSignin}) => {
   const username = localStorage.getItem("username");
   const [isHovered, setIsHovered] = useState(false);
@@ -17,6 +17,7 @@ const Topbar = ({setIsSignin}) => {
   const [openMenu, setOpenMenu] = useState(null);
   const theme = useTheme();
   const [, colorMode] = useMode();
+	const backend_host = host;
   const toggleMode = () => {
 	colorMode.toggleColorMode();
   }
@@ -157,10 +158,34 @@ const Topbar = ({setIsSignin}) => {
 									color: theme.palette.background.default,
 									backgroundColor: theme.palette.text.primary,
 								}}
-								onClick={()=>{
-									localStorage.clear();
-									setIsSignin(false);
-								}}
+								onClick={ async ()=>{
+									const token = {access_token: null, refresh_token: null}
+									if(localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null)
+									{
+											token.access_token = localStorage.getItem("access");
+											token.refresh_token = localStorage.getItem("refresh");
+									}
+									else
+									{
+											throw new Error("There is no access token and refresh token ....");
+									}
+									const headers = {
+										'Content-Type':'application/json',};
+									const verify_logout = {
+											'method':'POST',
+											"headers": headers,
+											"body": JSON.stringify({ "refresh": token.refresh_token }),
+									};
+									const verify_logout_response = await fetch(`http://${backend_host}/api/token/blacklist`, 
+										verify_logout,);
+										if(verify_logout_response.status === 200){
+											alert("Successfully Logout");
+											localStorage.clear();
+											setIsSignin(false);
+										}else{
+											alert("Try again!!!")
+										}
+								 }}
 							>
 								<Typography variant="h5" p={0.3}>
 									Sign out!

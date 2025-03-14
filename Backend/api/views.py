@@ -16,10 +16,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import (EmployeePermissionSerializer, RegistrationNodeSerializer,
                             UserSerializer, ResetPassWordSerializer, ChangePassWordSerializer,
                             NodeConfigurationBufferSerializer, RoomSerializer, ControlSetpointSerializer,
-                            AqiRefSerializer, RawSensorMonitorSerializer, EnergyDataSerializer, RawActuatorMonitorSerializer)
-from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSensorMonitor, EnergyData, RawActuatorMonitor,)
+                            AqiRefSerializer, RawSensorMonitorSerializer, EnergyDataSerializer, RawActuatorMonitorSerializer,
+                            ScanDeviceSerializer)
+from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSensorMonitor, EnergyData, RawActuatorMonitor,
+                    ScanDevice, NodeConfigurationBuffer)
 from threading import Thread
-from .mqtt_server_to_gateway import SendNodeToGateway, SendSetUpActuatorToGateway, client
+from .mqtt_server_to_gateway import SendNodeToGatewayWifi, SendSetUpActuatorToGateway, ScanDeviceToGateWay, CheckScanDeviceToGateWay, SendAddNodeToGatewayBleMesh, SendDeleteNodeToGatewayBleMesh, client
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -153,7 +155,7 @@ class RoomAPIView(mixins.ListModelMixin, mixins.CreateModelMixin,
 @api_view(["GET", "POST", "DELETE", "PUT"])
 @authentication_classes([jwtauthentication.JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-def ConfigurationNode(request, *args, **kwargs):
+def ConfigurationNodeWifi(request, *args, **kwargs):
 
     if request.method == "POST":
         data = json.loads(request.body)
@@ -185,7 +187,7 @@ def ConfigurationNode(request, *args, **kwargs):
             serializer_data.save()
             if serializer_data_buffer.is_valid():
                 serializer_data_buffer.save()
-                t = Thread(target = SendNodeToGateway, args = (client, "add"))
+                t = Thread(target = SendNodeToGatewayWifi, args = (client, "add"))
                 t.start()
                 return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
             else:
@@ -213,7 +215,7 @@ def ConfigurationNode(request, *args, **kwargs):
 
         if serializer_data_buffer.is_valid():
             serializer_data_buffer.save()
-            t = Thread(target = SendNodeToGateway, args = (client, "delete"))
+            t = Thread(target = SendNodeToGatewayWifi, args = (client, "delete"))
             t.start()
             return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
         else:
@@ -246,8 +248,6 @@ def ConfigurationNode(request, *args, **kwargs):
 def SetActuator(request, *args, **kwargs):
 
     data = json.loads(request.body)
-    print(data)
-    print(data["node_id"])
     check_node = RegistrationNode.objects.filter(node_id = data["node_id"])
 
     if not check_node.exists():
@@ -826,3 +826,157 @@ def GetActuatorStatus(request, *args, **kwargs):
             {"Response": "Error on server!"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
+
+@api_view(["POST"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def ScanDeviceGateWay(request, *args, **kwargs):
+
+    try:
+        data = json.loads(request.body)
+        print(data)
+        response = CheckScanDeviceToGateWay(client, data)
+
+        if response == False:
+            return Response(
+            {"Response": response},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+        t = Thread(target = ScanDeviceToGateWay, args = (client,))
+        t.start()
+        return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
+
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def GetAllScanDevice(request, *args, **kwargs):
+    try:
+        room_id = request.GET["room_id"]
+
+        if (ScanDevice.objects.filter(room_id = room_id).count() == 0):
+            return Response(
+                {"Response": "No data"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        
+        data = ScanDeviceSerializer(ScanDevice.objects.filter(room_id = room_id), many = True).data
+        return Response(
+                data,
+                status=status.HTTP_200_OK,
+            )
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["DELETE"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def DeleteScanDevice(request, *args, **kwargs):
+    try:
+        node_id = request.GET["node_id"]
+        print(node_id)
+        if (ScanDevice.objects.filter(id = node_id).count() == 0):
+            return Response(
+                {"Response": "No data"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        data = ScanDevice.objects.filter(id = node_id)
+        data.delete()
+        return Response(
+                {"Response": "Delete Sucessfully"},
+                status=status.HTTP_200_OK,
+            )
+    except Exception as e:
+        return Response(
+            {"Response": f"Error on server: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["POST", "DELETE"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def ConfigurationNodeBleMesh(request, *args, **kwargs):
+
+    if request.method == "POST":
+
+        try:
+            data = json.loads(request.body)
+            data_save_database = data["info"]["dev_info"]
+            data_buffer = {
+                    "action": 1,
+                    "mac": data_save_database["mac"],
+                    "room_id": data["info"]["room_id"],
+                    "time": int((datetime.datetime.now()).timestamp()) + 7 * 60 * 60,
+            }
+            data_save_database["room_id"] = data["info"]["room_id"]
+            data_save_database["time"] = data_buffer["time"]
+            data_save_database["status"] = "wait"
+            serializer_data = RegistrationNodeSerializer(data = data_save_database)
+            serializer_data_buffer = NodeConfigurationBufferSerializer(data = data_buffer)
+
+            if serializer_data.is_valid():
+                serializer_data.save()
+                check_buffer = NodeConfigurationBuffer.objects.filter(action = 1).exists()
+                if check_buffer:
+                    if serializer_data_buffer.is_valid():
+                        serializer_data_buffer.save()
+                else:
+                    if serializer_data_buffer.is_valid():
+                        serializer_data_buffer.save()
+                    t = Thread(target = SendAddNodeToGatewayBleMesh, args = (client, "add"))
+                    t.start()
+                return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
+            else:
+                return Response({"Errors": serializer_data_buffer.errors}, status = status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(
+                {"Response": "Error on server!"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+        
+    if request.method == "DELETE":
+
+        try:
+            data = json.loads(request.body)
+            check = RegistrationNode.objects.filter(node_id = data["node_id"]).first()
+
+            if check is None:
+                return Response({"Response":"This node haven't exist, please singup node fisrtly"},
+                                status = status.HTTP_400_BAD_REQUEST)
+            
+            check.status = "deleted"
+            check.save()
+            data_buffer = {
+                    "action": 0,
+                    "mac": check.mac,
+                    "room_id": check.room_id.room_id,
+                    "time": int((datetime.datetime.now()).timestamp()) + 7 * 60 * 60,
+            }
+            serializer_data_buffer = NodeConfigurationBufferSerializer(data = data_buffer)
+            check_buffer = NodeConfigurationBuffer.objects.filter(action = 0).exists()
+
+            if check_buffer:
+                if serializer_data_buffer.is_valid():
+                    serializer_data_buffer.save()
+            else:
+                if serializer_data_buffer.is_valid():
+                    serializer_data_buffer.save()
+                t = Thread(target = SendDeleteNodeToGatewayBleMesh, args = (client, "delete"))
+                t.start()
+
+            return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
+        except:
+            return Response(
+                {"Response": "Error on server!"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

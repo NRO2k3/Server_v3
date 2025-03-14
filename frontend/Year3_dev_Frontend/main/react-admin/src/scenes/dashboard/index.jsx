@@ -9,13 +9,14 @@ import {host} from "../../App";
 import InformationTag from "../../components/InformationTag2";
 import { useLocation } from "react-router-dom"; 
 import RoomMap from "../../components/RoomMap/RoomMap2";
-import AqiRef from "../../components/AqiRef/AqiRef2";
+import AqiRef from "../../components/AqiRef/AqiRef3";
 import Actuator from "../../components/Actuator/Actuator";
 import EnergyChart from "../../components/EnergyChart/EnergyChart2";
 
 const Dashboard = () => {
     const backend_host = host;
     const location = useLocation(); /*!< This is used to get the "state" component that is passed into <Link> */
+    console.log(location)
     const data_passed_from_landingpage = location.state;
     let room_id = data_passed_from_landingpage == null ? 1 : data_passed_from_landingpage.room_id
     const theme = useTheme();
@@ -23,8 +24,6 @@ const Dashboard = () => {
     const [id, setId] = useState(1);
     const [optionData, setOptionData] = useState("now");        //change option to show different Chart
     const [optionChartData, setOptionChartData] = useState("now")
-    // const apiHistoryChart = `http://${backend_host}/api/v1.1/monitor/data/history?room_id=${room_id}&node_id=${nodeIdFilter}&time_start=${unixTimestampStart}&time_end=${unixTimestampEnd}&option=${optionChartData}`;
-    // const [apiHistoryChartState, setApiHistoryChartState] = useState(apiHistoryChart);
     const apiInformationTag = `http://${backend_host}/api/room/information_tag?room_id=${room_id}`;
     const [actuatorInfoOfRoom, setActuatorInfoOfRoom] = useState([]);
     

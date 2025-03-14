@@ -1,21 +1,317 @@
 from .mqtt_class import ClientMQTT
 import datetime
 import json, time
-from .models import RegistrationNode, NodeConfigurationBuffer
+from .models import RegistrationNode, NodeConfigurationBuffer, ScanDevice
 import os
+import psycopg2
 
 backend_topic_dictionary = {
                         "node_sync_backend_gateway": "farm/sync_node",
                         "set_actuator": "farm/set_actuator",
+                        "scan_device": "farm/scan_device",
                         }
 
-client = ClientMQTT([backend_topic_dictionary["node_sync_backend_gateway"], backend_topic_dictionary["set_actuator"]])
+client = ClientMQTT([backend_topic_dictionary["node_sync_backend_gateway"], backend_topic_dictionary["set_actuator"],
+                    backend_topic_dictionary["scan_device"] ])
+
 broker = os.environ.get('SERVER_BROKER')
 port = 1883
 client.connect(broker, port)
 client.loop_start()
 
-def SendNodeToGateway(client : ClientMQTT, command: str):
+def CheckScanDeviceToGateWay(client: ClientMQTT, data: dict):
+    message_send = json.dumps(data)
+    result = client.publish(backend_topic_dictionary["scan_device"], message_send)
+    status = result[0]
+
+    if status == 0:
+        print("Successfully send message")
+    else:
+        raise Exception("Can't publish data to mqtt")
+    
+    current_time = int((datetime.datetime.now()).timestamp())
+
+    while True:
+        if int((datetime.datetime.now()).timestamp()) - current_time > 10:
+            return False
+        
+        message_receive = client.message_arrive()
+
+        if message_receive != None:
+            data_receive = json.loads(message_receive)
+
+            if data_receive["operator"] == "scan_device_ack":
+
+                if data_receive["status"] == "1":
+                    return True
+                else:
+                    return False
+
+def ScanDeviceToGateWay(client: ClientMQTT):
+
+    client = ClientMQTT([backend_topic_dictionary["scan_device"]],)
+    client.connect(broker, port)
+    client.loop_start()
+
+    try:
+        connect_to_database = psycopg2.connect(
+            database = os.environ.get('POSTGRES_DB'),
+            user = os.environ.get('POSTGRES_USER'),
+            password = os.environ.get('POSTGRES_PASSWORD'),
+            host = os.environ.get('HOST_NAME'),
+            port = "5432",
+        )
+        print("Successfully to connect database in function ScanDeviceToGateWay")
+    except psycopg2.OperationalError as e:
+        connect_to_database = None
+        print(e)
+
+    connect_to_database.autocommit = True
+    cursor = connect_to_database.cursor()
+    cursor.execute("DELETE FROM api_scandevice")
+    cursor.close()
+    connect_to_database.close()
+    current_time = int((datetime.datetime.now()).timestamp())
+
+    while int((datetime.datetime.now()).timestamp()) - current_time <= 60:
+        
+        message_receive = client.message_arrive()
+
+        if message_receive != None:
+            data_receive = json.loads(message_receive)
+
+            if data_receive["operator"] == "scan_result":
+
+                if data_receive["status"] == "1":
+                    
+                    try:
+                        connect_to_database = psycopg2.connect(
+                            database = os.environ.get('POSTGRES_DB'),
+                            user = os.environ.get('POSTGRES_USER'),
+                            password = os.environ.get('POSTGRES_PASSWORD'),
+                            host = os.environ.get('HOST_NAME'),
+                            port = "5432",
+                        )
+                        print("Successfully to connect database in function ScanDeviceToGateWay")
+                    except psycopg2.OperationalError as e:
+                        connect_to_database = None
+                        print(e)
+
+                    connect_to_database.autocommit = True
+                    cursor = connect_to_database.cursor()
+                    query = f"""INSERT INTO api_scandevice (room_id, uuid, device_name, mac, address_type, oob_info, adv_type, bearer_type, rssi)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    dict_key = [
+                        "uuid",
+                        "device_name",
+                        "mac",
+                        "address_type",
+                        "oob_info",
+                        "adv_type",
+                        "bearer_type",
+                        "rssi",
+                    ]
+                    record = (data_receive["info"]["room_id"],)
+                    for i in dict_key:
+                        if i in data_receive["info"]["dev_info"]:
+                            record = record + (data_receive["info"]["dev_info"][i], )
+                        else:
+                            record = record + (-1, )
+                    print(record)
+                    cursor.execute(query, record)
+                    print("Successfully insert ScanDevice to PostgreSQL")
+                    cursor.close()
+                    connect_to_database.close()
+                else:
+                    return False
+    print("Time out scan !!!")
+
+def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
+
+    action = 1 if command == "add" else 0
+    topic = backend_topic_dictionary["node_sync_backend_gateway"]
+
+    while NodeConfigurationBuffer.objects.filter(action = action).exists():
+
+        latest_data_in_buffer = NodeConfigurationBuffer.objects.filter(action = action).order_by("id").first()
+        latest_data_in_node_registration = RegistrationNode.objects.filter(room_id = latest_data_in_buffer.room_id,
+                                                                                mac = latest_data_in_buffer.mac,).first()
+        if action ==1 :
+            data = {
+                    "operator": "add_node",
+                    "status": "1" ,
+                    "info": {
+                        "room_id":  latest_data_in_buffer.room_id,
+                        "protocol": "ble_mesh",
+                        "dev_info": {
+                            "uuid": latest_data_in_node_registration.uuid,
+                            "device_name": latest_data_in_node_registration.device_name,
+                            "mac": latest_data_in_node_registration.mac,
+                            "address_type": latest_data_in_node_registration.address_type,
+                            "oob_info": latest_data_in_node_registration.oob_info,
+                            "adv_type": latest_data_in_node_registration.adv_type,
+                            "bearer_type": latest_data_in_node_registration.bearer_type,
+                            "rssi": latest_data_in_node_registration.rssi
+                            }
+                        }
+                    }
+        else:
+            return None
+        message_send = json.dumps(data)
+        result = client.publish(topic, message_send)
+        status = result[0]
+
+        if status == 0:
+            print("Successfully send message")
+        else:
+            raise Exception("Can't publish data to mqtt")
+        
+        current_time = int((datetime.datetime.now()).timestamp())
+        check_status = True
+        while True:
+            if int((datetime.datetime.now()).timestamp()) - current_time > 20:
+                print("Step 1: Successfully Delete Buffer and Node in Function SendNodeToGatewayBleMesh")
+                latest_data_in_buffer.delete()
+                latest_data_in_node_registration.delete()
+                check_status = False
+                break
+            
+            message_receive = client.message_arrive()
+            
+            if message_receive != None:
+                data_receive = json.loads(message_receive)
+                print(data_receive)
+                if data_receive["operator"] == "add_node_ack":
+
+                    if data_receive["status"] == "1":
+                        break
+                    else:
+                        print("Step 1: Successfully Delete Buffer and Node in Function SendNodeToGatewayBleMesh")
+                        latest_data_in_buffer.delete()
+                        latest_data_in_node_registration.delete()
+                        check_status = False
+                        break
+        
+        if check_status:
+
+            while True:
+                if int((datetime.datetime.now()).timestamp()) - current_time > 60:
+                    latest_data_in_buffer.delete()
+                    latest_data_in_node_registration.delete()
+                    print("Step 2: Successfully Delete Buffer and Node in Function SendNodeToGatewayBleMesh")
+                    break
+
+                message_receive = client.message_arrive()
+                if message_receive != None:
+                    data_receive = json.loads(message_receive)
+
+                    if data_receive["operator"] == "new_node_info":
+
+                        if data_receive["status"] == "1":
+                            latest_data_in_node_registration.function = data_receive["info"]["dev_info"]["function"]
+                            latest_data_in_node_registration.unicast = data_receive["info"]["dev_info"]["unicast"]
+                            latest_data_in_node_registration.status = "sync"
+                            latest_data_in_node_registration.save()
+                            latest_data_in_buffer.delete()
+                            data_scan_device = ScanDevice.objects.filter(mac = latest_data_in_node_registration.mac)
+                            data_scan_device.delete()
+                            data_response = {
+                                "operation": "new_node_info_ack",
+                                "status": "1",
+                                "info": {
+                                    "room_id": latest_data_in_buffer.room_id,
+                                    "protocol": "ble_mesh",
+                                    "dev_info": {
+                                        "node_id": latest_data_in_node_registration.node_id,
+                                        "function": latest_data_in_node_registration.function,
+                                        "uuid": latest_data_in_node_registration.uuid,
+                                        "device_name": latest_data_in_node_registration.device_name,
+                                        'unicast': latest_data_in_node_registration.unicast,
+                                    }
+                                }
+                            }
+                            message_send = json.dumps(data_response)
+                            result = client.publish(topic, message_send)
+                            status = result[0]
+
+                            if status == 0:
+                                print("Successfully send message, Finish add node")
+                            else:
+                                raise Exception("Can't publish data to mqtt")
+                            time.sleep(2)
+                            message_receive = client.message_arrive() # need because send but not recieve
+                            break
+                        else:
+                            print("Step 2: Successfully Delete Buffer and Node in Function SendNodeToGatewayBleMesh")
+                            latest_data_in_buffer.delete()
+                            latest_data_in_node_registration.delete()
+                            check_status = False
+                            break
+
+    return None
+
+def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
+    action = 0 if command == "delete" else 0
+    topic = backend_topic_dictionary["node_sync_backend_gateway"]
+
+    while NodeConfigurationBuffer.objects.filter(action = action).exists():
+
+        latest_data_in_buffer = NodeConfigurationBuffer.objects.filter(action = action).order_by("id").first()
+        latest_data_in_node_registration = RegistrationNode.objects.filter(room_id = latest_data_in_buffer.room_id,
+                                                                                mac = latest_data_in_buffer.mac,).first()
+        if action == 0 :
+            data = {
+                    "operator": "delete_node",
+                    "status": "1",
+                    "info": {
+                        "room_id": latest_data_in_buffer.room_id,
+                        "protocol": "ble_mesh",
+                        "dev_info": {
+                            "node_id": latest_data_in_node_registration.node_id,
+                            "uuid": latest_data_in_node_registration.uuid,
+                            "unicast": latest_data_in_node_registration.unicast
+                        }
+                    }
+                }
+        else:
+            return None
+
+        message_send = json.dumps(data)
+        result = client.publish(topic, message_send)
+        status = result[0]
+
+        if status == 0:
+            print("Successfully send message")
+        else:
+            raise Exception("Can't publish data to mqtt")
+
+        current_time = int((datetime.datetime.now()).timestamp())
+        while True:
+            if int((datetime.datetime.now()).timestamp()) - current_time > 60:
+                print("Successfully Delete Buffer and Update node in Function SendNodeToGatewayBleMesh")
+                latest_data_in_buffer.delete()
+                latest_data_in_node_registration.status = "sync"
+                latest_data_in_node_registration.save()
+                break
+
+            message_receive = client.message_arrive()
+            if message_receive != None:
+                data_receive = json.loads(message_receive)
+
+                if data_receive["operator"] == "delete_node_ack":
+
+                    if data_receive["status"] == "1":
+                        print("Successfully Delete Node")
+                        latest_data_in_buffer.delete()
+                        break
+                    else:
+                        print("Successfully Delete Buffer and Update node in Function SendNodeToGatewayBleMesh")
+                        latest_data_in_node_registration.status = "sync"
+                        latest_data_in_node_registration.save()
+                        break
+
+
+def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
 
     action = 1 if command == "add" else 0
     result = 0
@@ -91,7 +387,7 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
 
                     if message_buffer["operator"] == "server_add_ack":
 
-                        if message_buffer["status"] == 1:
+                        if message_buffer["status"] == "1":
 
                             if message_buffer["info"]["mac"] == str(latest_data_in_node_registration.mac):
                                 print("SUCCESSFULLY")
@@ -126,10 +422,10 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
                                         
                                         if message_buffer["operator"] == "server_add_ack":
 
-                                            if message_buffer["status"] == 2:
+                                            if message_buffer["status"] == "2":
                                                 print("Finish Processing")
                                                 return result
-                                            elif message_buffer["status"] == 1:
+                                            elif message_buffer["status"] == "1":
                                                 pass
                                             else:
                                                 latest_data_in_node_registration.delete()
@@ -141,7 +437,7 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
 
                             else:
                                 print("MAC WRONG, finish deleting add data in registration and buffer")
-                                message_buffer["status"] = 0
+                                message_buffer["status"] = "0"
                                 message_buffer["info"]["mac"] = "Not Match"
                                 result = client.publish(topic, json.dumps(message_buffer))
                                 latest_data_in_node_registration.delete()
@@ -160,7 +456,7 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
 
                     if message_buffer["operator"] == "server_delete_ack":
 
-                        if message_buffer["status"] == 1:
+                        if message_buffer["status"] == "1":
                             print("SUCCESSFULLY")
                             latest_data_in_buffer.delete()
                             result = 1
@@ -174,7 +470,7 @@ def SendNodeToGateway(client : ClientMQTT, command: str):
                             return result
     return result
 
-def SendSetUpActuatorToGateway(client : ClientMQTT, data: dict):
+def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
     
     data_query = RegistrationNode.objects.get(node_id = data["node_id"])
 
@@ -210,7 +506,7 @@ def SendSetUpActuatorToGateway(client : ClientMQTT, data: dict):
     else:
         raise Exception("Can't publish data to mqtt")
     
-    new_data["info"]["status"] = 0
+    new_data["info"]["status"] = "0"
     curent_time = int((datetime.datetime.now()).timestamp())
 
     while True:
@@ -225,8 +521,8 @@ def SendSetUpActuatorToGateway(client : ClientMQTT, data: dict):
 
             if data_receive["operator"] == "server_control_ack":
 
-                if data_receive["status"] == 1:
-                    new_data["info"]["status"] = 1
+                if data_receive["status"] == "1":
+                    new_data["info"]["status"] = "1"
                     break
 
     return new_data

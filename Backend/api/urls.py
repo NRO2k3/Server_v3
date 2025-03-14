@@ -14,9 +14,17 @@ urlpatterns=[
 
     path('employee_permission/<int:pk>', views.EmployeePermissionAPIView.as_view(), name = 'delete_update_employee'),
     path('employee_permission', views.EmployeePermissionAPIView.as_view(), name = 'list_post_employee'),
+
     path('configuration_room', views.RoomAPIView.as_view(), name = 'list_post_room'),
     path('configuration_room/<int:pk>', views.RoomAPIView.as_view(), name = 'delete_update_room'),
-    path('configuration_node', views.ConfigurationNode, name = 'configuration_node'),
+## Wifi
+    path('configuration_node', views.ConfigurationNodeWifi, name = 'configuration_node'),
+## Ble Mesh
+    path('scan_device', views.ScanDeviceGateWay, name = 'scan_device'),
+    path('all_scan_device', views.GetAllScanDevice, name = 'all_scan_device'),
+    path('delete_device', views.DeleteScanDevice, name = 'delete_device'),
+    path('configuration_node_ble_mesh', views.ConfigurationNodeBleMesh, name = 'configuration_node_ble_mesh'),
+
     path('set_actuator', views.SetActuator, name = 'set_actuator'),
     path('aqi_ref', views.GetAqiRef, name = 'aqi_ref'),
     path('room/information_tag', views.GetRoomInformation, name= 'information_room'),
