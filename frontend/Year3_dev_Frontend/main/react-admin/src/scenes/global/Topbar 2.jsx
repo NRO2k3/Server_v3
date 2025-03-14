@@ -8,11 +8,11 @@ import PeopleIcon from '@mui/icons-material/People';
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import logo from '../../assets/logo_lab.png'
-
+import {host} from "../App"
 const Topbar = ({setIsSignin}) => {
   const theme = useTheme();
   const username = localStorage.getItem("username");
-
+	const backend_host = host;
   return (
     <Box display="flex" justifyContent="space-between"
 					paddingRight={2}
@@ -92,10 +92,6 @@ const Topbar = ({setIsSignin}) => {
 					</Typography>
 
                     <Link color="white" display="inline" href="/"
-                         onClick={()=>{
-                            localStorage.clear();
-                            setIsSignin(false);
-                         }}
                     >
                         <Typography variant="h5" color="white" display="inline">
 						Sign out!

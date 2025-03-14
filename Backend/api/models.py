@@ -31,13 +31,20 @@ class RegistrationNode(models.Model):
                                 db_column = "room_id",
                                 )
     node_id = models.BigIntegerField(null = True, unique = True, db_column = "node_id",)
-    x_axis = models.IntegerField(null = False, db_column = "x_axis",)
-    y_axis = models.IntegerField(null = False, db_column = "y_axis",)
-    z_axis = models.IntegerField(null = False, db_column = "z_axis",)
-    function = models.TextField(null = False, db_column = "function",)
+    x_axis = models.IntegerField(default = 1, db_column = "x_axis",)
+    y_axis = models.IntegerField(default = 1, db_column = "y_axis",)
+    z_axis = models.IntegerField(default = 1, db_column = "z_axis",)
+    function = models.TextField(default = "None", db_column = "function",)
     mac = models.TextField(null = True, unique = True, db_column = "mac",)
     uuid = models.TextField(null = True, db_column = "uuid",)
+    device_name = models.TextField(null = True, db_column = "device_name",)
+    address_type = models.TextField(null = True, db_column = "address_type",)
+    oob_info = models.TextField(null = True, db_column="oob_info",)
+    adv_type = models.IntegerField(null = True, db_column="adv_type",)
+    bearer_type = models.TextField(null = True, db_column="bearer_type",)
+    rssi = models.IntegerField(null = True, db_column="rssi",)
     status = models.TextField(null = True, db_column = "status",)
+    unicast = models.IntegerField(null = True, db_column="unicast",)
     time = models.BigIntegerField(null = True, db_column = "time",)
 
     def save(self, *args, **kwargs):
@@ -152,3 +159,22 @@ class ControlSetpoint(models.Model):
     end_time = models.BigIntegerField(null = True, db_column = "end_time")
     status = models.IntegerField(null = False, db_column = "status")
     time = models.BigIntegerField(null = False, db_column = "time")
+
+class ScanDevice(models.Model):
+
+    id = models.BigAutoField(primary_key = True, db_column = "id")
+    room_id = models.ForeignKey(Room,
+                                to_field = 'room_id',
+                                verbose_name = ("Refering to id of room where this node is implemented"),
+                                on_delete = models.CASCADE,
+                                null = True,
+                                db_column = "room_id",
+                                )
+    uuid = models.TextField(null = False, db_column = "uuid")
+    device_name = models.TextField(null = False, db_column = "device_name")
+    mac = models.TextField(null = False, db_column = "mac")
+    address_type = models.TextField(null = False, db_column = "address_type")
+    oob_info = models.TextField(null = False, db_column = "oob_info")
+    adv_type = models.IntegerField(null = False, db_column = "adv_type")
+    bearer_type = models.TextField(null = False, db_column = "bearer_type")
+    rssi = models.IntegerField(null = False, db_column = "rssi")

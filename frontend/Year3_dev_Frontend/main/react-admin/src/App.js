@@ -14,7 +14,7 @@ import Contact from "./scenes/contact";
 import Configuration from "./scenes/configuration/Configuration";
 import SignUp from "./scenes/signUp";
 import Weatherdata from "./scenes/weatherdata/Weatherdata";
-
+import AqiRef from "./components/AqiRef/AqiRef3";
 
 const debug_mode = process.env.REACT_APP_DEBUG_MODE === "false";
 export const host = process.env.REACT_APP_BACKEND_URL;
@@ -67,5 +67,9 @@ function App() {
         </LocalizationProvider>
     );
 }
-
+// function App(){
+//     return<>
+//     <AqiRef/>
+//     </>
+// }
 export default App;

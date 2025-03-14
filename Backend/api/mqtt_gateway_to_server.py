@@ -53,7 +53,7 @@ def DataForAqiRef():
 
                 try:
                     connect_to_database = psycopg2.connect(
-                        database = "server_version_3",
+                        database = os.environ.get('POSTGRES_DB'),
                         user = os.environ.get('POSTGRES_USER'),
                         password = os.environ.get('POSTGRES_PASSWORD'),
                         host = os.environ.get('HOST_NAME'),
@@ -134,7 +134,7 @@ def DataFromSensorNode():
 
                     try:
                         connect_to_database = psycopg2.connect(
-                            database = "server_version_3",
+                            database = os.environ.get('POSTGRES_DB'),
                             user = os.environ.get('POSTGRES_USER'),
                             password = os.environ.get('POSTGRES_PASSWORD'),
                             host = os.environ.get('HOST_NAME'),
@@ -182,7 +182,7 @@ def DataFromSensorNode():
 
                     try:
                         connect_to_database = psycopg2.connect(
-                            database = "server_version_3",
+                            database = os.environ.get('POSTGRES_DB'),
                             user = os.environ.get('POSTGRES_USER'),
                             password = os.environ.get('POSTGRES_PASSWORD'),
                             host = os.environ.get('HOST_NAME'),
@@ -243,7 +243,7 @@ def DataFromActuator():
 
                     try:
                         connect_to_database = psycopg2.connect(
-                            database = "server_version_3",
+                            database = os.environ.get('POSTGRES_DB'),
                             user = os.environ.get('POSTGRES_USER'),
                             password = os.environ.get('POSTGRES_PASSWORD'),
                             host = os.environ.get('HOST_NAME'),

@@ -7,30 +7,12 @@ import { React, useState, useEffect, useRef } from "react";
 
 import HeatmapComponent from "./HeatmapComponent";
 
-/**
- * @brief This component RoomMap will render out the image room with all node 
- *          sticks to it in real position according to the x and y axises provided
- *          in database backend.
- */
 const RoomMap = ({ room_id, callbackSetSignIn, backend_host }) => {
     const [nodeData, setNodeData] = useState([]);
     const [nodeList, setNodeList] = useState([]);
     const [nodeFunction, setNodeFunction] = useState([]);
     const [showHeatmap, setShowHeatmap] = useState(true);
     const theme = useTheme();
-
-    /**
-     * @brief nodePosition is an array of all node in this room with informations,
-     *        the information will contains whether it is sensor or actuator, the positions
-     *        of it according to the real size of the box it is gonna be rendered, which is    
-     *        the "px" from left and the "px" from above.
-     *        The image of the room will be positioned so that the main door will facing above,
-     *        the left of the room will be the x_axis and the bottom of the room will be the y_axis.
-     *        The array will be like:
-     *        [{"node_id": ..., "function": ..., "node_left": ..., "node_above": ...}, ...]
-     * 
-     *  node_info -> sensor(array 7) -> x_axis, y_axis, node_id
-     */
     const [isLoading, setIsLoading] = useState(false);
     const api_to_fetch = `http://${backend_host}/api/heatmap?room_id=${room_id}`;
 
@@ -42,12 +24,6 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host }) => {
         407: plan_409,
         507: plan_409,
     }
-    // const pic_resolution = {
-    //     1: [321,351],
-    //     2: [321,351],
-    //     3: [321,351],
-    //     4: [322,352],
-    // }
 
     const fetch_data_function = async (url, access_token) => {
         const headers =
@@ -72,7 +48,6 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host }) => {
         if (response && response.status === 200) {
             const data_response = await response.json();
             let newNodePosition = [];
-            console.log(data_response[1])
             setNodeList(data_response[1]);
             setNodeFunction(data_response[2]);
             for (let i = 0; i < data_response[3].length; i++) {

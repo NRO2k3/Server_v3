@@ -36,7 +36,7 @@ export default function SignUp({setSignUp}) {
 
     const create_user = async (data)=> 
     {
-        data.email = "xxxx@gmail.com"
+        // data.email = "xxxx@gmail.com"
         console.log(data)
         const api = `http://${host}/api/signup`;
         const fetch_option = 
@@ -49,7 +49,7 @@ export default function SignUp({setSignUp}) {
         }
         const response = await fetch(api, fetch_option);
         const response_data = await response.json();
-        if(response.status === 200)
+        if(response.status === 201)
         {
             alert(response_data["Response"]);
             return true;
@@ -64,7 +64,6 @@ export default function SignUp({setSignUp}) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-
         if(data.get('password') !== data.get('password_verify'))
         {
             alert("Password and Verify Password must be the same!")
@@ -72,7 +71,7 @@ export default function SignUp({setSignUp}) {
         else
         {
             alert("Valid!")
-            let is_successfull = await create_user({"username": data.get("username"), "password": data.get("password")}, "");
+            let is_successfull = await create_user({"username": data.get("username"), "password": data.get("password"), "email": data.get("email")}, "");
             if(is_successfull === true)
             {
                 setSignUp(false);
@@ -132,7 +131,7 @@ export default function SignUp({setSignUp}) {
                   autoComplete="family-name"
                 />
               </Grid>
-              {/* <Grid item xs={12}>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -141,7 +140,7 @@ export default function SignUp({setSignUp}) {
                   name="email"
                   autoComplete="email"
                 />
-              </Grid> */}
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
