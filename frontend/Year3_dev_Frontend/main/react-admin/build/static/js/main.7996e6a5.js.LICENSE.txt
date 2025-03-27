@@ -1,5 +1,7 @@
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
+/*!< This is used to get the "state" component that is passed into <Link> */
+
 /*!< if the fetch is successful*/
 
 /*!< if there is data in response */

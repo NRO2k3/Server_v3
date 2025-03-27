@@ -35,8 +35,8 @@ class RegistrationNode(models.Model):
     y_axis = models.IntegerField(default = 1, db_column = "y_axis",)
     z_axis = models.IntegerField(default = 1, db_column = "z_axis",)
     function = models.TextField(default = "None", db_column = "function",)
-    mac = models.TextField(null = True, unique = True, db_column = "mac",)
-    uuid = models.TextField(null = True, db_column = "uuid",)
+    mac = models.TextField(null = True, db_column = "mac",)
+    uuid = models.TextField(null = True, unique = True, db_column = "uuid",)
     device_name = models.TextField(null = True, db_column = "device_name",)
     address_type = models.TextField(null = True, db_column = "address_type",)
     oob_info = models.TextField(null = True, db_column="oob_info",)
@@ -167,10 +167,10 @@ class ScanDevice(models.Model):
                                 to_field = 'room_id',
                                 verbose_name = ("Refering to id of room where this node is implemented"),
                                 on_delete = models.CASCADE,
-                                null = True,
+                                null = False,
                                 db_column = "room_id",
                                 )
-    uuid = models.TextField(null = False, db_column = "uuid")
+    uuid = models.TextField(null = False, unique = True, db_column = "uuid")
     device_name = models.TextField(null = False, db_column = "device_name")
     mac = models.TextField(null = False, db_column = "mac")
     address_type = models.TextField(null = False, db_column = "address_type")

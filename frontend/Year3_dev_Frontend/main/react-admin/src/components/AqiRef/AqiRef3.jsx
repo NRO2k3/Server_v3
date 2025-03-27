@@ -127,108 +127,107 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                             Hanoi AQI: Hanoi Real-time Air Quality Index (AQI)
                         </Typography>
                     </Grid>
-                        <Grid item xs={12}>
-                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                <Grid container spacing={2} marginY={0.5} px='10px'>
-                                    <Grid item xs={6} container display="flex" flexDirection="column" justifyItems='center' textAlign='center'>
-                                        <Grid container item justifyContent='center' alignContent='center'>
-                                            <Tooltip style={{
-                                                fontSize: theme.typography.pxToRem(24),
-                                                backgroundColor: theme.palette.common.white,
-                                                border: '1px solid #eeeeee',
-                                                maxWidth: 220,
-                                            }}
-                                                title={
-                                                    <Grid>
-                                                        <Typography color="inherit">{`PM2.5: ${data['pm25']}`}</Typography>
-                                                        <Typography color="inherit">{`PM10: ${data['pm10']}`}</Typography>
-                                                        <Typography color="inherit">{`O3: ${data['o3']}`}</Typography>
-                                                        <Typography color="inherit">{`NO2: ${data['no2']}`}</Typography>
-                                                        <Typography color="inherit">{`SO2: ${data['so2']}`}</Typography>
-                                                        <Typography color="inherit">{`CO: ${data['co']}`}</Typography>
-                                                    </Grid>
-                                                }
-                                            >
-                                                <div style={{
-                                                    width: '100px', // Adjust as needed
-                                                    height: '100px', // Adjust as needed
-                                                    border: '10px solid', // Border makes the circle hollow
-                                                    borderColor: `${data['rating']['color']}`,
-                                                    borderRadius: '50%', // Makes the div a circle
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    textAlign: 'center',
+                    <Grid item xs={12} >
+                        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                            <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
+                            <Grid container spacing={2} marginY={0.5} px='10px'>
+                                <Grid item xs={6} container display="flex" flexDirection="column" justifyItems='center' textAlign='center'>
+                                    <Grid container item justifyContent='center' alignContent='center'>
+                                        <Tooltip style={{
+                                            fontSize: theme.typography.pxToRem(24),
+                                            backgroundColor: theme.palette.common.white,
+                                            border: '1px solid #eeeeee',
+                                            maxWidth: 220,
+                                        }}
+                                            title={
+                                                <Grid>
+                                                    <Typography color="inherit">{`PM2.5: ${data['pm25']}`}</Typography>
+                                                    <Typography color="inherit">{`PM10: ${data['pm10']}`}</Typography>
+                                                    <Typography color="inherit">{`O3: ${data['o3']}`}</Typography>
+                                                    <Typography color="inherit">{`NO2: ${data['no2']}`}</Typography>
+                                                    <Typography color="inherit">{`SO2: ${data['so2']}`}</Typography>
+                                                    <Typography color="inherit">{`CO: ${data['co']}`}</Typography>
+                                                </Grid>
+                                            }
+                                        >
+                                            <div style={{
+                                                width: '100px', // Adjust as needed
+                                                height: '100px', // Adjust as needed
+                                                border: '10px solid', // Border makes the circle hollow
+                                                borderColor: `${data['rating']['color']}`,
+                                                borderRadius: '50%', // Makes the div a circle
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                textAlign: 'center',
+                                                position: 'relative',
+                                                marginTop: "16px"
+                                            }}>
+                                                <span style={{
                                                     position: 'relative',
-                                                    marginTop: "16px"
+                                                    color: theme.palette.text.primary,
+                                                    fontSize: '28px',
+                                                    fontWeight: 'bold',
                                                 }}>
-                                                    <span style={{
-                                                        position: 'relative',
-                                                        color: theme.palette.text.primary,
-                                                        fontSize: '28px',
-                                                        fontWeight: 'bold',
-                                                    }}>
-                                                        {data['aqi']}
-                                                    </span>
-                                                </div>
-                                            </Tooltip>
-                                        </Grid>
-                                        <Grid item marginY={0.5} />
-                                        <Grid item>
-                                            <Typography fontWeight='bold' variant='h3'>{data['rating']['rate']}</Typography>
-                                        </Grid>
+                                                    {data['aqi']}
+                                                </span>
+                                            </div>
+                                        </Tooltip>
                                     </Grid>
-                                    <Grid item sx={{ borderLeft: "2px solid gray",  alignSelf: "stretch", mx: 2 }} />
-                                    <Grid item xs>
-                                        <Typography
-                                            variant="h5"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            gap="5px"
-                                        >
-                                            <ThermostatIcon sx={{ fontSize: '3rem', color: theme.palette.secondary.main }} />
-                                            <span style={{ flexGrow: 1 }}> Temperature: {data['t'] === 'No data' ? 'No data' : `${data['t']} °C`}</span>
-                                        </Typography>
-                                        
-                                        <Typography
-                                            variant="h5"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            gap="5px"
-                                        >
-                                            <InvertColorsIcon sx={{ fontSize: '3rem', color: theme.palette.secondary.main }} /> 
-                                            <span style={{ flexGrow: 1 }}> Hudminity: {data['h'] === 'No data' ? 'No data' : `${data['h']} %`}</span>
-                                        </Typography>
-
-                                        <Typography
-                                            variant="h5"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            gap="10px"
-                                        >
-                                            <SpeedIcon sx={{ fontSize: '3rem', color: theme.palette.secondary.main }} /> 
-                                            <span style={{ flexGrow: 1 }}>Pressure: {data['p'] === 'No data' ? 'No data' : `${data['p']} hPa`}</span>
-                                        </Typography>
-
-                                        <Typography
-                                            variant="h5"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="space-between"
-                                            gap="10px"
-                                        >
-                                            <FilterDramaIcon sx={{ fontSize: '3rem', color: theme.palette.secondary.main }} /> 
-                                            <span style={{ flexGrow: 1 }}>Wind: {data['w'] === 'No data' ? 'No data' : `${data['w']} m/s`}</span>
-                                        </Typography>
+                                    <Grid item marginY={0.5} />
+                                    <Grid item>
+                                        <Typography fontWeight='bold' variant='h3'>{data['rating']['rate']}</Typography>
                                     </Grid>
                                 </Grid>
-                                </Paper>
-                            </div>
-                        </Grid>
+                                <Grid item xs>
+                                    <Typography
+                                        variant="h5"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        gap="5px"
+                                    >
+                                        <ThermostatIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} />
+                                        <span style={{ flexGrow: 1 }}> Temperature: {data['t'] === 'No data' ? 'No data' : `${data['t']} °C`}</span>
+                                    </Typography>
+                                    
+                                    <Typography
+                                        variant="h5"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        gap="5px"
+                                    >
+                                        <InvertColorsIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} /> 
+                                        <span style={{ flexGrow: 1 }}> Hudminity: {data['h'] === 'No data' ? 'No data' : `${data['h']} %`}</span>
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h5"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        gap="10px"
+                                    >
+                                        <SpeedIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} /> 
+                                        <span style={{ flexGrow: 1 }}>Pressure: {data['p'] === 'No data' ? 'No data' : `${data['p']} hPa`}</span>
+                                    </Typography>
+
+                                    <Typography
+                                        variant="h5"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        gap="10px"
+                                    >
+                                        <FilterDramaIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} /> 
+                                        <span style={{ flexGrow: 1 }}>Wind: {data['w'] === 'No data' ? 'No data' : `${data['w']} m/s`}</span>
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            </Paper>
+                        </div>
+                    </Grid>
                     <Grid xs={12} textAlign='center' margin={1}>
                         <Typography textAlign='center' variant='h5' component='span'>updated on {
                             (() => {

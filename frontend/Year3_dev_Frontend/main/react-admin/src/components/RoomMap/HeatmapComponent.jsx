@@ -29,6 +29,34 @@ const HeatmapOverlay = styled('div')({
   opacity: '200%'
 });
 
+// const HeatmapContainer = styled('div')({
+//   position: 'relative',
+//   width: '80%',  // Giữ ảnh trong 80% màn hình
+//   maxWidth: '500px', // Giới hạn kích thước tối đa
+//   height: 'auto',
+//   aspectRatio: '1/1', // Giữ tỷ lệ vuông
+//   overflow: 'hidden',
+//   margin: 'auto' // Căn giữa trong layout
+// });
+
+// const HeatmapImg = styled('img')({
+//   width: '100%',   
+//   height: '100%',
+//   objectFit: 'contain', // Giữ toàn bộ ảnh mà không bị cắt
+//   position: 'absolute',
+//   top: 0,
+//   left: 0
+// });
+
+// const HeatmapOverlay = styled('div')({
+//   position: 'absolute',
+//   top: 0,
+//   left: 0,
+//   width: '100%',
+//   height: '100%',
+//   opacity: '200%',
+// });
+
 const HeatmapComponent = ({nodeData, nodeList, nodeFunction, pic_src, showHeatmap}) => {
   const heatmapRef = useRef(null);
   

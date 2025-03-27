@@ -177,14 +177,14 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host }) => {
         <>
             {
                 isLoading ? <h1>Loading...</h1> :
-                    <Grid container justifyContent='center' justifyItems='center'>
+                    <Grid container justifyContent='center' >
                         <Grid item xs={12} sm={12} md={12} textAlign="center" >
                             <Typography fontWeight="bold" fontSize='21px'>
                                 Map view
                             </Typography>
                         </Grid>
                         <Grid item xs={12} p={1} />
-                        <Grid container item xs={12} justifyContent='center'>
+                        <Grid container justifyContent='center' >
                             <HeatmapComponent
                                 nodeData={nodeData}
                                 nodeList={nodeList}

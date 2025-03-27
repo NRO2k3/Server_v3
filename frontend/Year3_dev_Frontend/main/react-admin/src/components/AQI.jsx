@@ -274,7 +274,7 @@ const AQI = ({room_id, callbackSetSignIn}) =>
             <div style={{
                 width: '100px', // Adjust as needed
                 height: '100px', // Adjust as needed
-                border: '10px solid', // Border makes the circle hollow
+                border: '15px solid', // Border makes the circle hollow
                 borderColor: `${aqi['color']}`,
                 borderRadius: '50%', // Makes the div a circle
                 display: 'flex',
@@ -282,20 +282,24 @@ const AQI = ({room_id, callbackSetSignIn}) =>
                 alignItems: 'center',
                 textAlign: 'center',
                 position: 'relative',
+                padding: '80px',
+                marginTop: '25px',
+                marginLeft: '20px'
             }}>
                 <span style={{
                     position: 'relative',
                     color: theme.palette.text.primary,
-                    fontSize: '28px',
-                    fontWeight: 'bold'
+                    fontSize: '50px',
+                    fontWeight: 'bold',
+                    padding:"100px"
                 }}>
                     {aqi['hourly']}
                 </span>
             </div>
             </Grid>
             <Grid item marginY={0.6} />
-            <Grid item>
-                <Typography fontWeight='bold' variant='h3'>{aqi['level']}</Typography>
+            <Grid item style={{ marginLeft: '20px' }}>
+                <Typography fontWeight='bold' variant='h2'>{aqi['level']}</Typography>
             </Grid>
         </Grid>
     );

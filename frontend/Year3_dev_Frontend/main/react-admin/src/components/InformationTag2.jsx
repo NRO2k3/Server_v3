@@ -298,166 +298,94 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                     :
                     <Grid container textAlign='center'>
                         <Grid xs={12} sm={12} md={12} textAlign="center" columnSpacing={2}>
-                            <Typography fontWeight="bold" fontSize='21px'>
+                            <Typography fontWeight="bold" fontSize='30px'>
                                 Room info
                             </Typography>
                         </Grid>
                         <Grid container spacing={1} marginY={0.5} marginX={1}>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <AQI room_id={room_id} callbackSetSignIn={callbackSetSignIn} />
-                                    </Paper>
-                                </div>
+                            <Grid container xs={4} flexDirection="column" justifyContent="space-around" alignItems="center" >
+                                <Grid item textAlign="center">
+                                        <ThermostatIcon style={{ fontSize: '3rem' }} />
+                                        <Typography textAlign='center' variant='h5'>Temperature</Typography>
+                                        <Typography textAlign='center' fontWeight='bold' variant='h3'>
+                                        {infoData["temp"]["value"] === 'No data'
+                                        ? infoData["temp"]["value"]
+                                        : `${infoData["temp"]["value"]} ${dict_of_enviroment_para_names['temp']['unit']}`}
+                                        </Typography>
+                                </Grid>
+                                <Grid item textAlign="center">
+                                    <Co2Icon style={{ fontSize: '3rem' }} />
+                                    <Typography textAlign='center' variant='h5'>CO2</Typography>
+                                        <Typography textAlign='center' fontWeight='bold' variant='h3'>
+                                        {infoData["co2"]["value"] === 'No data'
+                                        ? infoData["co2"]["value"]
+                                        : `${infoData["co2"]["value"]} ${dict_of_enviroment_para_names['co2']['unit']}`}
+                                        </Typography>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' alignItems='center' textAlign='center'>
-                                            <Grid item>
-                                                <ThermostatIcon style={{ fontSize: '5.1rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>Temperature</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>
-                                                    {((temp) => {
-                                                        if (infoData["temp"]["value"] == 'No data') temp = infoData["temp"]["value"];
-                                                        else temp = `${infoData["temp"]["value"]} ${dict_of_enviroment_para_names['temp']['unit']}`
-                                                        return temp;
-                                                    })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
+                            <Grid container xs={4}>
+                                <AQI room_id={room_id} callbackSetSignIn={callbackSetSignIn} />
                             </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <Co2Icon style={{ fontSize: '5.1rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>CO2</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{((temp) => {
-                                                    if (infoData["co2"]["value"] == 'No data') temp = infoData["co2"]["value"];
-                                                    else temp = `${infoData["co2"]["value"]} ${dict_of_enviroment_para_names['co2']['unit']}`
-                                                    return temp;
-                                                })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
+                            <Grid container xs={4} flexDirection="column" justifyContent="space-around" alignItems="center" >
+                            <div style={{  marginLeft: "30px" }}>
+                                <Grid item textAlign="center">
+                                    <LensBlurIcon style={{ fontSize: '3rem' }} />
+                                    <Typography textAlign='center' variant='h5'>Dust</Typography>
+                                    <Typography textAlign='center' fontWeight='bold' variant='h3'>
+                                    {infoData["dust"]["value"] === 'No data'
+                                        ? infoData["dust"]["value"]
+                                        : `${infoData["dust"]["value"]} ${dict_of_enviroment_para_names['dust']['unit']}`}
+                                    </Typography>
+                                </Grid>
+                                <Grid item textAlign="center">
+                                    <Grid item>
+                                        <LightModeIcon style={{ fontSize: '3rem' }} />
+                                        <Typography textAlign='center' variant='h5'>Light</Typography>
+                                        <Typography textAlign='center' fontWeight='bold' variant='h3'>
+                                        {infoData["light"]["value"] === 'No data'
+                                        ? infoData["light"]["value"]
+                                        : `${infoData["light"]["value"]} ${dict_of_enviroment_para_names['light']['unit']}`}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </div>
                             </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <InvertColorsIcon style={{ fontSize: '3rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>Humidity</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{((temp) => {
-                                                    if (infoData["hum"]["value"] == 'No data') temp = infoData["hum"]["value"];
-                                                    else temp = `${infoData["hum"]["value"]} ${dict_of_enviroment_para_names['hum']['unit']}`
-                                                    return temp;
-                                                })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
+                        </Grid>
+                        <Grid container  flexDirection="row" justifyContent="space-evenly" alignItems="center" >
+                            <Grid item textAlign="center">
+                                <InvertColorsIcon style={{ fontSize: '3rem' }} />
+                                <Typography variant="h5">Humidity</Typography>
+                                <Typography fontWeight="bold" variant="h3">
+                                    {infoData["hum"]["value"] === 'No data' 
+                                        ? infoData["hum"]["value"] 
+                                        : `${infoData["hum"]["value"]} ${dict_of_enviroment_para_names['hum']['unit']}`}
+                                </Typography>
                             </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <FilterDramaIcon style={{ fontSize: '3rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>TVOC</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{((temp) => {
-                                                    if (infoData["tvoc"]["value"] == 'No data') temp = infoData["tvoc"]["value"];
-                                                    else temp = `${infoData["tvoc"]["value"]} ${dict_of_enviroment_para_names['tvoc']['unit']}`
-                                                    return temp;
-                                                })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
+
+                            <Grid item textAlign="center">
+                                <FilterDramaIcon style={{ fontSize: '3rem' }} />
+                                <Typography variant="h5">TVOC</Typography>
+                                <Typography fontWeight="bold" variant="h3">
+                                    {infoData["tvoc"]["value"] === 'No data' 
+                                        ? infoData["tvoc"]["value"] 
+                                        : `${infoData["tvoc"]["value"]} ${dict_of_enviroment_para_names['tvoc']['unit']}`}
+                                </Typography>
                             </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <LensBlurIcon style={{ fontSize: '3rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>Dust</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{((temp) => {
-                                                    if (infoData["dust"]["value"] == 'No data') temp = infoData["dust"]["value"];
-                                                    else temp = `${infoData["dust"]["value"]} ${dict_of_enviroment_para_names['dust']['unit']}`
-                                                    return temp;
-                                                })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
+
+                            <Grid item textAlign="center">
+                                <VolumeUpIcon style={{ fontSize: '3rem' }} />
+                                <Typography variant="h5">Sound</Typography>
+                                <Typography fontWeight="bold" variant="h3">
+                                    {infoData["sound"]["value"] === 'No data' 
+                                        ? infoData["sound"]["value"] 
+                                        : `${infoData["sound"]["value"]} ${dict_of_enviroment_para_names['sound']['unit']}`}
+                                </Typography>
                             </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <LightModeIcon style={{ fontSize: '3rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>Light</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{((temp) => {
-                                                    if (infoData["light"]["value"] == 'No data') temp = infoData["light"]["value"];
-                                                    else temp = `${infoData["light"]["value"]} ${dict_of_enviroment_para_names['light']['unit']}`
-                                                    return temp;
-                                                })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <VolumeUpIcon style={{ fontSize: '3rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>Sound</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{((temp) => {
-                                                    if (infoData["sound"]["value"] == 'No data') temp = infoData["sound"]["value"];
-                                                    else temp = `${infoData["sound"]["value"]} ${dict_of_enviroment_para_names['sound']['unit']}`
-                                                    return temp;
-                                                })()}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                    <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
-                                        <Grid container display="flex" flexDirection="column" alignContent='center' textAlign='center'>
-                                            <Grid item>
-                                                <BoyIcon style={{ fontSize: '3rem' }} />
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography textAlign='center' variant='h5'>Motion</Typography>
-                                                <Typography textAlign='center' fontWeight='bold' variant='h3'>{infoData["motion"]["value"]}</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Paper>
-                                </div>
+
+                            <Grid item textAlign="center">
+                                <BoyIcon style={{ fontSize: '3rem' }} />
+                                <Typography variant="h5">Motion</Typography>
+                                <Typography fontWeight="bold" variant="h3">{infoData["motion"]["value"]}</Typography>
                             </Grid>
                         </Grid>
                         <Grid xs={12} textAlign='center' spacing={1} margin={1}>
@@ -473,26 +401,6 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                             }
                             </Typography>
                         </Grid>
-                        {/** save for later */}
-                        {/* <Box display="flex" flexDirection="column" justifyContent="center" 
-                    alignItems="center"
-                    // justify="center"
-                    >
-                    <span colSpan="2" style={{ textAlign: 'left', fontWeight: 'bold', width: '300px', fontSize: "15px" }} align="center" nowrap="true">
-                        {(()=>{
-                            let data = "Sensor id: ";
-                            nodeData["sensor"].forEach((e)=>{data += e["node_id"]; data+= ", "})
-                            return data;
-                        })()}
-                    </span>
-                    <span colSpan="2" style={{ textAlign: 'left', fontWeight: 'bold', width: '300px', fontSize: "15px" }} align="center" nowrap="true">
-                        {(()=>{
-                            let data = "Actuator id: ";
-                            nodeData["actuator"].forEach((e)=>{data += e["node_id"]; data+= ", "})
-                            return data;
-                        })()}
-                    </span>
-                    </Box> */}
                     </Grid>
             }
         </>

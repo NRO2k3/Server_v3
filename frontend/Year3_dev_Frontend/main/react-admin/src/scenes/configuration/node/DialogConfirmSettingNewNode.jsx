@@ -74,8 +74,7 @@ export default function DialogConfirmSettingNewNode({dataNodeSetting, setDataNod
                     label="Function"
                 >
                     <MenuItem value={"sensor"}>Sensor</MenuItem>
-                    <MenuItem value={"air"}>Air conditioning</MenuItem>
-                    <MenuItem value={"fan"}>Fan</MenuItem>
+                    <MenuItem value={"actuator"}>Actuator</MenuItem>
                 </Select>
             </FormControl>
         </Grid>

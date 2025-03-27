@@ -8,11 +8,19 @@ import psycopg2
 backend_topic_dictionary = {
                         "node_sync_backend_gateway": "farm/sync_node",
                         "set_actuator": "farm/set_actuator",
-                        "scan_device": "farm/scan_device",
+                        "scan_device": "farm/node/scan",
+                        "add_device": "farm/node/add",
+                        "delete_device": "farm/node/delete",
                         }
 
-client = ClientMQTT([backend_topic_dictionary["node_sync_backend_gateway"], backend_topic_dictionary["set_actuator"],
-                    backend_topic_dictionary["scan_device"] ])
+set_actuator = "farm/set_actuator"
+scan_device = "farm/node/scan"
+add_device = "farm/node/add"
+delete_device = "farm/node/delete"
+new_node_topic = "farm/node/new"
+keep_alive = "farm/monitor/alive"
+topic_list = [set_actuator, scan_device, add_device, delete_device, new_node_topic, keep_alive]
+client = ClientMQTT(topic_list)
 
 broker = os.environ.get('SERVER_BROKER')
 port = 1883
@@ -21,7 +29,7 @@ client.loop_start()
 
 def CheckScanDeviceToGateWay(client: ClientMQTT, data: dict):
     message_send = json.dumps(data)
-    result = client.publish(backend_topic_dictionary["scan_device"], message_send)
+    result = client.publish(scan_device, message_send)
     status = result[0]
 
     if status == 0:
@@ -32,7 +40,7 @@ def CheckScanDeviceToGateWay(client: ClientMQTT, data: dict):
     current_time = int((datetime.datetime.now()).timestamp())
 
     while True:
-        if int((datetime.datetime.now()).timestamp()) - current_time > 10:
+        if int((datetime.datetime.now()).timestamp()) - current_time > 20:
             return False
         
         message_receive = client.message_arrive()
@@ -42,14 +50,14 @@ def CheckScanDeviceToGateWay(client: ClientMQTT, data: dict):
 
             if data_receive["operator"] == "scan_device_ack":
 
-                if data_receive["status"] == "1":
+                if data_receive["status"] == 1:
                     return True
                 else:
                     return False
 
 def ScanDeviceToGateWay(client: ClientMQTT):
 
-    client = ClientMQTT([backend_topic_dictionary["scan_device"]],)
+    client = ClientMQTT([scan_device])
     client.connect(broker, port)
     client.loop_start()
 
@@ -82,46 +90,49 @@ def ScanDeviceToGateWay(client: ClientMQTT):
 
             if data_receive["operator"] == "scan_result":
 
-                if data_receive["status"] == "1":
-                    
-                    try:
-                        connect_to_database = psycopg2.connect(
-                            database = os.environ.get('POSTGRES_DB'),
-                            user = os.environ.get('POSTGRES_USER'),
-                            password = os.environ.get('POSTGRES_PASSWORD'),
-                            host = os.environ.get('HOST_NAME'),
-                            port = "5432",
-                        )
-                        print("Successfully to connect database in function ScanDeviceToGateWay")
-                    except psycopg2.OperationalError as e:
-                        connect_to_database = None
-                        print(e)
+                if data_receive["status"] == 1:
+                    data_node = ScanDevice.objects.filter(uuid = data_receive["info"]["dev_info"]["uuid"]).first()
+                    if(data_node is None):
+                        try:
+                            connect_to_database = psycopg2.connect(
+                                database = os.environ.get('POSTGRES_DB'),
+                                user = os.environ.get('POSTGRES_USER'),
+                                password = os.environ.get('POSTGRES_PASSWORD'),
+                                host = os.environ.get('HOST_NAME'),
+                                port = "5432",
+                            )
+                            print("Successfully to connect database in function ScanDeviceToGateWay")
+                        except psycopg2.OperationalError as e:
+                            connect_to_database = None
+                            print(e)
 
-                    connect_to_database.autocommit = True
-                    cursor = connect_to_database.cursor()
-                    query = f"""INSERT INTO api_scandevice (room_id, uuid, device_name, mac, address_type, oob_info, adv_type, bearer_type, rssi)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-                    dict_key = [
-                        "uuid",
-                        "device_name",
-                        "mac",
-                        "address_type",
-                        "oob_info",
-                        "adv_type",
-                        "bearer_type",
-                        "rssi",
-                    ]
-                    record = (data_receive["info"]["room_id"],)
-                    for i in dict_key:
-                        if i in data_receive["info"]["dev_info"]:
-                            record = record + (data_receive["info"]["dev_info"][i], )
-                        else:
-                            record = record + (-1, )
-                    print(record)
-                    cursor.execute(query, record)
-                    print("Successfully insert ScanDevice to PostgreSQL")
-                    cursor.close()
-                    connect_to_database.close()
+                        connect_to_database.autocommit = True
+                        cursor = connect_to_database.cursor()
+                        query = f"""INSERT INTO api_scandevice (room_id, uuid, device_name, mac, address_type, oob_info, adv_type, bearer_type, rssi)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                        dict_key = [
+                            "uuid",
+                            "device_name",
+                            "mac",
+                            "address_type",
+                            "oob_info",
+                            "adv_type",
+                            "bearer_type",
+                            "rssi",
+                        ]
+                        record = (data_receive["info"]["room_id"],)
+                        for i in dict_key:
+                            if i in data_receive["info"]["dev_info"]:
+                                record = record + (data_receive["info"]["dev_info"][i], )
+                            else:
+                                record = record + (-1, )
+                        print(record)
+                        cursor.execute(query, record)
+                        print("Successfully insert ScanDevice to PostgreSQL")
+                        cursor.close()
+                        connect_to_database.close()
+                    else:
+                        print("Data exist in database!!!")
                 else:
                     return False
     print("Time out scan !!!")
@@ -129,7 +140,7 @@ def ScanDeviceToGateWay(client: ClientMQTT):
 def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
 
     action = 1 if command == "add" else 0
-    topic = backend_topic_dictionary["node_sync_backend_gateway"]
+    topic = [add_device, new_node_topic]
 
     while NodeConfigurationBuffer.objects.filter(action = action).exists():
 
@@ -139,7 +150,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
         if action ==1 :
             data = {
                     "operator": "add_node",
-                    "status": "1" ,
+                    "status": 1 ,
                     "info": {
                         "room_id":  latest_data_in_buffer.room_id,
                         "protocol": "ble_mesh",
@@ -158,7 +169,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
         else:
             return None
         message_send = json.dumps(data)
-        result = client.publish(topic, message_send)
+        result = client.publish(topic[0], message_send)
         status = result[0]
 
         if status == 0:
@@ -170,6 +181,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
         check_status = True
         while True:
             if int((datetime.datetime.now()).timestamp()) - current_time > 20:
+                print("Error")
                 print("Step 1: Successfully Delete Buffer and Node in Function SendNodeToGatewayBleMesh")
                 latest_data_in_buffer.delete()
                 latest_data_in_node_registration.delete()
@@ -183,7 +195,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                 print(data_receive)
                 if data_receive["operator"] == "add_node_ack":
 
-                    if data_receive["status"] == "1":
+                    if data_receive["status"] == 1:
                         break
                     else:
                         print("Step 1: Successfully Delete Buffer and Node in Function SendNodeToGatewayBleMesh")
@@ -207,7 +219,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
 
                     if data_receive["operator"] == "new_node_info":
 
-                        if data_receive["status"] == "1":
+                        if data_receive["status"] == 1:
                             latest_data_in_node_registration.function = data_receive["info"]["dev_info"]["function"]
                             latest_data_in_node_registration.unicast = data_receive["info"]["dev_info"]["unicast"]
                             latest_data_in_node_registration.status = "sync"
@@ -217,7 +229,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                             data_scan_device.delete()
                             data_response = {
                                 "operation": "new_node_info_ack",
-                                "status": "1",
+                                "status": 1,
                                 "info": {
                                     "room_id": latest_data_in_buffer.room_id,
                                     "protocol": "ble_mesh",
@@ -252,7 +264,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
 
 def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
     action = 0 if command == "delete" else 0
-    topic = backend_topic_dictionary["node_sync_backend_gateway"]
+    topic = [delete_device]
 
     while NodeConfigurationBuffer.objects.filter(action = action).exists():
 
@@ -262,7 +274,7 @@ def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
         if action == 0 :
             data = {
                     "operator": "delete_node",
-                    "status": "1",
+                    "status": 1,
                     "info": {
                         "room_id": latest_data_in_buffer.room_id,
                         "protocol": "ble_mesh",
@@ -277,7 +289,7 @@ def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
             return None
 
         message_send = json.dumps(data)
-        result = client.publish(topic, message_send)
+        result = client.publish(topic[0], message_send)
         status = result[0]
 
         if status == 0:
@@ -300,9 +312,10 @@ def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
 
                 if data_receive["operator"] == "delete_node_ack":
 
-                    if data_receive["status"] == "1":
+                    if data_receive["status"] == 1:
                         print("Successfully Delete Node")
                         latest_data_in_buffer.delete()
+                        latest_data_in_node_registration.delete()
                         break
                     else:
                         print("Successfully Delete Buffer and Update node in Function SendNodeToGatewayBleMesh")
@@ -310,12 +323,11 @@ def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                         latest_data_in_node_registration.save()
                         break
 
-
 def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
 
     action = 1 if command == "add" else 0
     result = 0
-    topic = backend_topic_dictionary["node_sync_backend_gateway"]
+    topic = "farm/sync_node"
 
     while NodeConfigurationBuffer.objects.filter(action = action).exists():
 
@@ -387,7 +399,7 @@ def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
 
                     if message_buffer["operator"] == "server_add_ack":
 
-                        if message_buffer["status"] == "1":
+                        if message_buffer["status"] == 1:
 
                             if message_buffer["info"]["mac"] == str(latest_data_in_node_registration.mac):
                                 print("SUCCESSFULLY")
@@ -422,10 +434,10 @@ def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
                                         
                                         if message_buffer["operator"] == "server_add_ack":
 
-                                            if message_buffer["status"] == "2":
+                                            if message_buffer["status"] == 2:
                                                 print("Finish Processing")
                                                 return result
-                                            elif message_buffer["status"] == "1":
+                                            elif message_buffer["status"] == 1:
                                                 pass
                                             else:
                                                 latest_data_in_node_registration.delete()
@@ -437,7 +449,7 @@ def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
 
                             else:
                                 print("MAC WRONG, finish deleting add data in registration and buffer")
-                                message_buffer["status"] = "0"
+                                message_buffer["status"] = 0
                                 message_buffer["info"]["mac"] = "Not Match"
                                 result = client.publish(topic, json.dumps(message_buffer))
                                 latest_data_in_node_registration.delete()
@@ -456,7 +468,7 @@ def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
 
                     if message_buffer["operator"] == "server_delete_ack":
 
-                        if message_buffer["status"] == "1":
+                        if message_buffer["status"] == 1:
                             print("SUCCESSFULLY")
                             latest_data_in_buffer.delete()
                             result = 1
@@ -506,7 +518,7 @@ def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
     else:
         raise Exception("Can't publish data to mqtt")
     
-    new_data["info"]["status"] = "0"
+    new_data["info"]["status"] = 0
     curent_time = int((datetime.datetime.now()).timestamp())
 
     while True:
@@ -521,8 +533,8 @@ def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
 
             if data_receive["operator"] == "server_control_ack":
 
-                if data_receive["status"] == "1":
-                    new_data["info"]["status"] = "1"
+                if data_receive["status"] == 1:
+                    new_data["info"]["status"] = 1
                     break
 
     return new_data

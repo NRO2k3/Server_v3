@@ -165,15 +165,15 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
     const handleNext = () => {
         let flag = 1;
         if(activeStep === 0 )
-        {
+        {   console.log(dataNodeSetting)
             for(const prop in dataNodeSetting)
             {
-                if(dataNodeSetting[prop] === null)
-                {   
-                    alert(`You have to fill in ${name_lookup[prop]}!`);
-                    flag = 0;
-                    break;
-                }
+                // if(dataNodeSetting[prop] === null)
+                // {   
+                //     alert(`You have to fill in ${name_lookup[prop]}!`);
+                //     flag = 0;
+                //     break;
+                // }
                 
                 if(prop === "x_axis")
                 {

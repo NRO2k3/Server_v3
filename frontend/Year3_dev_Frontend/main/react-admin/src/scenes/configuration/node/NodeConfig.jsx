@@ -25,6 +25,7 @@ import { TableContainer } from "@mui/material";
 import verifyAccessToken from '../../../function/verifyAccessToken';
 import verifyRefreshToken from '../../../function/verifyRefreshToken';
 import ScanDevice from './ScanDevice';
+import Options from '../../../components/OptionsRoomMap/Options';
 
 export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     
@@ -86,7 +87,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
             }
             const body = JSON.stringify({
                 "operator": "scan_device",
-                "status": "1",
+                "status": 1,
                 "info": {
                     "room_id": roomIdForNodeConfig,
                     "protocol": "ble_mesh"
@@ -129,6 +130,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     };
 
     useEffect(()=>{
+        verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         const timer = setInterval(() => {
             verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         }, 10000);
@@ -168,7 +170,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             roomSize={roomSize}
                 /> */}
                 <Grid container>
-                    <Grid item xs = {6}>
+                    <Grid item xs = {5}>
                         <TableContainer sx={{ maxWidth: "90%", overflowX: "auto", backgroundColor: "white"}}>
                             <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                             <Table size="small">
@@ -233,16 +235,20 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
 
                         </TableContainer>
                     </Grid>
-                    <Grid item xs = {6}>
-                        <RoomMap
+                    <Grid item xs = {7}>
+                        {/* <RoomMap
                             room_id={roomIdForNodeConfig} callbackSetSignIn={callbackSetSignIn} backend_host={backend_host}
-                        />
+                        /> */}
+                        <div>
+                            <Options room_id={roomIdForNodeConfig} callbackSetSignIn={callbackSetSignIn}/>
+                        </div>
                         <Button
                             sx={{
                                 backgroundColor: "#2319b4",
                                 fontSize: "20px",
                                 fontWeight: "bold",
                                 padding: "5px 12px",
+                                margin: "5px",
                                 "&:hover": { backgroundColor: "#6d65ea" }
                                 }}
                             variant="contained"

@@ -103,7 +103,7 @@ export default function ScanDevice({roomIdForNodeConfig}) {
         }
         const body = JSON.stringify({
           "operator": "add_node",
-          "status": "1",
+          "status": 1,
           "info": {
               "room_id": roomIdForNodeConfig,
               "protocol": "ble_mesh",
