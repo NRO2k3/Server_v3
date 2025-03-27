@@ -2,15 +2,11 @@ import * as THREE from 'three';
 import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { Suspense, useRef, useLayoutEffect, useState } from 'react';
 import { MapControls, Html } from '@react-three/drei';
+import SensorsIcon from '@mui/icons-material/Sensors';
+import AirIcon from '@mui/icons-material/Air';
 import './styles.css';
 
-const points = [
-  { x: -0.5, y: 0.3, color: 'red' },
-  { x: 0.2, y: -0.4, color: 'blue' },
-  { x: 0.6, y: 0.1, color: 'green' }
-];
-
-function ImagePlane({ url, setClickPos }) {
+function ImagePlane({ url, setClickPos}) {
   const texture = useLoader(THREE.TextureLoader, url);
   const ref = useRef();
   const { size, camera } = useThree();
@@ -19,9 +15,7 @@ function ImagePlane({ url, setClickPos }) {
     if (ref.current && texture.image) {
       const { width, height } = texture.image;
       const aspect = width / height;
-
       ref.current.scale.set(aspect, 1.5, 2);
-
       const screenAspect = size.width / size.height;
       camera.zoom = screenAspect > aspect ? size.height / 2 : size.width / (2 * aspect);
       camera.updateProjectionMatrix();
@@ -36,22 +30,38 @@ function ImagePlane({ url, setClickPos }) {
   );
 }
 
-function Point({ x, y, color, setClickPos }) {
-  const [pointColor, setPointColor] = useState(color); // Lưu trạng thái màu sắc
-
+function Point({ id, x, y, type }) {
+  const [clicked, setClicked] = useState(false);
   return (
-    <mesh position={[x, y, 0.1]} onPointerDown={(e) => {
-      e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
-      setClickPos({ x, y });
-      setPointColor("black"); // Cập nhật màu mới
-    }}>
-      <circleGeometry args={[0.05, 32]} /> {/* Giảm kích thước */}
-      <meshBasicMaterial color={pointColor} /> {/* Dùng state để đổi màu */}
-    </mesh>
+    <Html position={[x, y, 0.2]} center>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          setClicked(!clicked);
+        }}
+        style={{
+          backgroundColor: type === "sensor" ? "white" : "aqua",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: clicked ? "52px" : "40px",
+          height: clicked ? "52px" : "40px",
+          cursor: "pointer",
+          border: "2px solid black",
+          transition: "transform 0.2s, width 0.2s, height 0.2s",
+          transform: clicked ? "scale(1.3)" : "scale(1)",
+        }}
+      >
+        {type === "sensor" ? (
+          <SensorsIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+        ) : (
+          <AirIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+        )}
+      </div>
+    </Html>
   );
 }
-
-
 
 function ClickCoordinates({ clickPos }) {
   return clickPos ? (
@@ -61,19 +71,22 @@ function ClickCoordinates({ clickPos }) {
   ) : null;
 }
 
-function RoomMap2D({url}) {
+function RoomMap2D({ url, configurationNodeAll }) {
   const [clickPos, setClickPos] = useState(null);
-
+  console.log(configurationNodeAll)
+  const points = configurationNodeAll.map((point) => ({
+    id : point.id, x: point.x_axis, y: point.y_axis, type: point.function
+  }))
   return (
-    <Canvas orthographic camera={{position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100}}>
+    <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
       <Suspense fallback={null}>
-        <ImagePlane url = {url} setClickPos={setClickPos} />
-        {points.map((point, index) => (
-          <Point key={index} {...point} setClickPos={setClickPos} />
+        <ImagePlane url={url} setClickPos={setClickPos}/>
+        {points.map((point) => (
+          <Point key={point.id} {...point}/>
         ))}
       </Suspense>
       <ClickCoordinates clickPos={clickPos} />
-      <MapControls enableRotate={false}/>
+      <MapControls enableRotate={false} screenSpacePanning={true} panSpeed={2} />
     </Canvas>
   );
 }

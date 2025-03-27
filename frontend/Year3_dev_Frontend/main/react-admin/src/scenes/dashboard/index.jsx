@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Energy from "../../components/AqiRef/Energy2";
@@ -14,6 +14,8 @@ import Actuator from "../../components/Actuator/Actuator";
 import EnergyChart from "../../components/EnergyChart/EnergyChart2";
 import { Border } from "victory";
 import Options from "../../components/OptionsRoomMap/Options";
+import verify_and_get_data from "../../function/fetchData";
+
 
 const Dashboard = () => {
     const backend_host = host;
@@ -28,7 +30,45 @@ const Dashboard = () => {
     const [optionChartData, setOptionChartData] = useState("now")
     const apiInformationTag = `http://${backend_host}/api/room/information_tag?room_id=${room_id}`;
     const [actuatorInfoOfRoom, setActuatorInfoOfRoom] = useState([]);
-    
+    const [configurationNodeAll, setConfigurationNodeAll] = useState([]);
+    const api = `http://${host}/api/configuration_node?room_id=${room_id}`
+    const getConfigurationNodeAllData = async (url, access_token) => 
+    {
+
+        const headers =
+        {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${access_token}`,
+        }
+        const option_fetch =
+        {
+            "method": "GET",
+            "headers": headers,
+            "body": null,
+        }
+        const response = await fetch(url, option_fetch);
+
+        const data = await response.json()
+        if(data)
+        {
+            if(response.status === 200)
+            {
+                setConfigurationNodeAll(data);
+            }
+        }
+        else
+        {
+            alert("Some error happened, try to reload page!");
+        }
+    }
+
+    useEffect(()=>{
+        verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
+        const timer = setInterval(() => {
+            verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
+        }, 10000);
+        return () => clearInterval(timer);
+    },[])
     return (
     <>
     <Box 
@@ -108,7 +148,7 @@ const Dashboard = () => {
                         alignItems="center"
                         justify="center"
                     >
-                        <Options room_id={room_id} callbackSetSignIn={callbackSetSignIn}/>
+                        <Options room_id={room_id} callbackSetSignIn={callbackSetSignIn} configurationNodeAll={configurationNodeAll}/>
                     </Grid>
                 </Grid>
 
@@ -171,7 +211,7 @@ const Dashboard = () => {
                     callbackSetSignIn={callbackSetSignIn}
                 />   */}
             </Container>
-    </Box>
+        </Box>
     </>
     );
 }

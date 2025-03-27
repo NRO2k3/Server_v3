@@ -31,9 +31,9 @@ class RegistrationNode(models.Model):
                                 db_column = "room_id",
                                 )
     node_id = models.BigIntegerField(null = True, unique = True, db_column = "node_id",)
-    x_axis = models.IntegerField(default = 1, db_column = "x_axis",)
-    y_axis = models.IntegerField(default = 1, db_column = "y_axis",)
-    z_axis = models.IntegerField(default = 1, db_column = "z_axis",)
+    x_axis = models.FloatField(default = 1, db_column = "x_axis",)
+    y_axis = models.FloatField(default = 1, db_column = "y_axis",)
+    z_axis = models.FloatField(default = 1, db_column = "z_axis",)
     function = models.TextField(default = "None", db_column = "function",)
     mac = models.TextField(null = True, db_column = "mac",)
     uuid = models.TextField(null = True, unique = True, db_column = "uuid",)

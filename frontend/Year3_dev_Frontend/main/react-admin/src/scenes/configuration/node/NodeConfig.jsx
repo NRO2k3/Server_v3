@@ -26,6 +26,7 @@ import verifyAccessToken from '../../../function/verifyAccessToken';
 import verifyRefreshToken from '../../../function/verifyRefreshToken';
 import ScanDevice from './ScanDevice';
 import Options from '../../../components/OptionsRoomMap/Options';
+import { Box} from "@mui/material";
 
 export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     
@@ -145,7 +146,9 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
         isLoadingNodeConfig === true ?
             <h1>Loading ...</h1>
             :
-            <Container sx={{ p: 0, m: 0, width: "100%" }} maxWidth="xl" >
+            <Container sx={{ p: 0, m: 0, width: "100vw" }}
+                        maxWidth={false}
+                        disableGutters>
                 <Button
                     startIcon={<ArrowBackIcon />}
                     sx={{
@@ -170,8 +173,8 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             roomSize={roomSize}
                 /> */}
                 <Grid container>
-                    <Grid item xs = {5}>
-                        <TableContainer sx={{ maxWidth: "90%", overflowX: "auto", backgroundColor: "white"}}>
+                    <Grid item xs = {4.5}>
+                        <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white"}}>
                             <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                             <Table size="small">
                                 <TableHead>
@@ -235,28 +238,30 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
 
                         </TableContainer>
                     </Grid>
-                    <Grid item xs = {7}>
-                        {/* <RoomMap
-                            room_id={roomIdForNodeConfig} callbackSetSignIn={callbackSetSignIn} backend_host={backend_host}
-                        /> */}
-                        <div>
-                            <Options room_id={roomIdForNodeConfig} callbackSetSignIn={callbackSetSignIn}/>
-                        </div>
-                        <Button
-                            sx={{
-                                backgroundColor: "#2319b4",
-                                fontSize: "20px",
-                                fontWeight: "bold",
-                                padding: "5px 12px",
-                                margin: "5px",
-                                "&:hover": { backgroundColor: "#6d65ea" }
-                                }}
-                            variant="contained"
+                    <Grid item xs={7.5}>
 
-                            onClick={()=>{handleButtonClick(`http://${host}/api/scan_device`)}}
-                        >
-                            SCAN DEVICE
-                        </Button>
+                        <Grid Gird sx={{ height: "800px" }}>
+                            <Options room_id={roomIdForNodeConfig}
+                            callbackSetSignIn={callbackSetSignIn}
+                            configurationNodeAll={configurationNodeAll}/>
+                        </Grid>
+                        <Grid>
+                            <Button
+                                sx={{
+                                    backgroundColor: "#2319b4",
+                                    fontSize: "20px",
+                                    fontWeight: "bold",
+                                    padding: "5px 12px",
+                                    margin: "5px",
+                                    "&:hover": { backgroundColor: "#6d65ea" }
+                                    }}
+                                variant="contained"
+
+                                onClick={()=>{handleButtonClick(`http://${host}/api/scan_device`)}}
+                            >
+                                SCAN DEVICE
+                            </Button>
+                        </Grid>
                         <ScanDevice roomIdForNodeConfig={roomIdForNodeConfig}/>
                     </Grid>
                 </Grid>

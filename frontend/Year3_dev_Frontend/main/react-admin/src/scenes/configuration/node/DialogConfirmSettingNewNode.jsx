@@ -41,11 +41,16 @@ export default function DialogConfirmSettingNewNode({dataNodeSetting, setDataNod
             id="x_axis"
             name="x_axis"
             label="Position X"
+            inputProps={{ step: "any" }}
             fullWidth
             autoComplete="x_axis"
             variant="standard"
             value={dataNodeSetting.x_axis}
-            onInput={(e)=>{e.target.value = e.target.value.replace(/[^0-9]/g, '')}}
+            onInput={(e) => {
+            e.target.value = e.target.value.replace(/[^0-9.-]/g, '')  // Cho phép số, dấu `.` và `-`
+                                  .replace(/(?!^)-/g, '')  // Chỉ cho phép dấu `-` ở đầu
+                                  .replace(/(\..*)\./g, '$1');  // Chỉ cho phép một dấu `.`
+          }} 
             onChange={(e)=>setDataNodeSetting({...dataNodeSetting, x_axis: e.target.value})}
           />
         </Grid>
@@ -55,12 +60,17 @@ export default function DialogConfirmSettingNewNode({dataNodeSetting, setDataNod
             id="y_axis"
             name="y_axis"
             label="Position Y"
+            inputProps={{ step: "any" }}
             fullWidth
             autoComplete="y_axis"
             variant="standard"
             value={dataNodeSetting.y_axis}
-            onInput={(e)=>{e.target.value = e.target.value.replace(/[^0-9]/g, '')}}
-            onChange={(e)=>setDataNodeSetting({...dataNodeSetting, y_axis: e.target.value})}
+            onInput={(e) => {
+            e.target.value = e.target.value.replace(/[^0-9.-]/g, '')  // Cho phép số, dấu `.` và `-`
+                                  .replace(/(?!^)-/g, '')  // Chỉ cho phép dấu `-` ở đầu
+                                  .replace(/(\..*)\./g, '$1');  // Chỉ cho phép một dấu `.`
+          }}
+          onChange={(e)=>setDataNodeSetting({...dataNodeSetting, y_axis: e.target.value})}
           />
         </Grid>
         <Grid item xs={12} sm={12}>

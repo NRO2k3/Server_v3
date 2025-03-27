@@ -31,6 +31,7 @@ const DialogConfirmSettingNewNodeConfirm = ({dataNodeSetting}) => {
                     id="x_axis"
                     name="x_axis"
                     label="Position X"
+                    inputProps={{ step: "any" }}
                     fullWidth
                     autoComplete="x_axis"
                     variant="standard"
@@ -46,6 +47,7 @@ const DialogConfirmSettingNewNodeConfirm = ({dataNodeSetting}) => {
                     id="y_axis"
                     name="y_axis"
                     label="Position Y"
+                    inputProps={{ step: "any" }}
                     fullWidth
                     autoComplete="y_axis"
                     variant="standard"
