@@ -153,13 +153,13 @@ const InformationTag = ({url, callbackSetSignIn, time_delay, room_id, setActuato
 
             newInfoData["time"] = parseInt(data["time"]);
             getInfoData(newInfoData);
-            console.log(newInfoData);
+            // console.log(newInfoData);
             let newNodeData = {};
             newNodeData["sensor"] = data["node_info"]["sensor"];
             newNodeData["actuator"] = data["node_info"]["actuator"];
             setActuatorInfoOfRoom(newNodeData["actuator"]);
-            console.log("THIS IS FROM INFORMATION TAG");
-            console.log(newNodeData["actuator"]);
+            // console.log("THIS IS FROM INFORMATION TAG");
+            // console.log(newNodeData["actuator"]);
             getNodeData(newNodeData);
             setIsLoading(false);
         }

@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 export default function Node({node, imageWidth, imageHeight})
 {
     const description = node["function"];
-    console.log(node);
+    // console.log(node);
     const [popUp, setPopUp] = useState(false);
     const { node_left, node_above } = node;
 

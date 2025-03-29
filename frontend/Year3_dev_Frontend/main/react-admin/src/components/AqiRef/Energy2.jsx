@@ -245,7 +245,7 @@ const Energy = ({room_id, callbackSetSignIn, time_delay, backend_host}) =>{
                                         <Typography variant='h5'>{define_energy_data[value]['name']}</Typography>
                                     </Grid>
                                     <Grid item>
-                                        <Typography variant='h2' fontWeight='bold'>
+                                        <Typography variant='h3' fontWeight='bold'>
                                             {((temp) => {
                                                 if (energyData[value] == 'NULL' || index == 4) temp = energyData[value];
                                                 else temp = `${energyData[value]} ${define_energy_data[value]['unit']}`

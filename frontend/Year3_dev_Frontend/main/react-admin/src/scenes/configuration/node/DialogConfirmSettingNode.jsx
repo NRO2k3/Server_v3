@@ -234,6 +234,13 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            sx={{
+                "& .MuiDialog-container": {
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                },
+            }}
+        
         >
             <DialogTitle id="alert-dialog-title">
                 <Box

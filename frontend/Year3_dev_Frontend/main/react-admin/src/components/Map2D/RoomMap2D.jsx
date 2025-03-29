@@ -24,19 +24,20 @@ function ImagePlane({ url, setClickPos}) {
 
   return (
     <mesh ref={ref} onClick={(e) => setClickPos({ x: e.point.x, y: e.point.y })}>
-      <planeGeometry args={[1, 1]} />
+      <planeGeometry args={[1.5, 1.5]} />
       <meshBasicMaterial map={texture} toneMapped={false} />
     </mesh>
   );
 }
 
-function Point({ id, x, y, type }) {
+function Point({ id, x, y, type, toggleNode}) {
   const [clicked, setClicked] = useState(false);
   return (
     <Html position={[x, y, 0.2]} center>
       <div
         onClick={(e) => {
           e.stopPropagation();
+          toggleNode(id, type);
           setClicked(!clicked);
         }}
         style={{
@@ -58,6 +59,23 @@ function Point({ id, x, y, type }) {
         ) : (
           <AirIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
         )}
+        <span style ={
+          {
+            position: 'absolute',
+            top: '-10px',
+            right: '0px',
+            backgroundColor: 'red',
+            color: 'white',
+            borderRadius: '50%',
+            width: '18px',
+            height: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '12px',
+          }
+        }
+        >{id}</span>
       </div>
     </Html>
   );
@@ -71,18 +89,33 @@ function ClickCoordinates({ clickPos }) {
   ) : null;
 }
 
-function RoomMap2D({ url, configurationNodeAll }) {
+function RoomMap2D({ url, configurationNodeAll, setSeparate, setListNode}) {
   const [clickPos, setClickPos] = useState(null);
-  console.log(configurationNodeAll)
+  const [selectedNodes, setSelectedNodes] = useState([]);
+
+  const toggleNode = (id, type) => {
+    setSelectedNodes((prevData) =>{
+      const exists = prevData.some((node) => node.id === id);
+      const data = exists ? prevData.filter((node) => node.id !== id) : [...prevData, {id, type}]
+      setSeparate(data.length > 0)
+      setListNode(data)
+      return data
+    }
+    );
+  };
   const points = configurationNodeAll.map((point) => ({
-    id : point.id, x: point.x_axis, y: point.y_axis, type: point.function
+    id : point.node_id, x: point.x_axis, y: point.y_axis, type: point.function
   }))
+
   return (
     <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
       <Suspense fallback={null}>
         <ImagePlane url={url} setClickPos={setClickPos}/>
         {points.map((point) => (
-          <Point key={point.id} {...point}/>
+          <Point
+            key={point.id} {...point}
+            toggleNode={toggleNode}
+            />
         ))}
       </Suspense>
       <ClickCoordinates clickPos={clickPos} />

@@ -15,12 +15,12 @@ import EnergyChart from "../../components/EnergyChart/EnergyChart2";
 import { Border } from "victory";
 import Options from "../../components/OptionsRoomMap/Options";
 import verify_and_get_data from "../../function/fetchData";
-
+import DetailNode from "../../components/NodeInfo/DetailNode";
 
 const Dashboard = () => {
     const backend_host = host;
     const location = useLocation(); /*!< This is used to get the "state" component that is passed into <Link> */
-    console.log(location)
+    // console.log(location)
     const data_passed_from_landingpage = location.state;
     let room_id = data_passed_from_landingpage == null ? 1 : data_passed_from_landingpage.room_id
     const theme = useTheme();
@@ -32,6 +32,9 @@ const Dashboard = () => {
     const [actuatorInfoOfRoom, setActuatorInfoOfRoom] = useState([]);
     const [configurationNodeAll, setConfigurationNodeAll] = useState([]);
     const api = `http://${host}/api/configuration_node?room_id=${room_id}`
+    const [separate, setSeparate] = useState(false)
+    const [listNode, setListNode] = useState([])
+    console.log(listNode)
     const getConfigurationNodeAllData = async (url, access_token) => 
     {
 
@@ -117,7 +120,7 @@ const Dashboard = () => {
                                 justify="center"
                                 marginTop={2}
                             >
-                            <InformationTag 
+                            <InformationTag
                                 url={apiInformationTag} 
                                 callbackSetSignIn={callbackSetSignIn} 
                                 time_delay={10000}
@@ -143,13 +146,29 @@ const Dashboard = () => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={8.5} container
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={separate ? 5.5 : 8.5} container
                         direction="column"
                         alignItems="center"
                         justify="center"
                     >
-                        <Options room_id={room_id} callbackSetSignIn={callbackSetSignIn} configurationNodeAll={configurationNodeAll}/>
+                        <Options
+                            room_id={room_id}
+                            callbackSetSignIn={callbackSetSignIn}
+                            configurationNodeAll={configurationNodeAll}
+                            setSeparate = {setSeparate}
+                            setListNode = {setListNode}
+                        />
                     </Grid>
+
+                    {separate && (
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={3} container direction="column" alignItems="center" justify="center">
+                        <DetailNode
+                            room_id={room_id}
+                            callbackSetSignIn={callbackSetSignIn}
+                            listNode={listNode}
+                        />
+                    </Grid>
+                    )}
                 </Grid>
 
                 <Grid
@@ -206,10 +225,10 @@ const Dashboard = () => {
                         </Box>
                     </Grid>
                 </Grid>
-                {/* <Actuator 
-                    room_id={room_id} 
+                {/* <Actuator
+                    room_id={room_id}
                     callbackSetSignIn={callbackSetSignIn}
-                />   */}
+                /> */}
             </Container>
         </Box>
     </>

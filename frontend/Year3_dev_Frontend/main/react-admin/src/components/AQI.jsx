@@ -147,7 +147,7 @@ const AQI = ({room_id, callbackSetSignIn}) =>
             let new_data = {};
             new_data["time"] = 0;
             setAqi(new_data);   
-            console.log(`Error code ${response.status}: ${data["Response"]} `);
+            // console.log(`Error code ${response.status}: ${data["Response"]} `);
         }
     }
 

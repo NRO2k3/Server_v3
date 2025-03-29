@@ -12,19 +12,6 @@ import SetTemperature from "./SetTemperature";
 
 export default function Actuator({room_id, callbackSetSignIn})
 {
-
-
-    /*
-     *
-    actuatorInfoOfRoom has this form
-    {"sensor":[{"id":1,"node_id":1,"x_axis":2,"y_axis":17,"function":"sensor","mac":"BNM:OURT:AR","status":"sync","time":1,"room_id":1},
-            {"id":2,"node_id":2,"x_axis":13,"y_axis":6,"function":"sensor","mac":"BNM:OURT:TYY","status":"sync","time":1,"room_id":1}
-        ],
-        "actuator":[]} 
-
-        => just the value of key "actuator"
-     */
-    
     const [actuatorStatus, setActuatorStatus] = useState(null);
     const [actuatorInfoOfRoom, setActuatorInfoOfRoom] = useState(null);
     const theme = useTheme();
@@ -64,7 +51,7 @@ export default function Actuator({room_id, callbackSetSignIn})
         setIsLoading(false);
     }
 
-    const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host) => 
+    const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host) =>
     {
         const token = {access_token: null, refresh_token: null}
         // const backend_host = host;

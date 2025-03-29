@@ -5,7 +5,7 @@ import {host} from "../../App";
 import RoomMap from "../../components/RoomMap/RoomMap2";
 import RoomMap2D from "../Map2D/RoomMap2D";
 
-function Options({ room_id, callbackSetSignIn, configurationNodeAll}) {
+function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate, setListNode}) {
     const theme = useTheme();
     const [status, setStatus] = useState(true);
     const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room.png");
@@ -94,7 +94,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll}) {
 
             </Grid>
             {status ? (
-                <RoomMap2D url={image} configurationNodeAll={configurationNodeAll}/>
+                <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setSeparate={setSeparate} setListNode={setListNode}/>
             ) : (
                 <RoomMap
                     room_id={room_id}
