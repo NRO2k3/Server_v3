@@ -1,5 +1,4 @@
 import React from 'react'
-import { host } from '../../App'
 import { Grid, Typography } from '@mui/material'
 import { GiClick } from "react-icons/gi";
 import SensorInfo from './SensorInfo';
@@ -7,23 +6,21 @@ import ActuatorInfo from './ActuatorInfo';
 
 function DetailNode({room_id, callbackSetSignIn, listNode}) {
 
-  const actuator_exists = listNode.some((node) => node.type === "actuator")
-  const sensor_exists = listNode.some((node) => node.type === "sensor")
-  console.log(actuator_exists, sensor_exists)
-  const backend_host = host;
-//   useEffect(()=>{
-//     verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
-//     const timer = setInterval(() => {
-//         verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
-//     }, 10000);
-//     return () => clearInterval(timer);
-// },[])
+  const sensors = listNode.filter((node) => node.type === "sensor")
+  const actuators = listNode.filter((node) => node.type === "actuator")
+  const sensor_exists = sensors.length > 0
+  const actuator_exists = actuators.length > 0
+  console.log(sensors, actuators)
   return (
     <Grid container direction="column" spacing={2} style={{ height: "100%" }}>
 
       { sensor_exists ?
         <Grid item xs={6}>
-          <SensorInfo/>
+          <SensorInfo
+            room_id = {room_id}
+            callbackSetSignIn = {callbackSetSignIn}
+            sensors = {sensors}
+          />
         </Grid> :
           <Grid item xs={6}
           style={{

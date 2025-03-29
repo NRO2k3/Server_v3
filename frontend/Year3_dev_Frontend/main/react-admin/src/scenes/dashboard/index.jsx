@@ -35,7 +35,7 @@ const Dashboard = () => {
     const [separate, setSeparate] = useState(false)
     const [listNode, setListNode] = useState([])
     console.log(listNode)
-    const getConfigurationNodeAllData = async (url, access_token) => 
+    const getConfigurationNodeAllData = async (url, access_token) =>
     {
 
         const headers =
