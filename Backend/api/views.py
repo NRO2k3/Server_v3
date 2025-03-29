@@ -48,7 +48,7 @@ def SignUp(request, *args, **kwargs):
             serializer.save()
             return Response({"Response": "Register successful"}, status = status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     else:
         return Response(
             {"Response": "Request method not allowed!"}, status = status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -71,7 +71,7 @@ def ResetPassword(request, *args, **kwargs):
         send_mail(subject, message,settings.EMAIL_HOST_USER, recipient_list)
         return Response({"message":"New password is sent in email"})
 
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
 @authentication_classes([jwtauthentication.JWTAuthentication])
@@ -87,13 +87,13 @@ def ChangePassword(request, *args, **kwargs):
         user = request.user
 
         if not user.check_password(old_password):
-            return Response({"message":"Password old not match"},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"Password old not match"}, status= status.HTTP_400_BAD_REQUEST)
 
         user.set_password(new_password)
         user.save()
-        return Response({"message":"Password change successful"},status=status.HTTP_200_OK)
+        return Response({"message":"Password change successful"}, status= status.HTTP_200_OK)
 
-    return Response({"message":"Error, please fill in full ?"},status=status.HTTP_400_BAD_REQUEST)
+    return Response({"message":"Error, please fill in full ?"}, status= status.HTTP_400_BAD_REQUEST)
 
 class EmployeePermissionAPIView(mixins.ListModelMixin, mixins.CreateModelMixin,
                                 mixins.UpdateModelMixin, mixins.DestroyModelMixin,
@@ -191,7 +191,7 @@ def ConfigurationNodeWifi(request, *args, **kwargs):
                 t.start()
                 return Response({"Response": "Processing......."}, status = status.HTTP_200_OK)
             else:
-                return Response({"Errors": serializer_data_buffer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"Errors": serializer_data_buffer.errors}, status = status.HTTP_400_BAD_REQUEST)
         else:
                 return Response({"Errors": serializer_data.errors}, status = status.HTTP_400_BAD_REQUEST)
     
@@ -273,7 +273,7 @@ def GetAqiRef(request, *args, **kwargs):
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["GET"])
@@ -301,7 +301,7 @@ def GetRoomInformation(request, *args, **kwargs):
                 for i in parameter_key_list:
                     average_data_to_return[i] = -1
                     average_data_to_return["time"] = 0
-                return Response(average_data_to_return, status=status.HTTP_200_OK)
+                return Response(average_data_to_return, status = status.HTTP_200_OK)
             
             all_node_id = RegistrationNode.objects.filter(room_id = room_id, function = "sensor", status = "sync")
             all_node_id_serializer = RegistrationNodeSerializer(all_node_id, many = True)
@@ -389,15 +389,15 @@ def GetRoomInformation(request, *args, **kwargs):
                 "x_length": room_size_data[0]["x_length"],
                 "y_length": room_size_data[0]["y_length"],
             }
-            return Response(average_data_to_return, status=status.HTTP_200_OK)
+            return Response(average_data_to_return, status = status.HTTP_200_OK)
         else:
             return Response(
-                {"Response": "No content!"}, status=status.HTTP_204_NO_CONTENT
+                {"Response": "No content!"}, status = status.HTTP_204_NO_CONTENT
             )
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["GET"])
@@ -412,7 +412,7 @@ def GetEnergyData(request, *args, **kwargs):
             for key, value in data_energy_serializer.data.items()
             if key != "id" and key != "room_id"
         ]
-        return Response(data_energy_array, status=status.HTTP_200_OK,)
+        return Response(data_energy_array, status = status.HTTP_200_OK,)
     except:
         return Response(
             {"Response": "Error on server!"},
@@ -482,7 +482,7 @@ def GetEnergyDataChart(request, *args, **kwargs):
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["GET"])
@@ -611,7 +611,7 @@ def GetEnviromentData(request, *args, **kwargs):
             return_data = {}
             for i in parameter_key_list:
                 return_data[i] = []
-            return Response(return_data, status=status.HTTP_204_NO_CONTENT)
+            return Response(return_data, status = status.HTTP_204_NO_CONTENT)
 
         max_len_of_array_in_total_list = max([len(i) for i in total_list])
 
@@ -657,11 +657,11 @@ def GetEnviromentData(request, *args, **kwargs):
                         return_data[j].append(0)
                     buffer[j]["value"] = 0
                     buffer[j]["number"] = 0
-        return Response(return_data, status=status.HTTP_200_OK)
+        return Response(return_data, status = status.HTTP_200_OK)
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
     
 @api_view(["GET"])
@@ -783,18 +783,18 @@ def AQIdustpm2_5(request, *args, **kwargs):
                     "daily": 0,
                     "time": hourly_dust_data[-1]["time"],
                 },
-                status=200,
+                status = 200,
             )
         else:
             return Response(
                 {"Response": "No data available!"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["GET"])
@@ -807,24 +807,24 @@ def GetActuatorStatus(request, *args, **kwargs):
         if (RegistrationNode.objects.filter(room_id = room_id, node_id = node_id, status = "sync").count() == 0):
             return Response(
                 {"Response": "Actuator not available"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         if (RawActuatorMonitor.objects.filter(node_id = node_id, room_id = room_id).count()== 0):
             return Response(
                 {"Response": "No actutor status data"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
         status_record = RawActuatorMonitorSerializer(
             RawActuatorMonitor.objects.filter(node_id = node_id, room_id = room_id).order_by("-time").first()
         ).data
 
-        return Response({"Response": status_record}, status=status.HTTP_200_OK)
+        return Response({"Response": status_record}, status = status.HTTP_200_OK)
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["POST"])
@@ -840,7 +840,7 @@ def ScanDeviceGateWay(request, *args, **kwargs):
         if response == False:
             return Response(
             {"Response": response},
-            status=status.HTTP_400_BAD_REQUEST,
+            status = status.HTTP_400_BAD_REQUEST,
         )
 
         t = Thread(target = ScanDeviceToGateWay, args = (client,))
@@ -850,7 +850,7 @@ def ScanDeviceGateWay(request, *args, **kwargs):
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["GET"])
@@ -863,18 +863,18 @@ def GetAllScanDevice(request, *args, **kwargs):
         if (ScanDevice.objects.filter(room_id = room_id).count() == 0):
             return Response(
                 {"Response": "No data"},
-                status=status.HTTP_204_NO_CONTENT,
+                status = status.HTTP_204_NO_CONTENT,
             )
         
         data = ScanDeviceSerializer(ScanDevice.objects.filter(room_id = room_id), many = True).data
         return Response(
                 data,
-                status=status.HTTP_200_OK,
+                status = status.HTTP_200_OK,
             )
     except:
         return Response(
             {"Response": "Error on server!"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["DELETE"])
@@ -887,19 +887,19 @@ def DeleteScanDevice(request, *args, **kwargs):
         if (ScanDevice.objects.filter(id = node_id).count() == 0):
             return Response(
                 {"Response": "No data"},
-                status=status.HTTP_400_BAD_REQUEST,
+                status = status.HTTP_400_BAD_REQUEST,
             )
         
         data = ScanDevice.objects.filter(id = node_id)
         data.delete()
         return Response(
                 {"Response": "Delete Sucessfully"},
-                status=status.HTTP_200_OK,
+                status = status.HTTP_200_OK,
             )
     except Exception as e:
         return Response(
             {"Response": f"Error on server: {str(e)}"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
 @api_view(["POST", "DELETE"])
@@ -941,7 +941,7 @@ def ConfigurationNodeBleMesh(request, *args, **kwargs):
         except:
             return Response(
                 {"Response": "Error on server!"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         
     if request.method == "DELETE":
@@ -978,5 +978,49 @@ def ConfigurationNodeBleMesh(request, *args, **kwargs):
         except:
             return Response(
                 {"Response": "Error on server!"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+@api_view(["GET"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def GetRawDataAllSensor(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        all_sensor_node = RegistrationNode.objects.filter(room_id = room_id, function = "sensor")
+        raw_data_all = []
+        for node in all_sensor_node:
+            raw_data_node = RawSensorMonitor.objects.filter(room_id = room_id, node_id = node.node_id).order_by("-time").first()
+            if raw_data_node:
+                raw_data_node_serializer = RawSensorMonitorSerializer(raw_data_node)
+                raw_data_all.append(raw_data_node_serializer.data)
+            else:
+                raw_data_all.append(
+                    {
+                        "room_id": int(room_id),
+                        "node_id": node.node_id,
+                        "co2": 0,
+                        "temp": 0,
+                        "hum": 0,
+                        "light": 0,
+                        "dust": 0,
+                        "sound": 0,
+                        "red": 0,
+                        "green": 0,
+                        "blue": 0,
+                        "tvoc": 0,
+                        "motion": 0,
+                        "time": 0
+                    }
+                )
+
+        return Response(
+            raw_data_all,
+            status = status.HTTP_200_OK,
+        )
+    except:
+            return Response(
+                {"Response": "Error on server!"},
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
