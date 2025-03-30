@@ -337,7 +337,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                                         : `${infoData["dust"]["value"]} ${dict_of_enviroment_para_names['dust']['unit']}`}
                                     </Typography>
                                 </Grid>
-                                <Grid item textAlign="center">
+                                <Grid item textAlign="center" mt={5}>
                                     <Grid item>
                                         <LightModeIcon style={{ fontSize: '3rem' }} />
                                         <Typography textAlign='center' variant='h5'>Light</Typography>

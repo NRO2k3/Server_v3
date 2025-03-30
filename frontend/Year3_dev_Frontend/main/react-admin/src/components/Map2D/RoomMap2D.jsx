@@ -5,6 +5,31 @@ import { MapControls, Html } from '@react-three/drei';
 import SensorsIcon from '@mui/icons-material/Sensors';
 import AirIcon from '@mui/icons-material/Air';
 import './styles.css';
+import { host } from '../../App';
+import verifyAccessToken from '../../function/verifyAccessToken';
+import verifyRefreshToken from '../../function/verifyRefreshToken';
+
+const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => {
+  const token = { access_token: null, refresh_token: null };
+
+  if (localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null) {
+      token.access_token = localStorage.getItem("access");
+      token.refresh_token = localStorage.getItem("refresh");
+  } else {
+      throw new Error("There is no access token and refresh token ....");
+  }
+
+  if (await verifyAccessToken(backend_host, token)) {
+      return await fetch_data_function(url, token["access_token"]);
+  } else {
+      if (await verifyRefreshToken(backend_host, token)) {
+          return await fetch_data_function(url, token["access_token"]);
+      } else {
+          callbackSetSignIn(false);
+          return null;
+      }
+  }
+};
 
 function ImagePlane({ url, setClickPos}) {
   const texture = useLoader(THREE.TextureLoader, url);
@@ -30,15 +55,65 @@ function ImagePlane({ url, setClickPos}) {
   );
 }
 
-function Point({ id, x, y, type, toggleNode}) {
+function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn}) {
+  const backend_host = host
+  const api = `http://${backend_host}/api/employee_node`
   const [clicked, setClicked] = useState(false);
+  const ListNodeUserPermission = async (url, access_token)=>{
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${access_token}`,
+    }
+    const option_fetch =
+      {
+          "method": "GET",
+          "headers": headers,
+          "body": null,
+      }
+      const response = await fetch(url, option_fetch);
+
+      const data = await response.json()
+      if(data){
+          if(response.status === 200){
+            return data
+          }
+      }
+      else{
+          alert("Some error happened, try to reload page!");
+          return null
+      }
+  }
   return (
     <Html position={[x, y, 0.2]} center>
       <div
-        onClick={(e) => {
+        onClick={ async (e) => {
           e.stopPropagation();
-          toggleNode(id, type);
-          setClicked(!clicked);
+          let role_user = null
+          if(localStorage.getItem("role") !== null){
+            role_user = localStorage.getItem("role");
+          } else {
+            throw new Error("There is no role ....");
+          }
+          if(role_user !== '0'){
+            addSelectedNode(id, type);
+            setClicked(!clicked);
+          } else {
+            console.log("TH2")
+            const permission = await verify_and_get_data(ListNodeUserPermission, callbackSetSignIn, backend_host, api)
+            if(permission.length > 0){
+              console.log(permission)
+              console.log(permission.includes(id))
+              if(permission.includes(id)){
+                addSelectedNode(id, type);
+                setClicked(!clicked);
+              } else {
+                window.alert(`You don't have register node ${id} from admin`);
+              }
+            }else{
+              window.alert("You don't have register node from admin");
+              console.log("No data")
+            }
+          }
         }}
         style={{
           backgroundColor: type === "sensor" ? "white" : "aqua",
@@ -89,11 +164,11 @@ function ClickCoordinates({ clickPos }) {
   ) : null;
 }
 
-function RoomMap2D({ url, configurationNodeAll, setSeparate, setListNode}) {
+function RoomMap2D({ url, configurationNodeAll, setSeparate, setListNode, callbackSetSignIn}) {
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
 
-  const toggleNode = (id, type) => {
+  const addSelectedNode = (id, type) => {
     setSelectedNodes((prevData) =>{
       const exists = prevData.some((node) => node.id === id);
       const data = exists ? prevData.filter((node) => node.id !== id) : [...prevData, {id, type}]
@@ -114,7 +189,8 @@ function RoomMap2D({ url, configurationNodeAll, setSeparate, setListNode}) {
         {points.map((point) => (
           <Point
             key={point.id} {...point}
-            toggleNode={toggleNode}
+            addSelectedNode={addSelectedNode}
+            callbackSetSignIn={callbackSetSignIn}
             />
         ))}
       </Suspense>

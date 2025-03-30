@@ -1024,3 +1024,25 @@ def GetRawDataAllSensor(request, *args, **kwargs):
                 {"Response": "Error on server!"},
                 status = status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+@api_view(["GET"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def EmployeeNode(request, *args, **kwargs):
+    try:
+        user_id = request.user.id
+        print(user_id)
+        data = EmployeePermission.objects.filter(user_id = user_id)
+        data_response = []
+        if data.exists():
+            data_serializer = EmployeePermissionSerializer(data, many=True).data
+            for i in data_serializer:
+                data_response.append(i["node_id"])
+        return Response(
+            data_response, status = status.HTTP_200_OK)
+
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

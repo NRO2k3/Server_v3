@@ -49,11 +49,11 @@ function App() {
                             <Route path="/landing/dashboard" element={<Dashboard/>} />
                             <Route path="/landing" element={<Landing />} />
                             {
-                                localStorage.getItem("role").toString() === "1"
+                                localStorage.getItem("role").toString() === "2"
                                 &&
                                 <Route path="/configuration" element={<Configuration />} />
                             }
-                            <Route path="/weatherdata" element={<Weatherdata/>} />
+                            {/* <Route path="/weatherdata" element={<Weatherdata/>} /> */}
                         </Routes>
 
                         <Footer/>
@@ -67,9 +67,4 @@ function App() {
         </LocalizationProvider>
     );
 }
-// function App(){
-//     return<>
-//     <AqiRef/>
-//     </>
-// }
 export default App;

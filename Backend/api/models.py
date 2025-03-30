@@ -5,12 +5,6 @@ class User(AbstractUser):
 
     role = models.IntegerField(default = 0, null = False, db_column = "role",)
 
-class EmployeePermission(models.Model):
-
-    id = models.BigAutoField(primary_key = True, db_column = "id",)
-    user_id = models.IntegerField(null = False, db_column = "user_id",)
-    node_id = models.IntegerField(null = False, db_column = "node_id",)
-
 class Room(models.Model):
     
     id = models.BigAutoField(primary_key = True, db_column = "id",)
@@ -19,6 +13,12 @@ class Room(models.Model):
     x_length = models.IntegerField(null = True, db_column = "x_length",)
     y_length = models.IntegerField(null = True, db_column = "y_length",)
     information = models.TextField(null = True, db_column = "information",)
+
+class EmployeePermission(models.Model):
+
+    id = models.BigAutoField(primary_key = True, db_column = "id",)
+    user_id = models.IntegerField(null = False, db_column = "user_id",)
+    node_id = models.IntegerField(null = False, db_column = "node_id",)
 
 class RegistrationNode(models.Model):
 

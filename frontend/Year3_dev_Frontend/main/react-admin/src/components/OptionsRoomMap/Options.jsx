@@ -94,7 +94,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate
 
             </Grid>
             {status ? (
-                <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setSeparate={setSeparate} setListNode={setListNode}/>
+                <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setSeparate={setSeparate} setListNode={setListNode}
+                callbackSetSignIn = {callbackSetSignIn}/>
             ) : (
                 <RoomMap
                     room_id={room_id}

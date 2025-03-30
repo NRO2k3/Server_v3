@@ -14,6 +14,7 @@ urlpatterns=[
 
     path('employee_permission/<int:pk>', views.EmployeePermissionAPIView.as_view(), name = 'delete_update_employee'),
     path('employee_permission', views.EmployeePermissionAPIView.as_view(), name = 'list_post_employee'),
+    path('employee_node', views.EmployeeNode, name = 'employee_node'),
 
     path('configuration_room', views.RoomAPIView.as_view(), name = 'list_post_room'),
     path('configuration_room/<int:pk>', views.RoomAPIView.as_view(), name = 'delete_update_room'),

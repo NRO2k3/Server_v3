@@ -76,7 +76,7 @@ const Topbar = ({setIsSignin}) => {
 					paddingLeft="5%"
                 >
                 {
-                    localStorage.getItem("role").toString() === "1" 
+                    localStorage.getItem("role").toString() === "2" 
                     && 
 					<Link to="/configuration">
 						<IconButton 
