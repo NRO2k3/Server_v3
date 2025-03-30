@@ -35,7 +35,6 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     const api = `http://${host}/api/configuration_node?room_id=${roomIdForNodeConfig}`
     const [configurationNodeAll, setConfigurationNodeAll] = useState([]);
     const [isLoadingNodeConfig, setIsLoadingNodeConfig] = useState(true);
-    const [separate, setSeparate] = useState(false)
     const [listNode, setListNode] = useState([])
     const dict_function = {
         "sensor": "Sensor",
@@ -245,7 +244,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             <Options room_id={roomIdForNodeConfig}
                             callbackSetSignIn={callbackSetSignIn}
                             configurationNodeAll={configurationNodeAll}
-                            setSeparate = {setSeparate}
+                            
                             setListNode = {setListNode}
                             />
                         </Grid>

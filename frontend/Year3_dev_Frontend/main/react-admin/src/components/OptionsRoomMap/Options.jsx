@@ -5,7 +5,7 @@ import {host} from "../../App";
 import RoomMap from "../../components/RoomMap/RoomMap2";
 import RoomMap2D from "../Map2D/RoomMap2D";
 
-function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate, setListNode}) {
+function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode}) {
     const theme = useTheme();
     const [status, setStatus] = useState(true);
     const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room.png");
@@ -43,6 +43,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate
         >
             <Grid>
                 <Button sx={{
+                    width: "120px",
+                    height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -56,6 +58,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate
                     ROOM
                 </Button>
                 <Button sx={{
+                    width: "120px",
+                    height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -79,6 +83,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate
                 <label htmlFor="upload-button">
                     <Button component="span"
                         sx={{
+                            width: "120px",
+                            height: "60px",
                             backgroundColor: "white",
                             fontSize: "20px",
                             fontWeight: "bold",
@@ -94,7 +100,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setSeparate
 
             </Grid>
             {status ? (
-                <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setSeparate={setSeparate} setListNode={setListNode}
+                <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setListNode={setListNode}
                 callbackSetSignIn = {callbackSetSignIn}/>
             ) : (
                 <RoomMap

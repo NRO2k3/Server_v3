@@ -305,7 +305,7 @@ export default function Actuator({room_id, callbackSetSignIn})
                                             <Header title="Actuator Status:" fontSize="20px"/>
                                             <ActuatorStatus room_id={room_id} setActuatorStatus={setActuatorStatus} callbackSetSignIn={callbackSetSignIn}
                                                 node_id={e["node_id"]}
-                                                actuatorStatus={actuatorStatus}    
+                                                actuatorStatus={actuatorStatus}
                                             />
                                         </Box>
                                     </Box>

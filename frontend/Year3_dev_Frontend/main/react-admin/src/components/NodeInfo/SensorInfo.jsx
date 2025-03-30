@@ -1,7 +1,7 @@
 import { host } from "../../App"
 import { useEffect, useState } from "react";
 import verify_and_get_data from "../../function/fetchData";
-import { Grid, Typography, Box, Paper, useMediaQuery, useTheme} from "@mui/material";
+import { Grid, Typography, Paper, useMediaQuery, useTheme} from "@mui/material";
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 import Co2Icon from '@mui/icons-material/Co2';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
@@ -115,8 +115,8 @@ function SensorInfo({room_id, callbackSetSignIn, sensors}) {
   
   return (
     <Grid container item textAlign='center' paddingTop={preferMd ? 0 : 0.5} justifyContent='center'>
-        <Grid item container xs={12} sm={12} md={12} textAlign="center" justifyContent='center' my={0.25} >
-          <Typography variant="h3" sx={{fontWeight: "bold"}}> Data Average Sensor Node: </Typography>
+        <Grid item container xs={12} sm={12} md={12} textAlign="center" justifyContent='center' my={0.25} mb={3}>
+          <Typography variant="h3" sx={{fontWeight: "bold"}}> Average Data Sensor Node: </Typography>
           {sensors.map((node, index) => (
           <Typography variant="h3" key={index} sx={{ marginLeft: 1, fontWeight: "bold" }}>
             {node.id}

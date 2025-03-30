@@ -316,14 +316,12 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
                             fontSize: "14px",
                             fontWeight: "bold",
                             padding: "8px 18px",
-                            
                             }}
 
                             
                         variant="contained"
                         onClick={() => handleClickOpen()}
                     >
-                        {/* <DownloadOutlinedIcon sx={{ mr: "10px" }} /> */}
                         Turn On
                     </Button>
                     <Dialog

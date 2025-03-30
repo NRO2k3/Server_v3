@@ -44,7 +44,11 @@ function DetailNode({room_id, callbackSetSignIn, listNode}) {
 
       { actuator_exists ?
         <Grid item xs={6}>
-          <ActuatorInfo/>
+          <ActuatorInfo
+          room_id = {room_id}
+          callbackSetSignIn = {callbackSetSignIn}
+          actuators = {actuators}
+          />
         </Grid>:
           <Grid item xs={6}
           style={{

@@ -813,14 +813,14 @@ def GetActuatorStatus(request, *args, **kwargs):
         if (RawActuatorMonitor.objects.filter(node_id = node_id, room_id = room_id).count()== 0):
             return Response(
                 {"Response": "No actutor status data"},
-                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status = status.HTTP_400_BAD_REQUEST,
             )
 
         status_record = RawActuatorMonitorSerializer(
             RawActuatorMonitor.objects.filter(node_id = node_id, room_id = room_id).order_by("-time").first()
         ).data
 
-        return Response({"Response": status_record}, status = status.HTTP_200_OK)
+        return Response(status_record, status = status.HTTP_200_OK)
     except:
         return Response(
             {"Response": "Error on server!"},

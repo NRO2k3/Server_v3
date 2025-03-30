@@ -32,7 +32,6 @@ const Dashboard = () => {
     const [actuatorInfoOfRoom, setActuatorInfoOfRoom] = useState([]);
     const [configurationNodeAll, setConfigurationNodeAll] = useState([]);
     const api = `http://${host}/api/configuration_node?room_id=${room_id}`
-    const [separate, setSeparate] = useState(false)
     const [listNode, setListNode] = useState([])
     console.log(listNode)
     const getConfigurationNodeAllData = async (url, access_token) =>
@@ -69,7 +68,7 @@ const Dashboard = () => {
         verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         const timer = setInterval(() => {
             verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
-        }, 10000);
+        }, 20000);
         return () => clearInterval(timer);
     },[])
     return (
@@ -108,9 +107,9 @@ const Dashboard = () => {
                             >
                                 <AqiRef callbackSetSignIn={callbackSetSignIn} time_delay={60000}/>
                             </Box>
-                            <Box 
+                            <Box
                                 sx={{boxShadow: 0,
-                                    borderRadius: '5px', 
+                                    borderRadius: '5px',
                                     backgroundColor: theme.palette.background.paper}}
                                 width="100%" height="100%"
                                 display="flex"
@@ -121,9 +120,9 @@ const Dashboard = () => {
                                 marginTop={2}
                             >
                             <InformationTag
-                                url={apiInformationTag} 
-                                callbackSetSignIn={callbackSetSignIn} 
-                                time_delay={10000}
+                                url={apiInformationTag}
+                                callbackSetSignIn={callbackSetSignIn}
+                                time_delay={20000}
                                 room_id={room_id}
                                 setActuatorInfoOfRoom={setActuatorInfoOfRoom}
                             />
@@ -146,7 +145,7 @@ const Dashboard = () => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={separate ? 5.5 : 8.5} container
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={listNode.length > 0 ? 5.5 : 8.5} container
                         direction="column"
                         alignItems="center"
                         justify="center"
@@ -155,12 +154,11 @@ const Dashboard = () => {
                             room_id={room_id}
                             callbackSetSignIn={callbackSetSignIn}
                             configurationNodeAll={configurationNodeAll}
-                            setSeparate = {setSeparate}
                             setListNode = {setListNode}
                         />
                     </Grid>
 
-                    {separate && (
+                    {listNode.length > 0 && (
                     <Grid item xs={12} sm={12} md={12} lg={12} xl={3} container direction="column" alignItems="center" justify="center">
                         <DetailNode
                             room_id={room_id}
@@ -206,18 +204,18 @@ const Dashboard = () => {
                         >
                             {   // bo phan optionChartData
                                 optionChartData === "now" ?
-                                <Chart 
+                                <Chart
                                         room_id={room_id}
                                         callbackSetSignIn={callbackSetSignIn} 
-                                        timedelay={5000} 
+                                        timedelay={10000} 
                                         optionData={optionChartData}
                                         apiInformationTag={apiInformationTag}
                                 />
                                 :
-                                <Chart 
+                                <Chart
                                         room_id={room_id} 
                                         callbackSetSignIn={callbackSetSignIn} 
-                                        timedelay={5000} 
+                                        timedelay={10000} 
                                         optionData={optionChartData}
                                         apiInformationTag={apiInformationTag}
                                 />

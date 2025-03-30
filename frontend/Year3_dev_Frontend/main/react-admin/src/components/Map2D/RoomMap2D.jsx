@@ -164,7 +164,7 @@ function ClickCoordinates({ clickPos }) {
   ) : null;
 }
 
-function RoomMap2D({ url, configurationNodeAll, setSeparate, setListNode, callbackSetSignIn}) {
+function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn}) {
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
 
@@ -172,7 +172,6 @@ function RoomMap2D({ url, configurationNodeAll, setSeparate, setListNode, callba
     setSelectedNodes((prevData) =>{
       const exists = prevData.some((node) => node.id === id);
       const data = exists ? prevData.filter((node) => node.id !== id) : [...prevData, {id, type}]
-      setSeparate(data.length > 0)
       setListNode(data)
       return data
     }
