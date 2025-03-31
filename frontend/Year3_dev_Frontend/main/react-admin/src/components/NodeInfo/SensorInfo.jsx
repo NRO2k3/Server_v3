@@ -116,13 +116,13 @@ function SensorInfo({room_id, callbackSetSignIn, sensors}) {
   return (
     <Grid container item textAlign='center' paddingTop={preferMd ? 0 : 0.5} justifyContent='center'>
         <Grid item container xs={12} sm={12} md={12} textAlign="center" justifyContent='center' my={0.25} mb={3}>
-          <Typography variant="h3" sx={{fontWeight: "bold"}}> Average Data Sensor Node: </Typography>
-          {sensors.map((node, index) => (
+          <Typography variant="h3" sx={{fontWeight: "bold"}}> Average Data Sensor Node </Typography>
+          {/* {sensors.map((node, index) => (
           <Typography variant="h3" key={index} sx={{ marginLeft: 1, fontWeight: "bold" }}>
             {node.id}
             {index < sensors.length - 1 && ", "}
           </Typography>
-          ))}
+          ))} */}
         </Grid>
         <Grid item container spacing={1} px='10px' marginBottom={0.5} justifyContent='center'>
             { Object.entries(averageSensorNode).map(([key, value], index, array) => {

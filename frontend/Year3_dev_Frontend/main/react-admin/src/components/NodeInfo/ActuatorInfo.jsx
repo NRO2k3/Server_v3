@@ -1,5 +1,5 @@
 import { host } from '../../App'
-import { Grid, Typography, Select, MenuItem, FormControl, InputLabel} from "@mui/material";
+import { Grid, Typography, Select, MenuItem, Paper, InputLabel} from "@mui/material";
 import { useState, useEffect } from 'react';
 import Header from "../../components/Header";
 import StatusActuator from './OptionsActuator/StatusActuator';
@@ -8,7 +8,7 @@ import SetTimer from './OptionsActuator/SetTimer';
 
 
 function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
-  const backend_host = host
+  const [status, setStatus] = useState(false);
   const [idNode, setIdNode] = useState("")
   useEffect(() => {
     if (actuators.length > 0) {
@@ -20,34 +20,41 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
       <Grid item container xs={12} sm={12} md={12} textAlign="center" justifyContent='center' >
       <Typography variant="h3" sx={{fontWeight: "bold"}}> Actuator Info And Setting Mode </Typography>
       </Grid>
-      <Grid item >
-        <InputLabel sx={{ fontSize: "12px", color: "black",  marginTop: "10px", textAlign: "center"}}> Node Id </InputLabel>
+      <Grid item sx={{mt:1}}>
+        <InputLabel sx={{ fontSize: "14px", color: "black",  marginTop: "10px", textAlign: "center", justifyContent: "center", fontWeight: "bold"}}> Node Id </InputLabel>
         <Select
           value={idNode}
           onChange={(e) => setIdNode(e.target.value)}
-          sx={{ width: 50, height: 30 }}
+          sx={{ width: 50, height: 30, fontWeight: "bold" }}
         >
           {actuators.map((node)=>
             <MenuItem value={node.id}>{node.id}</MenuItem>
           )}
         </Select>
         </Grid>
-        <Grid container xs ={12} sx={{ width: "100%", marginTop: "10px" }}>
+        <Grid container xs ={12} sx={{ mt: 2 }}>
           <Grid item xs={6}>
             <Header title = "Actuator Status" fontSize="18px"/>
-            <StatusActuator
-              room_id={room_id}
-              callbackSetSignIn={callbackSetSignIn}
-              idNode={idNode}
-            />
+              <StatusActuator
+                room_id={room_id}
+                callbackSetSignIn={callbackSetSignIn}
+                idNode={idNode}
+                status={status}
+                setStatus={setStatus}
+              />
           </Grid>
           <Grid item xs={6}>
             <Header title = "Set Temperature" fontSize="18px"/>
-            <SetTemperature/>
+            <SetTemperature
+              room_id={room_id}
+              callbackSetSignIn={callbackSetSignIn}
+              idNode={idNode}
+              status={status}
+            />
           </Grid>
         </Grid>
-        <Grid container xs ={12} sx={{ width: "100%", marginTop: "10px" }} justifyContent="center">
-          <Header title = "Set Time" fontSize="18px"/>
+        <Grid container xs ={12} sx={{ marginTop: "20px" }} justifyContent="center">
+          <Header title = "Set Time" fontSize="20px"/>
           <SetTimer/>
         </Grid>
     </Grid>

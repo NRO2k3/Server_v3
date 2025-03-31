@@ -17,6 +17,7 @@ import Options from "../../components/OptionsRoomMap/Options";
 import verify_and_get_data from "../../function/fetchData";
 import DetailNode from "../../components/NodeInfo/DetailNode";
 
+
 const Dashboard = () => {
     const backend_host = host;
     const location = useLocation(); /*!< This is used to get the "state" component that is passed into <Link> */

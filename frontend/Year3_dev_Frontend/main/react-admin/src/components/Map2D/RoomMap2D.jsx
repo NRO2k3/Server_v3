@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { Suspense, useRef, useLayoutEffect, useState } from 'react';
-import { MapControls, Html } from '@react-three/drei';
+import { MapControls } from '@react-three/drei';
 import SensorsIcon from '@mui/icons-material/Sensors';
 import AirIcon from '@mui/icons-material/Air';
 import './styles.css';
 import { host } from '../../App';
 import verifyAccessToken from '../../function/verifyAccessToken';
 import verifyRefreshToken from '../../function/verifyRefreshToken';
+import { Html } from '@react-three/drei';
 
 const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => {
   const token = { access_token: null, refresh_token: null };
@@ -84,7 +85,7 @@ function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn}) {
       }
   }
   return (
-    <Html position={[x, y, 0.2]} center>
+    <Html position={[x, y, 0.2]} transform distanceFactor={1}>
       <div
         onClick={ async (e) => {
           e.stopPropagation();
@@ -98,11 +99,8 @@ function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn}) {
             addSelectedNode(id, type);
             setClicked(!clicked);
           } else {
-            console.log("TH2")
             const permission = await verify_and_get_data(ListNodeUserPermission, callbackSetSignIn, backend_host, api)
             if(permission.length > 0){
-              console.log(permission)
-              console.log(permission.includes(id))
               if(permission.includes(id)){
                 addSelectedNode(id, type);
                 setClicked(!clicked);
