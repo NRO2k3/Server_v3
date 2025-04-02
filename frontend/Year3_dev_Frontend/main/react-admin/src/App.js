@@ -68,3 +68,27 @@ function App() {
     );
 }
 export default App;
+
+// import React from "react";
+// import { useTranslation } from "react-i18next";  // Import useTranslation từ react-i18next
+// import "./utils/i18n"; // Import cấu hình i18n
+
+// function App() {
+//   const { t, i18n } = useTranslation(); // Dùng useTranslation để lấy t (hàm dịch) và i18n (đối tượng ngôn ngữ)
+
+//   const changeLanguage = (lng) => {
+//     i18n.changeLanguage(lng); // Thay đổi ngôn ngữ
+//   };
+
+//   return (
+//     <div>
+//       <h1>{t("welcome")}</h1> {/* Dịch từ khóa "welcome" */}
+//       <button onClick={() => changeLanguage("en")}>English</button>
+//       <button onClick={() => changeLanguage("vi")}>Tiếng Việt</button>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+

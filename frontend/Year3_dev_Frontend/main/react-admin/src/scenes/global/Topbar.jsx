@@ -9,7 +9,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import logo from '../../assets/logo_lab.png'
 import { useMode } from "../../theme";
-import { host } from "../../App"; 
+import { host } from "../../App";
+import { useTranslation } from "react-i18next";
+import  "../../utils/i18n";
 const Topbar = ({setIsSignin}) => {
   const username = localStorage.getItem("username");
   const [isHovered, setIsHovered] = useState(false);
@@ -18,6 +20,10 @@ const Topbar = ({setIsSignin}) => {
   const theme = useTheme();
   const [, colorMode] = useMode();
 	const backend_host = host;
+	const {t, i18n} = useTranslation()
+	const changeLanguage = (lng) => {
+		i18n.changeLanguage(lng);
+	};
   const toggleMode = () => {
 	colorMode.toggleColorMode();
   }
@@ -63,8 +69,8 @@ const Topbar = ({setIsSignin}) => {
 										color="white"
 										display="inline"
 										paddingLeft="5%"
-										style={{ fontWeight: isHovered ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s' }}>
-								Home
+										style={{fontWeight: isHovered ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap", }}>
+								{t("home")}
 							</Typography>
 						</IconButton>	
 					</Link>
@@ -88,15 +94,22 @@ const Topbar = ({setIsSignin}) => {
 										color="white" 
 										display="inline"
 										paddingLeft="5%"
-										style={{ fontWeight: isHovered2 ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s' }}>
-								Configuration
+										style={{ fontWeight: isHovered2 ? 'bold' : 'normal' ,  transition: 'font-weight 0.15s', whiteSpace: "nowrap",}}>
+								{t("configuration")}
 							</Typography>
 						</IconButton>	
 					</Link>
                 }
 				</Box>
 		</Box>
-
+		<Box display="flex" ml="auto">
+			<Button onClick={() => changeLanguage("en")}  sx={{ width: "30px"}}>
+        <img src="/english.png" alt="English" style={{ width: 30, height: 20 }} />
+      </Button>
+      <Button onClick={() => changeLanguage("vi")} sx={{ width: "30px"}}>
+        <img src="/vietnam.png" alt="Vietnamese" style={{ width: 30, height: 20 }} />
+      </Button>
+		</Box>
 		{/* ICONS */}
 		<Box display="flex">
 				<Box display="flex" alignItems="center"> {/* Wrap the icon and text in a Box component */}
@@ -220,7 +233,7 @@ const Topbar = ({setIsSignin}) => {
                     </Link> */}
 				</Box>
 		</Box>
-	</Box>
+		</Box>
   );
 };
 
