@@ -9,8 +9,8 @@ import AirIcon from '@mui/icons-material/Air';
 
 const HeatmapContainer = styled('div')({
   position: 'relative',
-  width: '321px',
-  height: '351px',
+  width: '1100px',
+  height: '800px',
 });
 
 const HeatmapImg = styled('img')({
@@ -29,49 +29,21 @@ const HeatmapOverlay = styled('div')({
   opacity: '200%'
 });
 
-// const HeatmapContainer = styled('div')({
-//   position: 'relative',
-//   width: '80%',  // Giữ ảnh trong 80% màn hình
-//   maxWidth: '500px', // Giới hạn kích thước tối đa
-//   height: 'auto',
-//   aspectRatio: '1/1', // Giữ tỷ lệ vuông
-//   overflow: 'hidden',
-//   margin: 'auto' // Căn giữa trong layout
-// });
-
-// const HeatmapImg = styled('img')({
-//   width: '100%',   
-//   height: '100%',
-//   objectFit: 'contain', // Giữ toàn bộ ảnh mà không bị cắt
-//   position: 'absolute',
-//   top: 0,
-//   left: 0
-// });
-
-// const HeatmapOverlay = styled('div')({
-//   position: 'absolute',
-//   top: 0,
-//   left: 0,
-//   width: '100%',
-//   height: '100%',
-//   opacity: '200%',
-// });
-
 const HeatmapComponent = ({nodeData, nodeList, nodeFunction, pic_src, showHeatmap}) => {
   const heatmapRef = useRef(null);
   
   const SensorButton = styled(IconButton)({
-    border: '1px solid', // Add border to create an outlined effect
-    borderRadius: '50%', // Ensure the button is circular
-    padding: '8px', // Add padding to adjust the size of the button as needed
-    fontSize: '3rem',
+    border: '1px solid',
+    borderRadius: '50%',
+    padding: '8px',
+    fontSize: '1.5rem',
     position: 'absolute',
     '& .MuiButton-startIcon': {
       position: 'relative',
     },
     '& .sensor-label': {
       position: 'absolute',
-      top: '50px',
+      top: '-10px',
       right: '0px',
       backgroundColor: 'red',
       color: 'white',
@@ -108,7 +80,7 @@ const HeatmapComponent = ({nodeData, nodeList, nodeFunction, pic_src, showHeatma
             key={index}
             variant="contained"
             color="primary"
-            style={{ top: sensor.y - 25, left: sensor.x - 25, backgroundColor: (nodeFunction[index] === 'sensor' ? 'white' : 'aqua') }} 
+            style={{ top: sensor.y -25, left: sensor.x -25 , backgroundColor: (nodeFunction[index] === 'sensor' ? 'white' : 'aqua') }} 
             startIcon={<AddCircleOutline />}
           >
             {nodeFunction[index] === 'sensor' ?

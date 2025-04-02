@@ -9,7 +9,8 @@ import { host } from '../../App';
 import verifyAccessToken from '../../function/verifyAccessToken';
 import verifyRefreshToken from '../../function/verifyRefreshToken';
 import { Html } from '@react-three/drei';
-
+import { Box3 } from "three";
+export let data_max_min = []
 const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => {
   const token = { access_token: null, refresh_token: null };
 
@@ -45,6 +46,16 @@ function ImagePlane({ url, setClickPos}) {
       const screenAspect = size.width / size.height;
       camera.zoom = screenAspect > aspect ? size.height / 2 : size.width / (2 * aspect);
       camera.updateProjectionMatrix();
+    }
+    if (ref.current) {
+      ref.current.geometry.computeBoundingBox();
+      const bbox = new Box3().setFromObject(ref.current);
+      if(data_max_min.length > 0){
+        data_max_min = []
+        data_max_min.push(bbox.min.x, bbox.max.x, bbox.min.y, bbox.max.y)
+      } else{
+        data_max_min.push(bbox.min.x, bbox.max.x, bbox.min.y, bbox.max.y)
+      }
     }
   }, [texture, size, camera]);
 
@@ -162,7 +173,7 @@ function ClickCoordinates({ clickPos }) {
   ) : null;
 }
 
-function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn}) {
+function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, setSeparate}) {
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
 
@@ -171,6 +182,7 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn})
       const exists = prevData.some((node) => node.id === id);
       const data = exists ? prevData.filter((node) => node.id !== id) : [...prevData, {id, type}]
       setListNode(data)
+      setSeparate(data.length > 0)
       return data
     }
     );
@@ -188,6 +200,7 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn})
             key={point.id} {...point}
             addSelectedNode={addSelectedNode}
             callbackSetSignIn={callbackSetSignIn}
+            setSeparate={setSeparate}
             />
         ))}
       </Suspense>

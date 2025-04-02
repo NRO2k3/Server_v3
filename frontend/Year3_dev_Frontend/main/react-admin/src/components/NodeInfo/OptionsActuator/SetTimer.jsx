@@ -26,7 +26,7 @@ function SetTimer() {
   return (
     <Grid container sx={{ mt: 2 }} alignItems="center" justifyContent="center" spacing={0.1}>
       <Grid item xs={6}>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>Start Time Air Conditioner</Typography>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>Start Time</Typography>
         <MobileDateTimePicker
           slotProps={{
             dialog: {
@@ -47,7 +47,7 @@ function SetTimer() {
         />
       </Grid>
       <Grid item xs={6}>
-      <Typography variant="h6" sx={{ fontWeight: "bold" }}>End Time Air Conditioner</Typography>
+      <Typography variant="h6" sx={{ fontWeight: "bold" }}>End Time </Typography>
         <MobileDateTimePicker
           slotProps={{
             dialog: {

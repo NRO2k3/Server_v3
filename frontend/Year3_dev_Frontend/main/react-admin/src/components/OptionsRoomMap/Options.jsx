@@ -2,10 +2,10 @@ import { Box, Button, useTheme } from "@mui/material";
 import { useState, useEffect } from "react";
 import Grid from '@mui/material/Grid';
 import {host} from "../../App";
-import RoomMap from "../../components/RoomMap/RoomMap2";
 import RoomMap2D from "../Map2D/RoomMap2D";
+import RoomMap from "../RoomMap/RoomMap2";
 
-function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode}) {
+function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate}) {
     const theme = useTheme();
     const [status, setStatus] = useState(true);
     const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room.png");
@@ -101,12 +101,13 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             </Grid>
             {status ? (
                 <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setListNode={setListNode}
-                callbackSetSignIn = {callbackSetSignIn}/>
+                callbackSetSignIn = {callbackSetSignIn} setSeparate = {setSeparate}/>
             ) : (
                 <RoomMap
                     room_id={room_id}
                     callbackSetSignIn={callbackSetSignIn}
                     backend_host={host}
+                    setSeparate = {setSeparate}
                 />
             )}
         </Box>

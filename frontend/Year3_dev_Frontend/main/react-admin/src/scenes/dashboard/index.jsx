@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { useState, useContext, useEffect } from "react";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -8,11 +8,8 @@ import Chart from "../../data/Chart2";
 import {host} from "../../App";
 import InformationTag from "../../components/InformationTag2";
 import { useLocation } from "react-router-dom"; 
-import RoomMap from "../../components/RoomMap/RoomMap2";
 import AqiRef from "../../components/AqiRef/AqiRef3";
-import Actuator from "../../components/Actuator/Actuator";
 import EnergyChart from "../../components/EnergyChart/EnergyChart2";
-import { Border } from "victory";
 import Options from "../../components/OptionsRoomMap/Options";
 import verify_and_get_data from "../../function/fetchData";
 import DetailNode from "../../components/NodeInfo/DetailNode";
@@ -34,6 +31,7 @@ const Dashboard = () => {
     const [configurationNodeAll, setConfigurationNodeAll] = useState([]);
     const api = `http://${host}/api/configuration_node?room_id=${room_id}`
     const [listNode, setListNode] = useState([])
+    const [separate, setSeparate] = useState(false)
     console.log(listNode)
     const getConfigurationNodeAllData = async (url, access_token) =>
     {
@@ -146,7 +144,7 @@ const Dashboard = () => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={listNode.length > 0 ? 5.5 : 8.5} container
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={separate > 0 ? 5.5 : 8.5} container
                         direction="column"
                         alignItems="center"
                         justify="center"
@@ -156,10 +154,11 @@ const Dashboard = () => {
                             callbackSetSignIn={callbackSetSignIn}
                             configurationNodeAll={configurationNodeAll}
                             setListNode = {setListNode}
+                            setSeparate = {setSeparate}
                         />
                     </Grid>
 
-                    {listNode.length > 0 && (
+                    {separate && (
                     <Grid item xs={12} sm={12} md={12} lg={12} xl={3} container direction="column" alignItems="center" justify="center">
                         <DetailNode
                             room_id={room_id}
@@ -224,10 +223,6 @@ const Dashboard = () => {
                         </Box>
                     </Grid>
                 </Grid>
-                {/* <Actuator
-                    room_id={room_id}
-                    callbackSetSignIn={callbackSetSignIn}
-                /> */}
             </Container>
         </Box>
     </>

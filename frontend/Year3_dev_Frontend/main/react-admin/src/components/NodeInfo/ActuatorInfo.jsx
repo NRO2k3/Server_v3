@@ -54,7 +54,7 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
           </Grid>
         </Grid>
         <Grid container xs ={12} sx={{ marginTop: "20px" }} justifyContent="center">
-          <Header title = "Set Time" fontSize="20px"/>
+          <Header title = "Set Time Air Conditioner" fontSize="20px"/>
           <SetTimer/>
         </Grid>
     </Grid>
