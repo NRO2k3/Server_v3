@@ -36,6 +36,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     const [configurationNodeAll, setConfigurationNodeAll] = useState([]);
     const [isLoadingNodeConfig, setIsLoadingNodeConfig] = useState(true);
     const [listNode, setListNode] = useState([])
+    const [separate, setSeparate] = useState(false)
     const dict_function = {
         "sensor": "Sensor",
         "air": "Air conditioner",
@@ -240,12 +241,12 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                     </Grid>
                     <Grid item xs={7.5}>
 
-                        <Grid Gird sx={{ height: "800px" }}>
+                        <Grid Gird sx={{ height: "900px" }}>
                             <Options room_id={roomIdForNodeConfig}
                             callbackSetSignIn={callbackSetSignIn}
                             configurationNodeAll={configurationNodeAll}
-                            
                             setListNode = {setListNode}
+                            setSeparate = {setSeparate}
                             />
                         </Grid>
                         <Grid>
