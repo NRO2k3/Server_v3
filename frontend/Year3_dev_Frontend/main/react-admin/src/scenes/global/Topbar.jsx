@@ -135,19 +135,19 @@ const Topbar = ({setIsSignin}) => {
 					>
 						<div>
 							<Typography variant="h4" py={1} pl={2}>
-								Welcome, {username}!
+								{t("welcome", {username})}
 							</Typography>
 						</div>
 						<MenuItem>
 							<AccountCircleOutlinedIcon />
 							<Typography component='span' pl={2}>
-							Profile
+							{t("profile")}
 							</Typography>
 						</MenuItem>
 						<MenuItem>
 							<SettingsIcon /> 
 							<Typography component='span' pl={2}>
-							Settings
+							{t("settings")}
 							</Typography>
 						</MenuItem>
 						<MenuItem
@@ -155,7 +155,7 @@ const Topbar = ({setIsSignin}) => {
 						>
 							<ContrastIcon /> 
 							<Typography component='span' pl={2}>
-							Change theme
+							{t("theme")}
 							</Typography>
 						</MenuItem>
 						<div style={{
@@ -198,10 +198,10 @@ const Topbar = ({setIsSignin}) => {
 										}else{
 											alert("Try again!!!")
 										}
-								 }}
+								}}
 							>
 								<Typography variant="h5" p={0.3}>
-									Sign out!
+									{t("sign out")}
 								</Typography>
 							</Button>
 							{/* <Link color="white" display="inline" href="/"

@@ -15,7 +15,7 @@ import Configuration from "./scenes/configuration/Configuration";
 import SignUp from "./scenes/signUp";
 import Weatherdata from "./scenes/weatherdata/Weatherdata";
 import AqiRef from "./components/AqiRef/AqiRef3";
-
+import ContactForm from "./scenes/contact/contact";
 const debug_mode = process.env.REACT_APP_DEBUG_MODE === "false";
 export const host = process.env.REACT_APP_BACKEND_URL;
 
@@ -41,9 +41,8 @@ function App() {
                 <ThemeProvider theme={theme}>
                     <CssBaseline/>
                     <div className="app">
-                    <main className="content">
+                    <main className="content" >
                         <Topbar setIsSignin={setIsSignin}/>
-
                         <Routes>
                             <Route path="" element={<Landing />} />
                             <Route path="/landing/dashboard" element={<Dashboard/>} />
@@ -55,7 +54,7 @@ function App() {
                             }
                             {/* <Route path="/weatherdata" element={<Weatherdata/>} /> */}
                         </Routes>
-
+                        <ContactForm/>
                         <Footer/>
                     </main>
                     </div>

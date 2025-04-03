@@ -9,12 +9,22 @@ i18n
         translation: {
           "home": "Home",
           "configuration":"Configuration",
+          "sign out": "Sign out!",
+          "theme": "Change theme",
+          "settings":"Settings",
+          "profile": "Profile",
+          "welcome": "Welcome, {{username}}"
         }
       },
       vi: {
         translation: {
           "home": "Trang Chủ",
           "configuration":"Điều Chỉnh",
+          "sign out": "Đăng Xuất",
+          "theme": "Đổi Phông",
+          "settings":"Cài Đặt",
+          "profile": "Hồ sơ",
+          "welcome": "Xin Chào, {{username}}"
         }
       }
     },
