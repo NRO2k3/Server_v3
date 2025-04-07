@@ -18,7 +18,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
     const api_to_fetch = `http://${backend_host}/api/heatmap?room_id=${room_id}`;
-    const image = localStorage.getItem("uploadedImage") || "/room.png";
+    const image = localStorage.getItem("uploadedImage") || "/room2.png";
 
     const fetch_data_function = async (url, access_token) => {
         const headers =

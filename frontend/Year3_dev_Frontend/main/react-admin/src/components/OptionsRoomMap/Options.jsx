@@ -8,7 +8,7 @@ import RoomMap from "../RoomMap/RoomMap2";
 function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate}) {
     const theme = useTheme();
     const [status, setStatus] = useState(true);
-    const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room.png");
+    const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room2.png");
 
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {

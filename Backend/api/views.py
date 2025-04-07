@@ -69,7 +69,7 @@ def ResetPassword(request, *args, **kwargs):
         email = user.email
         recipient_list = [email]
         send_mail(subject, message,settings.EMAIL_HOST_USER, recipient_list)
-        return Response({"message":"New password is sent in email"})
+        return Response({"message":"New password is sent in email"}, status = status.HTTP_200_OK)
 
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 

@@ -16,6 +16,8 @@ import SignUp from "./scenes/signUp";
 import Weatherdata from "./scenes/weatherdata/Weatherdata";
 import AqiRef from "./components/AqiRef/AqiRef3";
 import ContactForm from "./scenes/contact/contact";
+import ForgetPassword from "./scenes/forgetPassword/ForgetPassword";
+
 const debug_mode = process.env.REACT_APP_DEBUG_MODE === "false";
 export const host = process.env.REACT_APP_BACKEND_URL;
 
@@ -25,15 +27,16 @@ function App() {
     const [isSignIn, setIsSignin] = useState(debug_mode);
     const [signUp, setSignUp] = useState(false);
     const [theme, colorMode] = useMode();
-
+    const [forgetPassword, setForgetPassword]  = useState(false)
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
         <UserContext.Provider value={setIsSignin}>
         {
             !isSignIn ?
             <>
-                {!signUp && <SignIn setSignUp={setSignUp} setIsSignin={setIsSignin}/>}
+                {!signUp && !forgetPassword && <SignIn setSignUp={setSignUp} setIsSignin={setIsSignin} setForgetPassword={setForgetPassword}/>}
                 {signUp && <SignUp setSignUp={setSignUp}/>}
+                {forgetPassword && <ForgetPassword setForgetPassword={setForgetPassword}/>}
             </>
             :
             <>

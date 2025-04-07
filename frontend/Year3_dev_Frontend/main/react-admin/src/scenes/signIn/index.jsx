@@ -30,7 +30,7 @@ function Copyright(props) {
 	);
 }
 
-export default function SignIn({setSignUp, setIsSignin})
+export default function SignIn({setSignUp, setIsSignin, setForgetPassword})
 {
     const [isLoading, setIsLoading] = useState(true);
     const backend_host = host;
@@ -186,20 +186,21 @@ export default function SignIn({setSignUp, setIsSignin})
                 >
                 Sign In
                 </Button>
+                <Box sx={{ width: '100%' }}>
+                    <Grid container justifyContent="flex-end" spacing={1}>
+                    <Grid item>
+                        <Link variant="body2" sx={{ cursor: 'pointer' }} onClick={()=>{setForgetPassword(true)}}>
+                            Forgot password?
+                        </Link>
+                    </Grid>
+                    <Grid item>
+                        <Link variant="body2" sx={{ cursor: 'pointer' }} onClick={()=>{setSignUp(true)}}>
+                            Sign Up
+                        </Link>
+                    </Grid>
+                    </Grid>
+                </Box>
 
-                <Grid container>
-                <Grid item xs>
-                    <Link variant="body2">
-                    {/* Forgot password? */}
-                    </Link>
-                </Grid>
-
-                <Grid item>
-                    <Link variant="body2" onClick={()=>{setSignUp(true)}}>
-                    {"Don't have an account? Sign Up"}
-                    </Link>
-                </Grid>
-                </Grid>
             </Box>
             </Box>
 

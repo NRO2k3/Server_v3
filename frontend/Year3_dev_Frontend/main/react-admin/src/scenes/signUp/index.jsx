@@ -36,8 +36,6 @@ export default function SignUp({setSignUp}) {
 
     const create_user = async (data)=> 
     {
-        // data.email = "xxxx@gmail.com"
-        console.log(data)
         const api = `http://${host}/api/signup`;
         const fetch_option = 
         {
@@ -163,12 +161,6 @@ export default function SignUp({setSignUp}) {
                   autoComplete="new-password"
                 />
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -180,8 +172,8 @@ export default function SignUp({setSignUp}) {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2" onClick={()=>{setSignUp(false)}}>
-                  Already have an account? Sign in
+                <Link variant="body2" sx={{ cursor: 'pointer' }} onClick={()=>{setSignUp(false)}}>
+                  Sign in
                 </Link>
               </Grid>
             </Grid>
