@@ -5,8 +5,11 @@ import {host} from "../../App";
 import RoomMap2D from "../Map2D/RoomMap2D";
 import RoomMap from "../RoomMap/RoomMap2";
 import RoomMapConnections from "../RoomMap/RoomMapConnections";
+import { useTranslation } from "react-i18next";
+import "../../utils/i18n"
 
 function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate}) {
+    const {t} = useTranslation()
     const theme = useTheme();
     const [status, setStatus] = useState(true);
     const [statusConnections, setStatusConnections] = useState(false);
@@ -46,7 +49,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             <Grid>
                 <Button sx={{
                     width: "150px",
-                    height: "60px",
+                    height: "80px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -60,11 +63,11 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                         setStatus(true)
                         setStatusConnections(false)
                         }}>
-                    ROOM
+                    {t("room")}
                 </Button>
                 <Button sx={{
                     width: "150px",
-                    height: "60px",
+                    height: "80px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -78,11 +81,11 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                         setStatus(false)
                         setStatusConnections(false)
                     }}>
-                    HEAT MAP
+                    {t("heatmap")}
                 </Button>
                 <Button sx={{
                     width: "150px",
-                    height: "60px",
+                    height: "80px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -94,9 +97,9 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                 }}
                     onClick={() => {
                         setStatus(false)
-                        setStatusConnections(true) 
+                        setStatusConnections(true)
                         }}>
-                    Connections
+                    {t("connections")}
                 </Button>
                 <input
                     type="file"
@@ -109,7 +112,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                     <Button component="span"
                         sx={{
                             width: "150px",
-                            height: "60px",
+                            height: "80px",
                             backgroundColor: "white",
                             fontSize: "20px",
                             fontWeight: "bold",
@@ -119,7 +122,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                             borderRadius: "5px",
                             "&:hover": { backgroundColor: "#EEEEEE" }
                         }}>
-                        IMPORT
+                        {t("import")}
                     </Button>
                 </label>
 

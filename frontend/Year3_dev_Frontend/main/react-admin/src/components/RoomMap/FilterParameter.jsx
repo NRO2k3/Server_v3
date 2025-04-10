@@ -6,9 +6,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from '../../theme';
+import { useTranslation } from "react-i18next";
 
 const FilterParameter = ({setParaFilter}) => 
 {
+	const {t} = useTranslation()
 	const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 	const [paraState, setParaState] = useState(1)
@@ -18,18 +20,18 @@ const FilterParameter = ({setParaFilter}) =>
 		// setNodeIdFilter(event.target.value);
 	};
     const para_filter_dict = [
-        {index: 0, value: `All\xa0\xa0\xa0\xa0\xa0\xa0\xa0`}, 
-        {index: 1, value: `Temperature\xa0\xa0\xa0\xa0\xa0\xa0\xa0`}, 
-        {index: 2, value: `Humid\xa0\xa0\xa0\xa0\xa0\xa0\xa0`}, 
-        {index: 3, value: `CO2\xa0\xa0\xa0\xa0\xa0\xa0\xa0`}, 
-        {index: 4, value: `TVOC\xa0\xa0\xa0\xa0\xa0\xa0\xa0`},
-        {index: 5, value: `Light\xa0\xa0\xa0\xa0\xa0\xa0\xa0`},
-        {index: 6, value: `Dust\xa0\xa0\xa0\xa0\xa0\xa0\xa0`},
+        {index: 0, value: `all`},
+        {index: 1, value: `temperature`},
+        {index: 2, value: `hudminity`},
+        {index: 3, value: `CO2`},
+        {index: 4, value: `tvoc`},
+        {index: 5, value: `light`},
+        {index: 6, value: `dust`},
     ];
 
   return (
 	<FormControl style={{width: '150%'}} size='small'>
-		<InputLabel id="demo-simple-select-label">Parameter</InputLabel>
+		<InputLabel id="demo-simple-select-label">{t("parameter")}</InputLabel>
 		<Select
 			labelId="demo-simple-select-label"
 			id="demo-simple-select"
@@ -40,7 +42,7 @@ const FilterParameter = ({setParaFilter}) =>
 			{
 				para_filter_dict.map((i)=>{
 					return (
-						<MenuItem disabled={i.index === 0 ? true : false} value={i.index}>{i.value}</MenuItem>
+						<MenuItem disabled={i.index === 0 ? true : false} value={i.index}>{t(i.value)}</MenuItem>
 					);		
 				})
 			}

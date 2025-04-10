@@ -38,13 +38,6 @@ const VictoryLineChart = ({data_x, data_y, option_data, parameter_type}) =>
 
     let new_label_x;
     new_label_x = [...label_x];
-    // for(let i=new_label_x.length-2; i>=Math.round(new_label_x.length/12); i-=Math.round(new_label_x.length/12))
-    // {
-    //     for(let j=i;j>=i-Math.round(new_label_x.length/12);--j)
-    //     {
-    //         new_label_x[j] = "111";
-    //     }
-    // }
     let step = Math.max(Math.round(new_label_x.length / 12), 1);
     for (let i = new_label_x.length - 2; i >= step; i -= step) {
         for (let j = i; j >= Math.max(i - step, 0); --j) {

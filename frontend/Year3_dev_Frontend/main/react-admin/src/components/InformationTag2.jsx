@@ -1,17 +1,8 @@
 import {
-    Box,
-    Card,
-    CardContent,
-    CardHeader,
     Grid,
-    Paper,
-    Stack,
-    SvgIcon,
     Typography,
-    useTheme, Tooltip
+    useTheme,
 } from '@mui/material';
-import { tokens } from "../theme";
-import Header from "./Header";
 import { host } from "../App"
 import { React, useEffect, useState } from "react";
 import temp_icon from "../assets/temperature.svg";
@@ -31,13 +22,15 @@ import BoyIcon from '@mui/icons-material/Boy';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import LensBlurIcon from '@mui/icons-material/LensBlur';
 import AQI from './AQI';
-import { Boy, VolumeMute } from '@mui/icons-material';
+import "../../src/utils/i18n"
+import { useTranslation } from 'react-i18next';
+import verify_and_get_data from '../function/fetchData';
 
 const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuatorInfoOfRoom }) => {
     const backend_host = host;
     const api_informationtag = url;
     const theme = useTheme();
-
+    const {t} = useTranslation()
     const [isLoading, setIsLoading] = useState(true);
     const [infoData, getInfoData] = useState(null);
     const [nodeData, getNodeData] = useState(null);
@@ -121,7 +114,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                 // if (data.hasOwnProperty(each_key) && data[each_key][data[each_key].length-1] !== 0) 
                 {
                     if (data[each_key][data[each_key].length - 1] > 0) {
-                        const motion_data = (data[each_key][data[each_key].length - 1] == 1 ? "Yes" : "No");    //!< data[each_key][data[each_key].length-1] (last element of array)
+                        const motion_data = (data[each_key][data[each_key].length - 1] == 1 ? t("yes") : t("no"));    //!< data[each_key][data[each_key].length-1] (last element of array)
                         newInfoData[each_key] = {
                             "title": dict_of_enviroment_para_names[each_key]["name"],
                             "icon": dict_of_enviroment_para_names[each_key]["icon"],
@@ -175,103 +168,6 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
         }
     }
 
-    const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host) => {
-        const token = { access_token: null, refresh_token: null }
-        // const backend_host = host;
-        if (localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null) {
-            token.access_token = localStorage.getItem("access");
-            token.refresh_token = localStorage.getItem("refresh");
-        }
-        else {
-            throw new Error("There is no access token and refresh token ....");
-        }
-
-        const verifyAccessToken = async () => {
-            //call the API to verify access-token
-            const verify_access_token_API_endpoint = `http://${backend_host}/api/token/verify`
-            const verify_access_token_API_data =
-            {
-                "token": token.access_token,
-            }
-            const verify_access_token_API_option =
-            {
-                "method": "POST",
-                "headers":
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_access_token_API_data),
-
-            }
-            const verify_access_token_API_response = await fetch(verify_access_token_API_endpoint,
-                verify_access_token_API_option,);
-            console.log(verify_access_token_API_response);
-            if (verify_access_token_API_response.status !== 200) {
-                return false;
-            }
-            return true;
-        }
-
-        /*
-        *brief: this function is to verify the refresh-token and refresh the access-token if the refresh-token is still valid
-        */
-        const verifyRefreshToken = async () => {
-            //call the API to verify access-token
-            const verify_refresh_token_API_endpoint = `http://${backend_host}/api/token/refresh`
-            const verify_refresh_token_API_data =
-            {
-                "refresh": token.refresh_token,
-            }
-            const verify_refresh_token_API_option =
-            {
-                "method": "POST",
-                "headers":
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_refresh_token_API_data),
-
-            }
-            const verify_refresh_token_API_response = await fetch(verify_refresh_token_API_endpoint,
-                verify_refresh_token_API_option,);
-            const verify_refresh_token_API_response_data = await verify_refresh_token_API_response.json();
-            if (verify_refresh_token_API_response.status !== 200) {
-                return false;
-            }
-            else if (verify_refresh_token_API_response.status === 200 && verify_refresh_token_API_response_data.hasOwnProperty("access")) {
-                localStorage.setItem("access", verify_refresh_token_API_response_data["access"]);
-                localStorage.setItem("refresh", verify_refresh_token_API_response_data["refresh"]);
-                return true
-            }
-            else {
-                throw new Error("Can not get new access token ....");
-            }
-        }
-
-        const verifyAccessToken_response = await verifyAccessToken();
-
-        if (verifyAccessToken_response === true) {
-            // const response = await fetch(url)
-            // const data = await response.json()
-            fetch_data_function(url, token["access_token"])
-        }
-        else {
-            let verifyRefreshToken_response = null;
-            try {
-                verifyRefreshToken_response = await verifyRefreshToken();
-            }
-            catch (err) {
-                alert(err);
-            }
-            if (verifyRefreshToken_response === true) {
-                fetch_data_function(url, token["access_token"]);
-            }
-            else {
-                callbackSetSignIn(false);
-            }
-        }
-    }
-
     useEffect(() => {
         if (time_delay !== 0) {
             if (infoData === null)            //!< this is for the total component always render the first time and then the next time will be setTimeOut
@@ -299,14 +195,14 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                     <Grid container textAlign='center'>
                         <Grid xs={12} sm={12} md={12} textAlign="center" columnSpacing={2}>
                             <Typography fontWeight="bold" fontSize='30px'>
-                                Room info
+                                {t("roominfor")}
                             </Typography>
                         </Grid>
                         <Grid container spacing={1} marginY={0.5} marginX={1}>
                             <Grid container xs={4} flexDirection="column" justifyContent="space-around" alignItems="center" >
                                 <Grid item textAlign="center">
                                         <ThermostatIcon style={{ fontSize: '3rem' }} />
-                                        <Typography textAlign='center' variant='h5'>Temperature</Typography>
+                                        <Typography textAlign='center' variant='h5'>{t("temperature")}</Typography>
                                         <Typography textAlign='center' fontWeight='bold' variant='h3'>
                                         {infoData["temp"]["value"] === 'No data'
                                         ? infoData["temp"]["value"]
@@ -330,7 +226,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                             <div style={{  marginLeft: "30px" }}>
                                 <Grid item textAlign="center">
                                     <LensBlurIcon style={{ fontSize: '3rem' }} />
-                                    <Typography textAlign='center' variant='h5'>Dust</Typography>
+                                    <Typography textAlign='center' variant='h5'>{t("dust")}</Typography>
                                     <Typography textAlign='center' fontWeight='bold' variant='h3'>
                                     {infoData["dust"]["value"] === 'No data'
                                         ? infoData["dust"]["value"]
@@ -340,7 +236,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                                 <Grid item textAlign="center" mt={5}>
                                     <Grid item>
                                         <LightModeIcon style={{ fontSize: '3rem' }} />
-                                        <Typography textAlign='center' variant='h5'>Light</Typography>
+                                        <Typography textAlign='center' variant='h5'>{t("light")}</Typography>
                                         <Typography textAlign='center' fontWeight='bold' variant='h3'>
                                         {infoData["light"]["value"] === 'No data'
                                         ? infoData["light"]["value"]
@@ -354,7 +250,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
                         <Grid container  flexDirection="row" justifyContent="space-evenly" alignItems="center" >
                             <Grid item textAlign="center">
                                 <InvertColorsIcon style={{ fontSize: '3rem' }} />
-                                <Typography variant="h5">Humidity</Typography>
+                                <Typography variant="h5">{t("hudminity")}</Typography>
                                 <Typography fontWeight="bold" variant="h3">
                                     {infoData["hum"]["value"] === 'No data' 
                                         ? infoData["hum"]["value"] 
@@ -364,7 +260,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
 
                             <Grid item textAlign="center">
                                 <FilterDramaIcon style={{ fontSize: '3rem' }} />
-                                <Typography variant="h5">TVOC</Typography>
+                                <Typography variant="h5">{t("tvoc")}</Typography>
                                 <Typography fontWeight="bold" variant="h3">
                                     {infoData["tvoc"]["value"] === 'No data' 
                                         ? infoData["tvoc"]["value"] 
@@ -374,7 +270,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
 
                             <Grid item textAlign="center">
                                 <VolumeUpIcon style={{ fontSize: '3rem' }} />
-                                <Typography variant="h5">Sound</Typography>
+                                <Typography variant="h5">{t("sound")}</Typography>
                                 <Typography fontWeight="bold" variant="h3">
                                     {infoData["sound"]["value"] === 'No data' 
                                         ? infoData["sound"]["value"] 
@@ -384,7 +280,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
 
                             <Grid item textAlign="center">
                                 <BoyIcon style={{ fontSize: '3rem' }} />
-                                <Typography variant="h5">Motion</Typography>
+                                <Typography variant="h5">{t("motion")}</Typography>
                                 <Typography fontWeight="bold" variant="h3">{infoData["motion"]["value"]}</Typography>
                             </Grid>
                         </Grid>

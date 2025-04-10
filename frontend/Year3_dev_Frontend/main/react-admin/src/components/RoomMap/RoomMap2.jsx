@@ -1,7 +1,4 @@
 import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
-import plan_409 from "../../assets/409.svg";
-import plan_410 from "../../assets/410.svg";
-import plan_411 from "../../assets/411.svg";
 import { host } from "../../App";
 import { React, useState, useEffect, useRef } from "react";
 import verify_and_get_data from "../../function/fetchData";
@@ -59,8 +56,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
     }
 
     useEffect(() => {
-        if (nodeData === null)            //!< this is for the total component always render the first time and then the next time will be setTimeOut
-        {
+        if (nodeData === null){
             verify_and_get_data(fetch_data_function, callbackSetSignIn, host, api_to_fetch);
         }
         else {
@@ -75,7 +71,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
         <>
             {
                 isLoading ? <h1>Loading...</h1> :
-                    <Grid container justifyContent='center' sx={{mt : 16, mb: 2}}>
+                    <Grid container justifyContent='center' sx={{mt : 10}}>
                         <Grid item xs={12} p={1} />
                         <Grid container justifyContent='center' >
                             <HeatmapComponent

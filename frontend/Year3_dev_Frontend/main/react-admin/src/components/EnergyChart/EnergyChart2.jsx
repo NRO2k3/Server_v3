@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Typography, Stack, Button, useTheme } from "@mui/material";
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryAxis, VictoryTooltip, VictoryLine, Flyout } from "victory";
+import verify_and_get_data from "../../function/fetchData";
+import { useTranslation } from "react-i18next";
 
 const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => {
+    const {t} = useTranslation()
     const [chartData, setChartData] = useState([])
     const [dataType, setDataType] = useState(0) // 0 is energyData, 1 is powerData
     const [maxYAxis, setMaxYAxis] = useState(null);
@@ -78,117 +81,6 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
         setIsLoading(false)
     }
 
-    const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => 
-    {
-        const token = {access_token: null, refresh_token: null}
-        // const backend_host = host;
-        if(localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null)
-        {
-            token.access_token = localStorage.getItem("access"); 
-            token.refresh_token = localStorage.getItem("refresh");
-        }
-        else
-        {
-            throw new Error("There is no access token and refresh token ....");
-        }
-
-        const verifyAccessToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_access_token_API_endpoint = `http://${backend_host}/api/token/verify`
-            const verify_access_token_API_data = 
-            {
-                "token": token.access_token,
-            }
-            const verify_access_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_access_token_API_data),
-
-            }
-            const verify_access_token_API_response = await fetch(verify_access_token_API_endpoint, 
-                                                                verify_access_token_API_option,);
-            if(verify_access_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        /*
-        *brief: this function is to verify the refresh-token and refresh the access-token if the refresh-token is still valid
-        */
-        const verifyRefreshToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_refresh_token_API_endpoint = `http://${backend_host}/api/token/refresh`
-            const verify_refresh_token_API_data = 
-            {
-                "refresh": token.refresh_token,
-            }
-            const verify_refresh_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_refresh_token_API_data),
-
-            }
-            const verify_refresh_token_API_response = await fetch(verify_refresh_token_API_endpoint, 
-                                                                    verify_refresh_token_API_option,);
-            const verify_refresh_token_API_response_data = await verify_refresh_token_API_response.json();
-            if(verify_refresh_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            else if(verify_refresh_token_API_response.status === 200 &&  verify_refresh_token_API_response_data.hasOwnProperty("access"))
-            {
-                localStorage.setItem("access", verify_refresh_token_API_response_data["access"]);
-                localStorage.setItem("refresh", verify_refresh_token_API_response_data["refresh"]);
-                return true
-            }
-            else
-            {
-                throw new Error("Can not get new access token ....");
-            }
-        }
-
-        const  verifyAccessToken_response = await verifyAccessToken();
-
-        if(verifyAccessToken_response === true)
-        {
-            // const response = await fetch(url)
-            // const data = await response.json()
-            fetch_data_function(url, token["access_token"])
-        }
-        else
-        {
-            let verifyRefreshToken_response = null;
-            try
-            {
-                verifyRefreshToken_response = await verifyRefreshToken();
-            }
-            catch(err)
-            {
-                alert(err);
-            }
-            if(verifyRefreshToken_response === true)
-            {
-                fetch_data_function(url, token["access_token"]);
-            }
-            else
-            {
-                callbackSetSignIn(false);
-            }
-        }
-    }
-
     function getChartData(dataType) {
         let data = [];
         let label, unit;
@@ -250,7 +142,7 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
                 <Grid container display='flex' flexDirection='column' justifyContent='center' xs={12} marginY={1}>
                     <Grid item>
                         <Typography component='span' textAlign='center' fontSize='20px'>
-                            {dataType ? 'Average active power' : 'Total active energy per month'}
+                            {dataType ? 'Average active power' : t("titleenergy")}
                         </Typography>
                     </Grid>
                     <Grid item marginX={4}>
@@ -270,7 +162,7 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
                                             setDataType(0);
                                         }}
                                         >
-                                    Energy
+                                    {t("energy")}
                                 </Button>
                                 <Button size="small" sx={{
                                             "min-width": "30px",
@@ -285,7 +177,7 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
                                         onClick={() => {
                                             setDataType(1);
                                         }}>
-                                    Power
+                                    {t("power")}
                                 </Button>
                             </Stack>
                             <Stack direction='row' justifyContent='flex-end' pr={2} spacing={1}>

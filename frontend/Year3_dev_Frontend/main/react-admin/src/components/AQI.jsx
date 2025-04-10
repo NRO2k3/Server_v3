@@ -1,20 +1,22 @@
 import { React, useEffect, useState } from "react";
 import { Grid, Typography, useTheme } from "@mui/material";
 import { host } from "../App";
-
+import { useTranslation } from "react-i18next";
+import "../utils/i18n";
+import verify_and_get_data from "../function/fetchData";
 const AQI = ({room_id, callbackSetSignIn}) =>
 {
     const [aqi, setAqi] = useState({"level": ""})
     const url = `http://${host}/api/room/AQIdustpm2_5?room_id=${room_id}`;
     const theme = useTheme();
-
+    const {t} = useTranslation()
     const rating_index = {
-        1 : {"level": "Good" , "colour": "green"},
-        2 : {"level": "Moderate", "colour": "yellow"},
-        3 : {"level": "Poor", "colour": "orange"},
-        4 : {"level": "Unhealthy", "colour": "red"},
-        5 : {"level": "Very Unhealthy", "colour": "purple"},
-        6 : {"level": "Hazardous", "colour": "maroon"},
+        1: { level: "good", colour: "green" },
+        2: { level: "moderate", colour: "yellow" },
+        3: { level: "poor", colour: "orange" },
+        4: { level: "unhealthy", colour: "red" },
+        5: { level: "veryUnhealthy", colour: "purple" },
+        6: { level: "hazardous", colour: "maroon" },
     };
     
     const rating_dust = [
@@ -150,119 +152,6 @@ const AQI = ({room_id, callbackSetSignIn}) =>
             // console.log(`Error code ${response.status}: ${data["Response"]} `);
         }
     }
-
-    const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => 
-    {
-
-        const token = {access_token: null, refresh_token: null}
-        // const backend_host = host;
-        if(localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null)
-        {
-            token.access_token = localStorage.getItem("access"); 
-            token.refresh_token = localStorage.getItem("refresh");
-        }
-        else
-        {
-            throw new Error("There is no access token and refresh token ....");
-        }
-
-        const verifyAccessToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_access_token_API_endpoint = `http://${backend_host}/api/token/verify`
-            const verify_access_token_API_data = 
-            {
-                "token": token.access_token,
-            }
-            const verify_access_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_access_token_API_data),
-
-            }
-            const verify_access_token_API_response = await fetch(verify_access_token_API_endpoint, 
-                                                                verify_access_token_API_option,);
-            if(verify_access_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        /*
-        *brief: this function is to verify the refresh-token and refresh the access-token if the refresh-token is still valid
-        */
-        const verifyRefreshToken  = async () =>
-        {
-            //call the API to verify access-token
-            const verify_refresh_token_API_endpoint = `http://${backend_host}/api/token/refresh`
-            const verify_refresh_token_API_data = 
-            {
-                "refresh": token.refresh_token,
-            }
-            const verify_refresh_token_API_option = 
-            {
-                "method": "POST",
-                "headers": 
-                {
-                    "Content-Type": "application/json",
-                },
-                "body": JSON.stringify(verify_refresh_token_API_data),
-
-            }
-            const verify_refresh_token_API_response = await fetch(verify_refresh_token_API_endpoint, 
-                                                                    verify_refresh_token_API_option,);
-            const verify_refresh_token_API_response_data = await verify_refresh_token_API_response.json();
-            if(verify_refresh_token_API_response.status !== 200)
-            {
-                return false;
-            }
-            else if(verify_refresh_token_API_response.status === 200 &&  verify_refresh_token_API_response_data.hasOwnProperty("access"))
-            {
-                localStorage.setItem("access", verify_refresh_token_API_response_data["access"]);
-                localStorage.setItem("refresh", verify_refresh_token_API_response_data["refresh"]);
-                return true
-            }
-            else
-            {
-                throw new Error("Can not get new access token ....");
-            }
-        }
-
-        const  verifyAccessToken_response = await verifyAccessToken();
-
-        if(verifyAccessToken_response === true)
-        {
-            // const response = await fetch(url)
-            // const data = await response.json()
-            fetch_data_function(url, token["access_token"])
-        }
-        else
-        {
-            let verifyRefreshToken_response = null;
-            try
-            {
-                verifyRefreshToken_response = await verifyRefreshToken();
-            }
-            catch(err)
-            {
-                alert(err);
-            }
-            if(verifyRefreshToken_response === true)
-            {
-                fetch_data_function(url, token["access_token"]);
-            }
-            else
-            {
-                callbackSetSignIn(false);
-            }
-        }
-
-    }
     
     useEffect(()=>{
         verify_and_get_data(fetch_data_function, callbackSetSignIn, host, url);
@@ -299,7 +188,7 @@ const AQI = ({room_id, callbackSetSignIn}) =>
             </Grid>
             <Grid item marginY={0.6} />
             <Grid item style={{ marginLeft: '20px' }}>
-                <Typography fontWeight='bold' variant='h2'>{aqi['level']}</Typography>
+                <Typography fontWeight='bold' variant='h2'>{t(aqi['level'])}</Typography>
             </Grid>
         </Grid>
     );

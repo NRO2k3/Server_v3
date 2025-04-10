@@ -20,12 +20,12 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
     const [data, setData] = useState(null);
 
     const rating_index = {
-        1: { "level": "Good", "colour": "green" },
-        2: { "level": "Moderate", "colour": "yellow" },
-        3: { "level": "Poor", "colour": "orange" },
-        4: { "level": "Unhealthy", "colour": "red" },
-        5: { "level": "Very Unhealthy", "colour": "purple" },
-        6: { "level": "Hazardous", "colour": "maroon" },
+        1: { level: "good", colour: "green" },
+        2: { level: "moderate", colour: "yellow" },
+        3: { level: "poor", colour: "orange" },
+        4: { level: "unhealthy", colour: "red" },
+        5: { level: "veryUnhealthy", colour: "purple" },
+        6: { level: "hazardous", colour: "maroon" },
     };
 
     const rating_array = [
@@ -108,7 +108,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                 :
                 <Grid container item textAlign='center'>
                     <Grid xs={12} sm={12} md={12} textAlign="center">
-                        <Typography fontSize='21px' fontWeight="bold">
+                        <Typography fontSize='24px' fontWeight="bold">
                             {t("hanoiaqi")}
                         </Typography>
                     </Grid>
@@ -161,7 +161,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                                     </Grid>
                                     <Grid item marginY={0.5} />
                                     <Grid item>
-                                        <Typography fontWeight='bold' variant='h3'>{data['rating']['rate']}</Typography>
+                                        <Typography fontWeight='bold' variant='h3'>{t(data['rating']['rate'])}</Typography>
                                     </Grid>
                                 </Grid>
                                 <Grid item xs>
@@ -173,7 +173,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                                         gap="5px"
                                     >
                                         <ThermostatIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} />
-                                        <span style={{ flexGrow: 1 }}> Temperature: {data['t'] === 'No data' ? 'No data' : `${data['t']} °C`}</span>
+                                        <span style={{ flexGrow: 1 }}> {t("temperature")}: {data['t'] === 'No data' ? 'No data' : `${data['t']} °C`}</span>
                                     </Typography>
                                     
                                     <Typography
@@ -184,7 +184,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                                         gap="5px"
                                     >
                                         <InvertColorsIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} /> 
-                                        <span style={{ flexGrow: 1 }}> Hudminity: {data['h'] === 'No data' ? 'No data' : `${data['h']} %`}</span>
+                                        <span style={{ flexGrow: 1 }}> {t("hudminity")}: {data['h'] === 'No data' ? 'No data' : `${data['h']} %`}</span>
                                     </Typography>
 
                                     <Typography
@@ -195,7 +195,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                                         gap="10px"
                                     >
                                         <SpeedIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} /> 
-                                        <span style={{ flexGrow: 1 }}>Pressure: {data['p'] === 'No data' ? 'No data' : `${data['p']} hPa`}</span>
+                                        <span style={{ flexGrow: 1 }}>{t("pressure")}: {data['p'] === 'No data' ? 'No data' : `${data['p']} hPa`}</span>
                                     </Typography>
 
                                     <Typography
@@ -206,7 +206,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                                         gap="10px"
                                     >
                                         <FilterDramaIcon sx={{ fontSize: '3rem', color: theme.palette.primary.main }} /> 
-                                        <span style={{ flexGrow: 1 }}>Wind: {data['w'] === 'No data' ? 'No data' : `${data['w']} m/s`}</span>
+                                        <span style={{ flexGrow: 1 }}>{t("wind")}: {data['w'] === 'No data' ? 'No data' : `${data['w']} m/s`}</span>
                                     </Typography>
                                 </Grid>
                             </Grid>
