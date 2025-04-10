@@ -4,10 +4,12 @@ import Grid from '@mui/material/Grid';
 import {host} from "../../App";
 import RoomMap2D from "../Map2D/RoomMap2D";
 import RoomMap from "../RoomMap/RoomMap2";
+import RoomMapConnections from "../RoomMap/RoomMapConnections";
 
 function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate}) {
     const theme = useTheme();
     const [status, setStatus] = useState(true);
+    const [statusConnections, setStatusConnections] = useState(false);
     const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room2.png");
 
     const convertToBase64 = (file) => {
@@ -43,7 +45,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
         >
             <Grid>
                 <Button sx={{
-                    width: "120px",
+                    width: "150px",
                     height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
@@ -54,11 +56,14 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                     borderRadius: "5px",
                     "&:hover": { backgroundColor: "#EEEEEE" }
                 }}
-                    onClick={() => { setStatus(true) }}>
+                    onClick={() => {
+                        setStatus(true)
+                        setStatusConnections(false)
+                        }}>
                     ROOM
                 </Button>
                 <Button sx={{
-                    width: "120px",
+                    width: "150px",
                     height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
@@ -69,10 +74,30 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                     borderRadius: "5px",
                     "&:hover": { backgroundColor: "#EEEEEE" }
                 }}
-                    onClick={() => { setStatus(false) }}>
+                    onClick={() => {
+                        setStatus(false)
+                        setStatusConnections(false)
+                    }}>
                     HEAT MAP
                 </Button>
-
+                <Button sx={{
+                    width: "150px",
+                    height: "60px",
+                    backgroundColor: "white",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    padding: "5px 12px",
+                    margin: "5px",
+                    border: "2px solid black",
+                    borderRadius: "5px",
+                    "&:hover": { backgroundColor: "#EEEEEE" }
+                }}
+                    onClick={() => {
+                        setStatus(false)
+                        setStatusConnections(true) 
+                        }}>
+                    Connections
+                </Button>
                 <input
                     type="file"
                     accept="image/*"
@@ -83,7 +108,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                 <label htmlFor="upload-button">
                     <Button component="span"
                         sx={{
-                            width: "120px",
+                            width: "150px",
                             height: "60px",
                             backgroundColor: "white",
                             fontSize: "20px",
@@ -99,16 +124,23 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                 </label>
 
             </Grid>
-            {status ? (
+            {status? (
                 <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setListNode={setListNode}
                 callbackSetSignIn = {callbackSetSignIn} setSeparate = {setSeparate}/>
-            ) : (
-                <RoomMap
-                    room_id={room_id}
-                    callbackSetSignIn={callbackSetSignIn}
-                    backend_host={host}
-                    setSeparate = {setSeparate}
+            ) : (statusConnections ?
+                <RoomMapConnections
+                room_id={room_id}
+                callbackSetSignIn={callbackSetSignIn}
+                backend_host={host}
+                setSeparate = {setSeparate}
                 />
+                :
+                <RoomMap
+                room_id={room_id}
+                callbackSetSignIn={callbackSetSignIn}
+                backend_host={host}
+                setSeparate = {setSeparate}
+            />
             )}
         </Box>
     );

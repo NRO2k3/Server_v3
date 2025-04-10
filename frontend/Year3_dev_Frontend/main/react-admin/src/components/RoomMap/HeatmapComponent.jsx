@@ -80,7 +80,7 @@ const HeatmapComponent = ({nodeData, nodeList, nodeFunction, pic_src, showHeatma
             key={index}
             variant="contained"
             color="primary"
-            style={{ top: sensor.y -25, left: sensor.x -25 , backgroundColor: (nodeFunction[index] === 'sensor' ? 'white' : 'aqua') }} 
+            style={{ top: sensor.y, left: sensor.x , backgroundColor: (nodeFunction[index] === 'sensor' ? 'white' : 'aqua') }} 
             startIcon={<AddCircleOutline />}
           >
             {nodeFunction[index] === 'sensor' ?

@@ -1,11 +1,8 @@
-import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
-import plan_409 from "../../assets/409.svg";
-import plan_410 from "../../assets/410.svg";
-import plan_411 from "../../assets/411.svg";
+import { Grid } from "@mui/material";
 import { host } from "../../App";
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useEffect } from "react";
 import verify_and_get_data from "../../function/fetchData";
-import HeatmapComponent from "./HeatmapComponent";
+import RoomMapConnectionsComponent from "./RoomMapConnectionsComponent";
 import { data_max_min } from "../Map2D/RoomMap2D";
 
 const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
@@ -13,8 +10,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
     const [nodeData, setNodeData] = useState([]);
     const [nodeList, setNodeList] = useState([]);
     const [nodeFunction, setNodeFunction] = useState([]);
-    const [showHeatmap, setShowHeatmap] = useState(true);
-    const theme = useTheme();
+    const [sizeRoom, setSizeRoom] =  useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const api_to_fetch = `http://${backend_host}/api/heatmap?room_id=${room_id}`;
     const image = localStorage.getItem("uploadedImage") || "/room2.png";
@@ -42,6 +38,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
         if (response && response.status === 200) {
             const data_response = await response.json();
             let newNodePosition = [];
+            setSizeRoom(data_response[0])
             setNodeList(data_response[1]);
             setNodeFunction(data_response[2]);
             for (let i = 0; i < data_response[3].length; i++) {
@@ -75,26 +72,17 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
         <>
             {
                 isLoading ? <h1>Loading...</h1> :
-                    <Grid container justifyContent='center' sx={{mt : 16, mb: 2}}>
+                    <Grid container justifyContent='center' sx={{mt : 16, mb: 6}}>
                         <Grid item xs={12} p={1} />
                         <Grid container justifyContent='center' >
-                            <HeatmapComponent
+                            <RoomMapConnectionsComponent
+                                sizeRoom = {sizeRoom}
                                 nodeData={nodeData}
                                 nodeList={nodeList}
                                 nodeFunction={nodeFunction}
                                 pic_src={image}
-                                showHeatmap={showHeatmap}
+                                offset = {offset}
                             />
-                        </Grid>
-                        <Grid item container justifyContent='center' xs={12} marginY={3}>
-                            <Button size="large" variant='outlined' sx={{ borderColor: theme.palette.text.primary, height: '60px', width: '180px',}}
-                                onClick={() => {
-                                    setShowHeatmap(!showHeatmap);
-                                }}>
-                                <Typography variant='h4' fontWeight='bold' color={theme.palette.text.primary}>
-                                    {showHeatmap ? 'Heatmap OFF' : 'Heatmap ON'}
-                                </Typography>
-                            </Button>
                         </Grid>
                     </Grid>
             }

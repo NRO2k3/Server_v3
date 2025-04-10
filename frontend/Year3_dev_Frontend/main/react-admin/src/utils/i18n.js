@@ -13,7 +13,8 @@ i18n
           "theme": "Change theme",
           "settings":"Settings",
           "profile": "Profile",
-          "welcome": "Welcome, {{username}}"
+          "welcome": "Welcome, {{username}}",
+          "hanoiaqi": " Hanoi AQI: Hanoi Real-time Air Quality Index (AQI)",
         }
       },
       vi: {
@@ -24,7 +25,8 @@ i18n
           "theme": "Đổi Phông",
           "settings":"Cài Đặt",
           "profile": "Hồ sơ",
-          "welcome": "Xin Chào, {{username}}"
+          "welcome": "Xin Chào, {{username}}",
+          "hanoiaqi": "Chỉ số AQI Hà Nội: Chỉ số chất lượng không khí theo thời gian thực tại Hà Nội"
         }
       }
     },

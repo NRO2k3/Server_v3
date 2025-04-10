@@ -8,11 +8,13 @@ import SpeedIcon from '@mui/icons-material/Speed';
 
 import { host } from "../../App";
 import verify_and_get_data from "../../function/fetchData";
+import { useTranslation } from "react-i18next";
+import  "../../utils/i18n";
 
 export default function AqiRef({ callbackSetSignIn, time_delay }) {
     const url = `http://${host}/api/aqi_ref`;
     const theme = useTheme();
-
+    const {t} = useTranslation()
     const [isLoading, setIsLoading] = useState(true);
 
     const [data, setData] = useState(null);
@@ -34,24 +36,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
         { "key": 5, "min": 201, "max": 300 },
         { "key": 6, "min": 301, "max": 500 },
     ];
-    // const data = {
-    //     "time":1231313132,
-    //     "t": 26,
-    //     "p":12,
-    //     "w":2,
-    //     "h":12,
-    //     "aqi": 180,
-    //     "pm25": 35,
-    //     "pm10": 50,
-    //     "o3": 120,
-    //     "no2": 40,
-    //     "so2": 18,
-    //     "co": 0.9,
-    //     "rating": {
-    //         "color": rating_index[2]["colour"],
-    //         "rate": rating_index[2]["level"],
-    //     }
-    // };
+
     const fetch_data_function = async (api, access_token) => {
 
         const headers =
@@ -124,7 +109,7 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                 <Grid container item textAlign='center'>
                     <Grid xs={12} sm={12} md={12} textAlign="center">
                         <Typography fontSize='21px' fontWeight="bold">
-                            Hanoi AQI: Hanoi Real-time Air Quality Index (AQI)
+                            {t("hanoiaqi")}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} >

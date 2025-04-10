@@ -14,12 +14,6 @@ class Room(models.Model):
     y_length = models.IntegerField(null = True, db_column = "y_length",)
     information = models.TextField(null = True, db_column = "information",)
 
-class EmployeePermission(models.Model):
-
-    id = models.BigAutoField(primary_key = True, db_column = "id",)
-    user_id = models.IntegerField(null = False, db_column = "user_id",)
-    node_id = models.IntegerField(null = False, db_column = "node_id",)
-
 class RegistrationNode(models.Model):
 
     id = models.BigAutoField(primary_key = True, db_column="id",)
@@ -53,6 +47,20 @@ class RegistrationNode(models.Model):
             last_node = RegistrationNode.objects.order_by('-node_id').first()
             self.node_id = (last_node.node_id + 1) if last_node != None else 1
         super().save(*args, **kwargs)
+
+class EmployeePermission(models.Model):
+
+    id = models.BigAutoField(primary_key = True, db_column = "id",)
+    user_id = models.ForeignKey(User,
+                                    to_field='id',
+                                    on_delete = models.CASCADE,
+                                    null = False,
+                                    db_column = "user_id",)
+    node_id = models.OneToOneField(RegistrationNode,
+                                    to_field='node_id',
+                                    on_delete = models.CASCADE,
+                                    null = False,
+                                    db_column = "node_id",)
 
 class NodeConfigurationBuffer(models.Model):
 
