@@ -72,7 +72,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
         <>
             {
                 isLoading ? <h1>Loading...</h1> :
-                    <Grid container justifyContent='center' sx={{mt : 16, mb: 6}}>
+                    <Grid container justifyContent='center' sx={{mt : 6, mb: 6}}>
                         <Grid item xs={12} p={1} />
                         <Grid container justifyContent='center' >
                             <RoomMapConnectionsComponent

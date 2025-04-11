@@ -71,7 +71,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
         <>
             {
                 isLoading ? <h1>Loading...</h1> :
-                    <Grid container justifyContent='center' sx={{mt : 10}}>
+                    <Grid container justifyContent='center' sx={{mt : 6}}>
                         <Grid item xs={12} p={1} />
                         <Grid container justifyContent='center' >
                             <HeatmapComponent

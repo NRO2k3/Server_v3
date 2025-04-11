@@ -192,20 +192,20 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
   }))
 
   return (
-    <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
-      <Suspense fallback={null}>
-        <ImagePlane url={url} setClickPos={setClickPos}/>
-        {points.map((point) => (
-          <Point
-            key={point.id} {...point}
-            addSelectedNode={addSelectedNode}
-            callbackSetSignIn={callbackSetSignIn}
-            setSeparate={setSeparate}
-            />
-        ))}
-      </Suspense>
-      <ClickCoordinates clickPos={clickPos} />
-      <MapControls enableRotate={false} screenSpacePanning={true} panSpeed={2} />
+      <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
+        <Suspense fallback={null}>
+          <ImagePlane url={url} setClickPos={setClickPos}/>
+          {points.map((point) => (
+            <Point
+              key={point.id} {...point}
+              addSelectedNode={addSelectedNode}
+              callbackSetSignIn={callbackSetSignIn}
+              setSeparate={setSeparate}
+              />
+          ))}
+        </Suspense>
+        <ClickCoordinates clickPos={clickPos} />
+        <MapControls enableRotate={false} screenSpacePanning={true} panSpeed={2} />
     </Canvas>
   );
 }

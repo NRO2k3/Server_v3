@@ -38,7 +38,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             sx={{
                 boxShadow: 0,
                 borderRadius: '5px',
-                backgroundColor: theme.palette.background.paper
+                backgroundColor: theme.palette.background.paper,
+                mb : 6
             }}
             width="100%" height="100%"
             display="flex"
@@ -46,10 +47,10 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             alignItems="center"
             justifyContent="center"
         >
-            <Grid>
+            <Grid sx={{ mb:4}}>
                 <Button sx={{
-                    width: "150px",
-                    height: "80px",
+                    width: "140px",
+                    height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -66,8 +67,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                     {t("room")}
                 </Button>
                 <Button sx={{
-                    width: "150px",
-                    height: "80px",
+                    width: "140px",
+                    height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -84,8 +85,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                     {t("heatmap")}
                 </Button>
                 <Button sx={{
-                    width: "150px",
-                    height: "80px",
+                    width: "140px",
+                    height: "60px",
                     backgroundColor: "white",
                     fontSize: "20px",
                     fontWeight: "bold",
@@ -111,8 +112,8 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
                 <label htmlFor="upload-button">
                     <Button component="span"
                         sx={{
-                            width: "150px",
-                            height: "80px",
+                            width: "140px",
+                            height: "60px",
                             backgroundColor: "white",
                             fontSize: "20px",
                             fontWeight: "bold",

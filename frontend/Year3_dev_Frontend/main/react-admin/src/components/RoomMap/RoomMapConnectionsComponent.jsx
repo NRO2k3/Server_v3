@@ -52,23 +52,26 @@ const SvgOverlay = styled('svg')({
 });
 
 const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction, pic_src, offset}) => {
-  const one_met_to_pixel = Math.round(Math.sqrt((1100/sizeRoom[0])**2 + (800/sizeRoom[1])**2))
-  console.log(one_met_to_pixel)
+  const sensor_radius = 4.5
+  const one_meter_to_width = 1100/sizeRoom[0]
+  const one_meter_to_height = 800/sizeRoom[1]
   const getDistance = (node_1, node_2) =>{
     if(!node_1 || !node_2) return null
-    return Math.round(Math.sqrt((node_1.x-node_2.x)**2 + (node_1.y-node_2.y)**2))
+    return Math.sqrt(((node_1.x-node_2.x)/one_meter_to_width)**2 + ((node_1.y-node_2.y)/one_meter_to_height)**2)
   }
   const connections = []
   for(let i = 0; i < nodeData.length; i++){
     for(let j = i + 1; j < nodeData.length; j++){
-      if(getDistance(nodeData[i], nodeData[j]) <= 2*3*one_met_to_pixel){
+      const dist = getDistance(nodeData[i], nodeData[j])
+      if( dist <= 2*sensor_radius){
         connections.push({  "from": nodeData[i],
                             "to": nodeData[j],
-                            "key": `${i}-${j}`
+                            "key": `${i}-${j}`,
+                            "distance": dist
                           })}
     }
   }
-  console.log(connections)
+
   return (
     <MapConnectionsContainer>
       <MapConnectionsImg src={pic_src} alt="Map view" />
@@ -87,15 +90,17 @@ const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction
         ))}
 
         {nodeData.map((sensor, index) => (
-        <circle
-          key = {`circle-${index}`}
-          cx = {sensor.x + offset}
-          cy = {sensor.y + offset}
-          r = {3*one_met_to_pixel}
-          stroke = "black"
-          strokeWidth = "2"
-          fill = "none"
-        />
+          <ellipse
+            key={`ellipse-${index}`}
+            cx={sensor.x + offset}
+            cy={sensor.y + offset}
+            rx={sensor_radius* one_meter_to_width}
+            ry={sensor_radius * one_meter_to_height}
+            stroke="black"
+            strokeWidth="2"
+            fill="none"
+          />
+
   ))}
       </SvgOverlay>
       {nodeData.map((sensor, index) => (
