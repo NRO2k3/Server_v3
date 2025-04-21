@@ -912,6 +912,8 @@ def ConfigurationNodeBleMesh(request, *args, **kwargs):
         try:
             data = json.loads(request.body)
             data_save_database = data["info"]["dev_info"]
+            data_save_database["remote_unicast"] = data["info"]["remote_prov"]["unicast"]
+            data_save_database["remote_enable"] = data["info"]["remote_prov"]["enable"]
             data_buffer = {
                     "action": 1,
                     "mac": data_save_database["mac"],

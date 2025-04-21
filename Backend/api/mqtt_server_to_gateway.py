@@ -108,8 +108,8 @@ def ScanDeviceToGateWay(client: ClientMQTT):
 
                         connect_to_database.autocommit = True
                         cursor = connect_to_database.cursor()
-                        query = f"""INSERT INTO api_scandevice (room_id, uuid, device_name, mac, address_type, oob_info, adv_type, bearer_type, rssi)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                        query = f"""INSERT INTO api_scandevice (room_id, uuid, device_name, mac, address_type, oob_info, adv_type, bearer_type, rssi, remote_enable, remote_unicast)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                         dict_key = [
                             "uuid",
                             "device_name",
@@ -119,6 +119,8 @@ def ScanDeviceToGateWay(client: ClientMQTT):
                             "adv_type",
                             "bearer_type",
                             "rssi",
+                            "remote_enable",
+                            "remote_unicast"
                         ]
                         record = (data_receive["info"]["room_id"],)
                         for i in dict_key:
@@ -154,6 +156,10 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                     "info": {
                         "room_id":  latest_data_in_buffer.room_id,
                         "protocol": "ble_mesh",
+                        "remote_prov":{
+                            "enable": latest_data_in_node_registration.remote_enable,
+                            "unicast": latest_data_in_node_registration.remote_unicast,
+                        },
                         "dev_info": {
                             "uuid": latest_data_in_node_registration.uuid,
                             "device_name": latest_data_in_node_registration.device_name,
@@ -228,11 +234,15 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                             data_scan_device = ScanDevice.objects.filter(mac = latest_data_in_node_registration.mac)
                             data_scan_device.delete()
                             data_response = {
-                                "operation": "new_node_info_ack",
+                                "operator": "new_node_info_ack",
                                 "status": 1,
                                 "info": {
                                     "room_id": latest_data_in_buffer.room_id,
                                     "protocol": "ble_mesh",
+                                    "remote_prov":{
+                                        "enable": latest_data_in_node_registration.remote_enable,
+                                        "unicast": latest_data_in_node_registration.remote_unicast,
+                                    },
                                     "dev_info": {
                                         "node_id": latest_data_in_node_registration.node_id,
                                         "function": latest_data_in_node_registration.function,
@@ -243,7 +253,7 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                                 }
                             }
                             message_send = json.dumps(data_response)
-                            result = client.publish(topic, message_send)
+                            result = client.publish(topic[1], message_send)
                             status = result[0]
 
                             if status == 0:

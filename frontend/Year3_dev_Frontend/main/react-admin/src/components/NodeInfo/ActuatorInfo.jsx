@@ -21,7 +21,7 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
       <Typography variant="h3" sx={{fontWeight: "bold"}}> Actuator Info And Setting Mode </Typography>
       </Grid>
       <Grid item sx={{mt:1}}>
-        <InputLabel sx={{ fontSize: "14px", color: "black",  marginTop: "10px", textAlign: "center", justifyContent: "center", fontWeight: "bold"}}> Node Id </InputLabel>
+        <InputLabel sx={{ fontSize: "14px", color: "black",  marginTop: "0px", textAlign: "center", justifyContent: "center", fontWeight: "bold"}}> Node Id </InputLabel>
         <Select
           value={idNode}
           onChange={(e) => setIdNode(e.target.value)}

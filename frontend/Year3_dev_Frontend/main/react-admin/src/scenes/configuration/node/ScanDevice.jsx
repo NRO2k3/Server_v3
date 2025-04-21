@@ -107,6 +107,10 @@ export default function ScanDevice({roomIdForNodeConfig}) {
           "info": {
               "room_id": roomIdForNodeConfig,
               "protocol": "ble_mesh",
+              "remote_prov":{
+                "enable": data.remote_enable,
+                "unicast": data.remote_unicast,
+              },
               "dev_info": {
                             "uuid": data.uuid,
                             "device_name": data.device_name,

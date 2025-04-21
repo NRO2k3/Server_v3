@@ -47,7 +47,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             alignItems="center"
             justifyContent="center"
         >
-            <Grid sx={{ mb:4}}>
+            <Grid sx={{ mb:2}}>
                 <Button sx={{
                     width: "140px",
                     height: "60px",

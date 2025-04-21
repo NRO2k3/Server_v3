@@ -40,6 +40,8 @@ class RegistrationNode(models.Model):
     status = models.TextField(null = True, db_column = "status",)
     unicast = models.IntegerField(null = True, db_column="unicast",)
     time = models.BigIntegerField(null = True, db_column = "time",)
+    remote_enable = models.IntegerField(null = True, db_column="remote_enable",)
+    remote_unicast =models.IntegerField(null = True, db_column="remote_unicast",)
 
     def save(self, *args, **kwargs):
 
@@ -186,3 +188,5 @@ class ScanDevice(models.Model):
     adv_type = models.IntegerField(null = False, db_column = "adv_type")
     bearer_type = models.TextField(null = False, db_column = "bearer_type")
     rssi = models.IntegerField(null = False, db_column = "rssi")
+    remote_enable = models.IntegerField(null = True, db_column="remote_enable",)
+    remote_unicast =models.IntegerField(null = True, db_column="remote_unicast",)
