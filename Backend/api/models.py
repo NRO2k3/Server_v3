@@ -13,6 +13,7 @@ class Room(models.Model):
     x_length = models.IntegerField(null = True, db_column = "x_length",)
     y_length = models.IntegerField(null = True, db_column = "y_length",)
     information = models.TextField(null = True, db_column = "information",)
+    image = models.ImageField(upload_to='images/room',null = True, blank = True)
 
 class RegistrationNode(models.Model):
 

@@ -8,7 +8,7 @@ import RoomMapConnections from "../RoomMap/RoomMapConnections";
 import { useTranslation } from "react-i18next";
 import "../../utils/i18n"
 
-function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate}) {
+function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate, isImageFetched}) {
     const {t} = useTranslation()
     const theme = useTheme();
     const [status, setStatus] = useState(true);
@@ -32,6 +32,14 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             localStorage.setItem("uploadedImage", base64);
         }
     };
+
+    useEffect(() => {
+        if (isImageFetched) {
+            setImage(localStorage.getItem("uploadedImage") || "/room2.png");
+        } else {
+            setImage(localStorage.getItem("uploadedImage"));
+        }
+    }, [isImageFetched]);
 
     return (
         <Box

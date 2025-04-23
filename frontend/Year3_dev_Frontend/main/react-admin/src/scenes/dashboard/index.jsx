@@ -21,6 +21,7 @@ const Dashboard = () => {
     // console.log(location)
     const data_passed_from_landingpage = location.state;
     let room_id = data_passed_from_landingpage == null ? 1 : data_passed_from_landingpage.room_id
+    const url_image = data_passed_from_landingpage.image_url
     const theme = useTheme();
     const callbackSetSignIn = useContext(UserContext);
     const [id, setId] = useState(1);
@@ -32,7 +33,7 @@ const Dashboard = () => {
     const api = `http://${host}/api/configuration_node?room_id=${room_id}`
     const [listNode, setListNode] = useState([])
     const [separate, setSeparate] = useState(false)
-    console.log(listNode)
+    const [isImageFetched, setIsImageFetched] = useState(false);
     const getConfigurationNodeAllData = async (url, access_token) =>
     {
 
@@ -63,13 +64,30 @@ const Dashboard = () => {
         }
     }
 
+    const fetchAndEncodeImage = async () => {
+        try {
+            const response = await fetch(url_image);
+            const blob = await response.blob();
+            const reader = new FileReader();
+            reader.onloadend = () => {
+            const base64 = reader.result;
+            localStorage.setItem("uploadedImage", base64);
+            setIsImageFetched(true)
+            };
+            reader.readAsDataURL(blob);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+        };
+
     useEffect(()=>{
+        fetchAndEncodeImage()
         verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         const timer = setInterval(() => {
             verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         }, 20000);
         return () => clearInterval(timer);
-    },[])
+    },[isImageFetched])
     return (
     <>
     <Box 
@@ -155,6 +173,7 @@ const Dashboard = () => {
                             configurationNodeAll={configurationNodeAll}
                             setListNode = {setListNode}
                             setSeparate = {setSeparate}
+                            isImageFetched = {isImageFetched}
                         />
                     </Grid>
 

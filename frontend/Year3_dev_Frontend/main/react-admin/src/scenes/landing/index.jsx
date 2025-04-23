@@ -60,7 +60,8 @@ const Landing = () => {
                             "name": `room ${room["room_id"]} ${room["construction_name"]}`,
                             "image": image_room[room["room_id"]],
                             "room_id": room["room_id"],
-                            "info": room["information"]
+                            "info": room["information"],
+                            "image_url": room["image"]
                         })
                     
                 })
@@ -141,7 +142,7 @@ const Landing = () => {
                                 <Link to="/landing/dashboard" 
                                     state= {room}
                                 >
-                                    <Button 
+                                    <Button
                                         size="small"
                                         sx={{
                                             backgroundColor: "black",

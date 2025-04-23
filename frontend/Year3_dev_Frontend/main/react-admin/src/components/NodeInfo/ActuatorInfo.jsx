@@ -16,8 +16,8 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
     }
   }, [actuators]);
   return (
-    <Grid container item textAlign='center'>
-      <Grid item container xs={12} sm={12} md={12} textAlign="center" justifyContent='center' >
+    <Grid container textAlign='center'>
+      <Grid container xs={12} sm={12} md={12} textAlign="center" justifyContent='center' >
       <Typography variant="h3" sx={{fontWeight: "bold"}}> Actuator Info And Setting Mode </Typography>
       </Grid>
       <Grid item sx={{mt:1}}>

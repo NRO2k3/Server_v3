@@ -35,5 +35,6 @@ urlpatterns=[
     path('enviroment_chart', views.GetEnviromentData, name = 'enviroment-chart'),
     path('room/AQIdustpm2_5', views.AQIdustpm2_5, name = 'AQI_dust_pm2_5'),
     path('actuator_status', views.GetActuatorStatus, name = 'actuator_status'),
-    path('raw_data_all_sensor', views.GetRawDataAllSensor, name = 'raw_data_all_sensor')
+    path('raw_data_all_sensor', views.GetRawDataAllSensor, name = 'raw_data_all_sensor'),
+    path('room_image', views.RoomImage, name = 'room_image'),
 ]

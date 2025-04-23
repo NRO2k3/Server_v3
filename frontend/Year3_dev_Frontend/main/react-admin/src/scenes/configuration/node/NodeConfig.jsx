@@ -27,6 +27,8 @@ import verifyRefreshToken from '../../../function/verifyRefreshToken';
 import ScanDevice from './ScanDevice';
 import Options from '../../../components/OptionsRoomMap/Options';
 import { Box} from "@mui/material";
+import Algorithm from './Algorithm';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     
@@ -37,6 +39,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     const [isLoadingNodeConfig, setIsLoadingNodeConfig] = useState(true);
     const [listNode, setListNode] = useState([])
     const [separate, setSeparate] = useState(false)
+    const [isImageFetched, setIsImageFetched] = useState(false)
     const dict_function = {
         "sensor": "Sensor",
         "air": "Air conditioner",
@@ -130,6 +133,36 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
         }
         
     };
+    
+    const handleImage = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append("image", file);
+            const token = {access_token: null, refresh_token: null}
+            if(localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null){
+                token.access_token = localStorage.getItem("access");
+                token.refresh_token = localStorage.getItem("refresh");
+            } else {
+                throw new Error("There is no access token and refresh token ....");
+            }
+            const headers =
+            {
+                "Authorization": `Bearer ${token.access_token}`,
+            }
+            const response = await fetch(`http://${host}/api/room_image?room_id=${roomIdForNodeConfig}`, {
+                "method": "PATCH",
+                "headers": headers,
+                "body": formData,
+            })
+            
+            if (response.status === 200){
+                alert("Upload Successfully")
+            } else {
+                alert("Error Upload")
+            }
+        }
+    };
 
     useEffect(()=>{
         verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
@@ -150,22 +183,47 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
             <Container sx={{ p: 0, m: 0, width: "100vw" }}
                         maxWidth={false}
                         disableGutters>
-                <Button
-                    startIcon={<ArrowBackIcon />}
-                    sx={{
-                        backgroundColor: "black",
-                        fontSize: "10px",
-                        fontWeight: "bold",
-                        padding: "5px 12px",
-                        }}
-                    variant="contained"
+                <Grid container gap = {2}>
+                    <Button
+                        startIcon={<ArrowBackIcon />}
+                        sx={{
+                            backgroundColor: "black",
+                            fontSize: "10px",
+                            fontWeight: "bold",
+                            padding: "5px 12px",
+                            }}
+                        variant="contained"
 
-                    onClick={()=>{
-                        setConfig(0);
-                    }}
-                >
-                    Go Back
-                </Button>
+                        onClick={()=>{
+                            setConfig(0);
+                        }}
+                    >
+                        Go Back
+                    </Button>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImage}
+                        style={{ display: "none" }}
+                        id="upload"
+                    />
+                    <label htmlFor="upload">
+                    <Button
+                        component="span"
+                        startIcon={<ArrowDownwardIcon />}
+                        sx={{
+                            backgroundColor: "blue",
+                            fontSize: "10px",
+                            fontWeight: "bold",
+                            padding: "5px 12px",
+                            "&:hover": {backgroundColor: "#3366FF"},
+                        }}
+                        variant="contained"
+                    >
+                        Import Image Room
+                    </Button>
+                    </label>
+                </Grid>
                 {/* Protocol Wifi*/}
                 {/* <NodeChange configurationNodeAll={configurationNodeAll} 
                             callbackSetSignIn={callbackSetSignIn} 
@@ -175,7 +233,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                 /> */}
                 <Grid container>
                     <Grid item xs = {4.5}>
-                        <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white"}}>
+                        <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "600px", overflowY: "auto"}}>
                             <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                             <Table size="small">
                                 <TableHead>
@@ -238,6 +296,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             </Link> */}
 
                         </TableContainer>
+                        <Algorithm/>
                     </Grid>
                     <Grid item xs={7.5}>
 
@@ -247,6 +306,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             configurationNodeAll={configurationNodeAll}
                             setListNode = {setListNode}
                             setSeparate = {setSeparate}
+                            isImageFetched = {isImageFetched}
                             />
                         </Grid>
                         <Grid>

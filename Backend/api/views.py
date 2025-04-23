@@ -1,9 +1,10 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
+from rest_framework.parsers import MultiPartParser, FormParser
 import json, datetime, random
 from django.conf import settings
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -1043,6 +1044,26 @@ def EmployeeNode(request, *args, **kwargs):
         return Response(
             data_response, status = status.HTTP_200_OK)
 
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["PATCH"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def RoomImage(request, *args, **kwargs):
+    try:
+        room_id = request.GET["room_id"]
+        image_file = request.FILES.get("image")
+        if not image_file:
+            return Response({"error": "Error"}, status=status.HTTP_400_BAD_REQUEST)
+        room = Room.objects.get(room_id = room_id)
+        room.image = image_file
+        room.save()
+        return Response({"message": "Image updated successfully"}, status=status.HTTP_200_OK)
     except:
         return Response(
             {"Response": "Error on server!"},

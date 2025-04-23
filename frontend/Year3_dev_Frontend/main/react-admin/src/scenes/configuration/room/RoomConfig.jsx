@@ -93,11 +93,11 @@ export default function RoomConfig({setConfig, setRoomIdForNodeConfig, setRoomSi
                                 <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.information}</TableCell>
                                 <TableCell 
                                     sx={{
-                                        width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
-                                              "& .MuiInputBase-root": {
-                                                  height: 35
-                                              },
-                                            }}
+                                    width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
+                                            "& .MuiInputBase-root": {
+                                                height: 35
+                                            },
+                                        }}
                                 >
                                     <Button
                                         startIcon={<DetailsIcon />}
@@ -120,11 +120,11 @@ export default function RoomConfig({setConfig, setRoomIdForNodeConfig, setRoomSi
                                 </TableCell>
                                 <TableCell 
                                 sx={{
-                                    width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
-                                          "& .MuiInputBase-root": {
-                                              height: 35
-                                          },
-                                        }}
+                                width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
+                                        "& .MuiInputBase-root": {
+                                            height: 35
+                                        },
+                                    }}
                                 >
                                     <DialogConfirmSettingRoom callbackSetSignIn={callbackSetSignIn} 
                                                             RoomConfigLoading={{0: isLoading, 1: setIsLoading}} 
