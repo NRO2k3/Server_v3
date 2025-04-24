@@ -191,3 +191,15 @@ class ScanDevice(models.Model):
     rssi = models.IntegerField(null = False, db_column = "rssi")
     remote_enable = models.IntegerField(null = True, db_column="remote_enable",)
     remote_unicast =models.IntegerField(null = True, db_column="remote_unicast",)
+
+class ResultAlgorithm(models.Model):
+    id = models.BigAutoField(primary_key = True, db_column = "id")
+    room_id = models.ForeignKey(Room,
+                                to_field = 'room_id',
+                                verbose_name = ("Refering to id of room where this node is implemented"),
+                                on_delete = models.CASCADE,
+                                null = False,
+                                db_column = "room_id",
+                                )
+    image_decode = models.ImageField(upload_to='images/result/decode',null = True, blank = True)
+    image_encode = models.ImageField(upload_to='images/result/encode',null = True, blank = True)

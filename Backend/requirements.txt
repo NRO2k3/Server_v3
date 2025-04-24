@@ -21,3 +21,5 @@ rest-framework-simplejwt==0.0.2
 sqlparse==0.5.3
 typing_extensions==4.12.2
 urllib3==2.3.0
+matplotlib==3.9.2
+numpy==2.1.1

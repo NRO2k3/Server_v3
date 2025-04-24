@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (EmployeePermission, Room, RegistrationNode, NodeConfigurationBuffer, ControlSetpoint,
-                    AqiRef, RawSensorMonitor, EnergyData, RawActuatorMonitor, ScanDevice)
+                    AqiRef, RawSensorMonitor, EnergyData, RawActuatorMonitor, ScanDevice, ResultAlgorithm)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
 
@@ -126,4 +126,11 @@ class ScanDeviceSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = ScanDevice
+        fields = "__all__"
+
+class ResultAlgorithmSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = ResultAlgorithm
         fields = "__all__"

@@ -37,4 +37,6 @@ urlpatterns=[
     path('actuator_status', views.GetActuatorStatus, name = 'actuator_status'),
     path('raw_data_all_sensor', views.GetRawDataAllSensor, name = 'raw_data_all_sensor'),
     path('room_image', views.RoomImage, name = 'room_image'),
+    path('coverage_algorithm', views.CoverageAlgorithm, name = 'coverage_algorithm'),
+    path('result_coverage_algorithm', views.ResultCoverageAlgorithm, name = 'result_coverage_algorithm'),
 ]

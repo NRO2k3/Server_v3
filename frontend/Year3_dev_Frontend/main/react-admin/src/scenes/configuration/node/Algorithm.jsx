@@ -3,16 +3,52 @@ import { useState } from "react";
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import CloseIcon from '@mui/icons-material/Close';
 import { Border } from "victory";
-export default function Algorithm() {
+import { host } from "../../../App";
+import ImageResult from "./ImageResult";
+
+export default function Algorithm({roomIdForNodeConfig}) {
   const [open, setOpen] = useState(false)
   const [numberNode, setNumberNode] = useState('');
   const [communicationRadius, setCommunicationRadius] = useState('');
   const [sensingRadius, setSensingRadius] = useState('');
-  const handleClick = () =>{
-    if (!numberNode || !communicationRadius || !sensingRadius) {
-      alert("Please fill in all fields.")
+  const url = `http://${host}/api/coverage_algorithm`
+  const handleClick = async() =>{
+    if (numberNode && communicationRadius && sensingRadius) {
+        const token = {access_token: null, refresh_token: null}
+        if(localStorage.getItem("access") !== null && localStorage.getItem("refresh") !== null){
+            token.access_token = localStorage.getItem("access");
+            token.refresh_token = localStorage.getItem("refresh");
+        } else {
+            throw new Error("There is no access token and refresh token ....");
+        }
+
+      const headers = {
+        "Content-Type" : "application",
+        "Authorization": `Bearer ${token.access_token}`
+      }
+
+      const body = JSON.stringify({
+          "room_id" : roomIdForNodeConfig,
+          "number_node": numberNode,
+          "Rc":communicationRadius,
+          "Rs":sensingRadius,
+      })
+
+      const option_fetch={
+        "method": "POST",
+        "headers": headers,
+        "body": body,
+      }
+
+      const response = await fetch(url, option_fetch)
+      if(response.status === 200){
+        alert("Send Successfully please wait")
+        setOpen(false);
+      } else {
+        alert("Try again")
+      }
     }else{
-      alert("OK")
+      alert("Please fill full parameter")
     }
     
   }
@@ -40,6 +76,7 @@ export default function Algorithm() {
             >
                 Setting
       </Button>
+      <ImageResult roomIdForNodeConfig={roomIdForNodeConfig}/>
     </Paper>
     <Dialog
           open = {open}

@@ -69,15 +69,16 @@ const Dashboard = () => {
             const response = await fetch(url_image);
             const blob = await response.blob();
             const reader = new FileReader();
-            reader.onloadend = () => {
-            const base64 = reader.result;
-            localStorage.setItem("uploadedImage", base64);
-            setIsImageFetched(true)
-            };
             reader.readAsDataURL(blob);
+
+            reader.onload = () => {
+                const base64 = reader.result;
+                localStorage.setItem("uploadedImage", base64);
+                setIsImageFetched(true)
+            };
         } catch (error) {
             console.error("Error:", error);
-        }
+            }
         };
 
     useEffect(()=>{

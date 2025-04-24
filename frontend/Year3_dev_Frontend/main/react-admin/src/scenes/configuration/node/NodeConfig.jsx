@@ -296,7 +296,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             </Link> */}
 
                         </TableContainer>
-                        <Algorithm/>
+                        <Algorithm roomIdForNodeConfig={roomIdForNodeConfig}/>
                     </Grid>
                     <Grid item xs={7.5}>
 

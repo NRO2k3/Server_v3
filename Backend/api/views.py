@@ -18,11 +18,12 @@ from .serializers import (EmployeePermissionSerializer, RegistrationNodeSerializ
                             UserSerializer, ResetPassWordSerializer, ChangePassWordSerializer,
                             NodeConfigurationBufferSerializer, RoomSerializer, ControlSetpointSerializer,
                             AqiRefSerializer, RawSensorMonitorSerializer, EnergyDataSerializer, RawActuatorMonitorSerializer,
-                            ScanDeviceSerializer)
+                            ScanDeviceSerializer, ResultAlgorithmSerializer)
 from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSensorMonitor, EnergyData, RawActuatorMonitor,
-                    ScanDevice, NodeConfigurationBuffer)
+                    ScanDevice, NodeConfigurationBuffer, ResultAlgorithm)
 from threading import Thread
 from .mqtt_server_to_gateway import SendNodeToGatewayWifi, SendSetUpActuatorToGateway, ScanDeviceToGateWay, CheckScanDeviceToGateWay, SendAddNodeToGatewayBleMesh, SendDeleteNodeToGatewayBleMesh, client
+from .coverage_algorithm import CoverageOptimizationAlgorithm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -1064,6 +1065,44 @@ def RoomImage(request, *args, **kwargs):
         room.image = image_file
         room.save()
         return Response({"message": "Image updated successfully"}, status=status.HTTP_200_OK)
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["POST"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def CoverageAlgorithm(request, *args, **kwargs):
+    try:
+        data = json.loads(request.body)
+        if data:
+            t = Thread(target = CoverageOptimizationAlgorithm, args = (data,))
+            t.start()
+            return Response("OK", status=status.HTTP_200_OK)
+        return Response(
+            {"Response": "Error!"},
+            status = status.HTTP_400_BAD_REQUEST,
+        )
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+@api_view(["GET"])
+@authentication_classes([jwtauthentication.JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def ResultCoverageAlgorithm(request, *args, **kwargs):
+    try:
+        room_id = request.GET["room_id"]
+        data = ResultAlgorithm.objects.filter(room_id=room_id).order_by('-id').first()
+        data_serializer = ResultAlgorithmSerializer(data).data
+        return Response(
+            data_serializer,
+            status = status.HTTP_200_OK,
+        )
     except:
         return Response(
             {"Response": "Error on server!"},
