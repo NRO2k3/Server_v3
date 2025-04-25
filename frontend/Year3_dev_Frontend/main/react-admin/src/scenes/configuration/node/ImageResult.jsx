@@ -2,9 +2,8 @@ import { useState, useEffect} from "react";
 import { host } from "../../../App";
 import { Typography, Grid } from "@mui/material";
 
-function ImageResult({roomIdForNodeConfig}) {
-  const [dataRoom, setData] = useState(null)
-  const url = `http://${host}/api/result_coverage_algorithm?room_id=${roomIdForNodeConfig}`;
+function ImageResult({roomIdForNodeConfig, dataRoom, setData, algorithm}) {
+  const url = `http://${host}/api/result_coverage_algorithm?room_id=${roomIdForNodeConfig}&&algorithm=${algorithm}`;
   const [imageDecode, setImageDecode] = useState(null);
   const [imageEncode, setImageEncode] = useState(null);
   const fetchAndEncodeImage = async (url_image, cmd) => {
@@ -62,9 +61,9 @@ function ImageResult({roomIdForNodeConfig}) {
   useEffect(()=>{
     const timer = setInterval(() => {
         handleLoad();
-    }, 10000);
+    }, 60000);
     return () => clearInterval(timer);
-    },[])
+    },[algorithm])
   return (
     <>
         {dataRoom === null ? <Typography variant = "h1">Loading .... </Typography>:

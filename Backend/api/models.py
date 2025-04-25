@@ -201,5 +201,6 @@ class ResultAlgorithm(models.Model):
                                 null = False,
                                 db_column = "room_id",
                                 )
-    image_decode = models.ImageField(upload_to='images/result/decode',null = True, blank = True)
-    image_encode = models.ImageField(upload_to='images/result/encode',null = True, blank = True)
+    image_decode = models.ImageField(upload_to='images/result/decode',null = True, blank = True, db_column = "image_decode",)
+    image_encode = models.ImageField(upload_to='images/result/encode',null = True, blank = True, db_column = "image_encode",)
+    algorithm =  models.TextField(null = True, blank = True, db_column = "algorithm",)

@@ -23,7 +23,7 @@ from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSens
                     ScanDevice, NodeConfigurationBuffer, ResultAlgorithm)
 from threading import Thread
 from .mqtt_server_to_gateway import SendNodeToGatewayWifi, SendSetUpActuatorToGateway, ScanDeviceToGateWay, CheckScanDeviceToGateWay, SendAddNodeToGatewayBleMesh, SendDeleteNodeToGatewayBleMesh, client
-from .coverage_algorithm import CoverageOptimizationAlgorithm
+from .coverage_algorithm import CoverageOptimizationNOAlgorithm, CoverageOptimizationFOAAlgorithm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -1078,9 +1078,15 @@ def CoverageAlgorithm(request, *args, **kwargs):
     try:
         data = json.loads(request.body)
         if data:
-            t = Thread(target = CoverageOptimizationAlgorithm, args = (data,))
-            t.start()
-            return Response("OK", status=status.HTTP_200_OK)
+            print(data["algorithm"])
+            if data["algorithm"] == "NOA":
+                t = Thread(target = CoverageOptimizationNOAlgorithm, args = (data,))
+                t.start()
+                return Response("OK", status=status.HTTP_200_OK)
+            if data["algorithm"] == "FOA":
+                t = Thread(target = CoverageOptimizationFOAAlgorithm, args = (data,))
+                t.start()
+                return Response("OK", status=status.HTTP_200_OK)
         return Response(
             {"Response": "Error!"},
             status = status.HTTP_400_BAD_REQUEST,
@@ -1097,7 +1103,9 @@ def CoverageAlgorithm(request, *args, **kwargs):
 def ResultCoverageAlgorithm(request, *args, **kwargs):
     try:
         room_id = request.GET["room_id"]
-        data = ResultAlgorithm.objects.filter(room_id=room_id).order_by('-id').first()
+        algorithm = request.GET["algorithm"]
+        print(room_id, algorithm)
+        data = ResultAlgorithm.objects.filter(room_id=room_id, algorithm = algorithm).order_by('-id').first()
         data_serializer = ResultAlgorithmSerializer(data).data
         return Response(
             data_serializer,

@@ -52,7 +52,8 @@ const SvgOverlay = styled('svg')({
 });
 
 const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction, pic_src, offset}) => {
-  const sensor_radius = 4.5
+  const sensor_radius = 5
+  const communication_radius = 9
   const one_meter_to_width = 1100/sizeRoom[0]
   const one_meter_to_height = 800/sizeRoom[1]
   const getDistance = (node_1, node_2) =>{
@@ -63,7 +64,7 @@ const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction
   for(let i = 0; i < nodeData.length; i++){
     for(let j = i + 1; j < nodeData.length; j++){
       const dist = getDistance(nodeData[i], nodeData[j])
-      if( dist <= 2*sensor_radius){
+      if( dist <= communication_radius){
         connections.push({  "from": nodeData[i],
                             "to": nodeData[j],
                             "key": `${i}-${j}`,
@@ -94,7 +95,7 @@ const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction
             key={`ellipse-${index}`}
             cx={sensor.x + offset}
             cy={sensor.y + offset}
-            rx={sensor_radius* one_meter_to_width}
+            rx={sensor_radius * one_meter_to_width}
             ry={sensor_radius * one_meter_to_height}
             stroke="black"
             strokeWidth="2"

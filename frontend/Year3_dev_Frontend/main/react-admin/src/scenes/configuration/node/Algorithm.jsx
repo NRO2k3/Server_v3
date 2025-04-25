@@ -1,4 +1,4 @@
-import {Typography,Paper, InputLabel, TextField, Grid, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle} from "@mui/material"
+import {Typography,Paper, InputLabel, TextField, Grid, Button, Box, Dialog, DialogContent, DialogContentText, DialogTitle, Select, MenuItem} from "@mui/material"
 import { useState } from "react";
 import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import CloseIcon from '@mui/icons-material/Close';
@@ -6,7 +6,11 @@ import { Border } from "victory";
 import { host } from "../../../App";
 import ImageResult from "./ImageResult";
 
+const nameAlgorithm = ["FOA", "NOA"]
+
 export default function Algorithm({roomIdForNodeConfig}) {
+  const [algorithm, setAlgorithm] = useState("FOA")
+  const [dataRoom, setData] = useState(null)
   const [open, setOpen] = useState(false)
   const [numberNode, setNumberNode] = useState('');
   const [communicationRadius, setCommunicationRadius] = useState('');
@@ -32,6 +36,7 @@ export default function Algorithm({roomIdForNodeConfig}) {
           "number_node": numberNode,
           "Rc":communicationRadius,
           "Rs":sensingRadius,
+          "algorithm": algorithm,
       })
 
       const option_fetch={
@@ -43,7 +48,8 @@ export default function Algorithm({roomIdForNodeConfig}) {
       const response = await fetch(url, option_fetch)
       if(response.status === 200){
         alert("Send Successfully please wait")
-        setOpen(false);
+        setOpen(false)
+        setData(null)
       } else {
         alert("Try again")
       }
@@ -76,7 +82,7 @@ export default function Algorithm({roomIdForNodeConfig}) {
             >
                 Setting
       </Button>
-      <ImageResult roomIdForNodeConfig={roomIdForNodeConfig}/>
+      <ImageResult roomIdForNodeConfig={roomIdForNodeConfig} dataRoom={dataRoom} setData={setData} algorithm={algorithm}/>
     </Paper>
     <Dialog
           open = {open}
@@ -129,6 +135,19 @@ export default function Algorithm({roomIdForNodeConfig}) {
                       value={sensingRadius}
                       onChange={(e) => setSensingRadius(e.target.value)}
                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Select
+                      value={algorithm}
+                      onChange={(e)=> setAlgorithm(e.target.value)}
+                      sx={{ width: 80, height: 30, fontWeight: "bold" }}
+                    >
+                      {
+                        nameAlgorithm.map((name)=>
+                          <MenuItem value={name}>{name}</MenuItem>
+                        )
+                      }
+                    </Select>
                   </Grid>
                 </Grid>
               </DialogContentText>
