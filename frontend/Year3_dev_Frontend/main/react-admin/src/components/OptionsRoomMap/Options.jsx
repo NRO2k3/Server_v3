@@ -35,7 +35,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
     };
 
     useEffect(() => {
-        if (isImageFetched) {
+        if (!isImageFetched) {
             setImage(localStorage.getItem("uploadedImage") || "/room2.png");
         } else {
             setImage(localStorage.getItem("uploadedImage"));

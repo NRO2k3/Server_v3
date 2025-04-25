@@ -69,7 +69,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
             if(response.status === 200)
             {
                 setConfigurationNodeAll(data);
-                setIsLoadingNodeConfig(false);
+                setIsLoadingNodeConfig(false)
             }
         }
         else
@@ -232,7 +232,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             roomSize={roomSize}
                 /> */}
                 <Grid container>
-                    <Grid item xs = {4.5}>
+                    <Grid item xs = {6}>
                         <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "600px", overflowY: "auto"}}>
                             <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                             <Table size="small">
@@ -298,8 +298,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                         </TableContainer>
                         <Algorithm roomIdForNodeConfig={roomIdForNodeConfig}/>
                     </Grid>
-                    <Grid item xs={7.5}>
-
+                    <Grid item xs={6}>
                         <Grid Gird sx={{ height: "900px" }}>
                             <Options room_id={roomIdForNodeConfig}
                             callbackSetSignIn={callbackSetSignIn}

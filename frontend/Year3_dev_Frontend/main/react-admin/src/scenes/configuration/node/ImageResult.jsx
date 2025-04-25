@@ -66,12 +66,16 @@ function ImageResult({roomIdForNodeConfig, dataRoom, setData, algorithm}) {
     },[algorithm])
   return (
     <>
-        {dataRoom === null ? <Typography variant = "h1">Loading .... </Typography>:
+        {dataRoom === null ? <Typography variant = "h1" fontWeight="bold">Loading .... </Typography>:
           <Grid container direction="column" alignItems="center" justifyContent="center" spacing={2}>
-            <Typography variant = "h2" fontWeight= "bold">Decoded Image</Typography>
-            <img src={imageDecode} alt="Decoded" style={{ maxWidth: "100%", height: "auto" }} />
-            <Typography variant = "h2" fontWeight= "bold">Encoded Image</Typography>
-            <img src={imageEncode} alt="Encoded" style={{ maxWidth: "100%", height: "auto" }} />
+            <Grid item container direction="column" alignItems="center" justifyContent="center" spacing={2}>
+              <img src={imageDecode} alt="Decoded" style={{ maxWidth: "100%", height: "auto" }} />
+              <Typography variant = "h2" fontWeight= "bold">Decoded Image</Typography>
+            </Grid>
+            <Grid item container direction="column" alignItems="center" justifyContent="center" spacing={2}>
+              <img src={imageEncode} alt="Encoded" style={{ maxWidth: "100%", height: "auto" }} />
+              <Typography variant = "h2" fontWeight= "bold">Encoded Image</Typography>
+            </Grid>
         </Grid>
         }
     </>
