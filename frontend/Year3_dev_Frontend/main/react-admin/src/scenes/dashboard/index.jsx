@@ -88,7 +88,7 @@ const Dashboard = () => {
             verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         }, 20000);
         return () => clearInterval(timer);
-    },[isImageFetched])
+    },[])
     return (
     <>
     <Box 
