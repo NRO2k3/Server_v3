@@ -1,11 +1,12 @@
 import { useState, useEffect} from "react";
 import { host } from "../../../App";
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid, Button, Tooltip } from "@mui/material";
 
-function ImageResult({roomIdForNodeConfig, dataRoom, setData, algorithm}) {
+function ImageResult({roomIdForNodeConfig, dataRoom, setData, algorithm, communicationRadius, sensingRadius, numberNode}) {
   const url = `http://${host}/api/result_coverage_algorithm?room_id=${roomIdForNodeConfig}&&algorithm=${algorithm}`;
   const [imageDecode, setImageDecode] = useState(null);
   const [imageEncode, setImageEncode] = useState(null);
+  const [state, setState] = useState(true);
   const fetchAndEncodeImage = async (url_image, cmd) => {
     try {
         url_image= `http://${host}` + url_image
@@ -68,14 +69,64 @@ function ImageResult({roomIdForNodeConfig, dataRoom, setData, algorithm}) {
     <>
         {dataRoom === null ? <Typography variant = "h1" fontWeight="bold">Loading .... </Typography>:
           <Grid container direction="column" alignItems="center" justifyContent="center" spacing={2}>
+            {state ?
             <Grid item container direction="column" alignItems="center" justifyContent="center" spacing={2}>
-              <img src={imageDecode} alt="Decoded" style={{ maxWidth: "100%", height: "auto" }} />
-              <Typography variant = "h2" fontWeight= "bold">Decoded Image</Typography>
-            </Grid>
+              <Tooltip style={{
+                    fontSize: "14px",
+                    backgroundColor: "white",
+                    border: '1px solid #eeeeee',
+                    maxWidth: 400,
+                    whiteSpace: 'normal'
+                }}
+                placement="left"
+                title={
+                    <Grid>
+                        <Typography color="inherit">{`Algorithm: ${algorithm}`}</Typography>
+                        <Typography color="inherit">{`Number Node: ${numberNode}`}</Typography>
+                        <Typography color="inherit">{`Sensing Radius: ${sensingRadius}`}</Typography>
+                        <Typography color="inherit">{`Communication Radius: ${communicationRadius}`}</Typography>
+                        <Typography color="inherit">{`Detail: The image shows the positions of sensor nodes in the network, along with the coverage area of each node and their connectivity with neighboring nodes, aiming to achieve optimal coverage within the room.`}</Typography>
+                    </Grid>
+                }
+                >
+                <img src={imageDecode} alt="Loading ..." style={{ maxWidth: "100%", height: "auto",  marginTop: "40px" }} />
+              </Tooltip>
+            </Grid>:
             <Grid item container direction="column" alignItems="center" justifyContent="center" spacing={2}>
-              <img src={imageEncode} alt="Encoded" style={{ maxWidth: "100%", height: "auto" }} />
-              <Typography variant = "h2" fontWeight= "bold">Encoded Image</Typography>
+              <Tooltip style={{
+                    fontSize: "14px",
+                    backgroundColor: "white",
+                    border: '1px solid #eeeeee',
+                    maxWidth: 600,
+                    whiteSpace: 'normal'
+                }}
+                placement="right"
+                title={
+                    <Grid>
+                        <Typography color="inherit">{`Algorithm: ${algorithm}`}</Typography>
+                        <Typography color="inherit">{`Number Node: ${numberNode}`}</Typography>
+                        <Typography color="inherit">{`Sensing Radius: ${sensingRadius}`}</Typography>
+                        <Typography color="inherit">{`Communication Radius: ${communicationRadius}`}</Typography>
+                        <Typography color="inherit">{`Detail: The image shows the positions of sensor nodes in the network along with the coverage area of each node, their connectivity with neighboring nodes, and how the algorithm selects placement to avoid obstacles, in order to achieve optimal coverage within the room.`}</Typography>
+                    </Grid>
+                }
+                >
+                <img src={imageEncode} alt="Loading ..." style={{ maxWidth: "100%", height: "auto",  marginTop: "40px" }} />
+              </Tooltip>
             </Grid>
+            }
+            <Button sx={{
+                          backgroundColor: "black",
+                          color: "white",
+                          fontSize: "20px",
+                          fontWeight: "bold",
+                          padding: "5px 12px",
+                          margin: "5px",
+                          "&:hover": { backgroundColor: "#6d65ea" }
+                          }}
+                      variant="contained"
+                      onClick = {()=> setState(!state)}
+            >Change Image</Button>
         </Grid>
         }
     </>

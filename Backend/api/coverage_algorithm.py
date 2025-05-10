@@ -194,7 +194,7 @@ def CoverageOptimizationFOAAlgorithm(data: dict):
             draw_circle(ax, node, Rs, small_radius)
         ax.imshow(image_1, extent=[0, VarMaxx, VarMaxy, 0])
 
-        # ax.set_title(f"Coverage percent: {round(fitness/(1-caculator),4) * 100:.2f} %")
+        ax.set_title(f"Coverage percent: {round(fitness/(1-caculator),4) * 100:.2f} %", fontweight='bold', fontsize=14, color='black')
         for i in range(len(sensor_nodes)):
             for j in range(i+1, len(sensor_nodes)):
                 node1, node2 = sensor_nodes[i], sensor_nodes[j]
@@ -219,7 +219,7 @@ def CoverageOptimizationFOAAlgorithm(data: dict):
         for bp in ban_position:
             ay.plot(bp[0], bp[1], 'ko', ms = 1)
 
-        # ay.set_title(f"Coverage percent: {round(fitness/(1-caculator),4) * 100:.2f} %")
+        ay.set_title(f"Coverage percent: {round(fitness/(1-caculator),4) * 100:.2f} %", fontweight='bold', fontsize=14, color='black')
         for i in range(len(sensor_nodes)):
             for j in range(i+1, len(sensor_nodes)):
                 node1, node2 = sensor_nodes[i], sensor_nodes[j]
@@ -255,8 +255,8 @@ def CoverageOptimizationNOAlgorithm(data: dict):
     Rc = int(data["Rc"])
     Rs = int(data["Rs"])
     nNode = int(data["number_node"])
-    MaxIt = 100
-    nPop = 10
+    MaxIt = 300
+    nPop = 5
     url = Room.objects.get(room_id = data["room_id"]).image
     image = Image.open(url.path)
     image_resized = image.resize((VarMax+1, VarMax+1))
@@ -785,7 +785,7 @@ def CoverageOptimizationNOAlgorithm(data: dict):
             draw_circle(ax, node, Rs, small_radius)
         ax.imshow(image_1, extent=[0, VarMax, VarMax, 0])
 
-        # ax.set_title(f"Coverage percent: {round(fitness/(1-caculator),4) * 100:.2f} %")
+        ax.set_title(f"Coverage percent: {round((1-fitness),4)*100:.2f} %", fontweight='bold', fontsize=14, color='black')
         for i in range(len(sensor_nodes)):
             for j in range(i+1, len(sensor_nodes)):
                 node1, node2 = sensor_nodes[i], sensor_nodes[j]
@@ -810,7 +810,7 @@ def CoverageOptimizationNOAlgorithm(data: dict):
         for bp in ban_position:
             ay.plot(bp[0], bp[1], 'ko', ms = 1)
 
-        # ay.set_title(f"Coverage percent: {round(fitness/(1-caculator),4) * 100:.2f} %")
+        ay.set_title(f"Coverage percent: {round((1-fitness),4)*100:.2f} %", fontweight='bold', fontsize=14, color='black')
         for i in range(len(sensor_nodes)):
             for j in range(i+1, len(sensor_nodes)):
                 node1, node2 = sensor_nodes[i], sensor_nodes[j]
@@ -837,8 +837,6 @@ def CoverageOptimizationNOAlgorithm(data: dict):
         ban_position, Area1)
     best_solution = np.array(best_solution).reshape(-1, 2)
     plot_sensor(best_solution, best_fitness)
-
-
 
 if __name__ == '__main__':
     CoverageOptimizationFOAAlgorithm({

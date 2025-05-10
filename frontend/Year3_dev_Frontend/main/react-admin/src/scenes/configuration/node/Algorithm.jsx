@@ -82,7 +82,8 @@ export default function Algorithm({roomIdForNodeConfig}) {
             >
                 Setting
       </Button>
-      <ImageResult roomIdForNodeConfig={roomIdForNodeConfig} dataRoom={dataRoom} setData={setData} algorithm={algorithm}/>
+      <ImageResult roomIdForNodeConfig={roomIdForNodeConfig} dataRoom={dataRoom} setData={setData} algorithm={algorithm}
+      communicationRadius={communicationRadius} sensingRadius={sensingRadius} numberNode={numberNode}/>
     </Paper>
     <Dialog
           open = {open}
