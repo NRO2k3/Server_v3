@@ -10,6 +10,7 @@ import verifyAccessToken from '../../function/verifyAccessToken';
 import verifyRefreshToken from '../../function/verifyRefreshToken';
 import { Html } from '@react-three/drei';
 import { Box3 } from "three";
+import { Tooltip, Grid, Typography } from "@mui/material";
 export let data_max_min = []
 const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => {
   const token = { access_token: null, refresh_token: null };
@@ -139,9 +140,46 @@ function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn}) {
         }}
       >
         {type === "sensor" ? (
-          <SensorsIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+          <Tooltip
+          style={{
+            fontSize: "14px",
+            backgroundColor: "white",
+            border: '1px solid #eeeeee',
+            maxWidth: 400,
+            whiteSpace: 'normal'
+        }}
+        placement="left"
+          title={
+            <Grid>
+              <Typography color="inherit">{`Node id: ${id}`}</Typography>
+              <Typography color="inherit">{`Position X: ${x}`}</Typography>
+              <Typography color="inherit">{`Position Y: ${y}`}</Typography>
+              <Typography color="inherit">{`Function: Sensor`}</Typography>
+            </Grid>
+          }>
+            <SensorsIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+          </Tooltip>
         ) : (
-          <AirIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+          <Tooltip
+          style={{
+            fontSize: "14px",
+            backgroundColor: "white",
+            border: '1px solid #eeeeee',
+            maxWidth: 400,
+            whiteSpace: 'normal'
+        }}
+        placement="left"
+          title={
+            <Grid>
+              <Typography color="inherit">{`Node id: ${id}`}</Typography>
+              <Typography color="inherit">{`Position X: ${x}`}</Typography>
+              <Typography color="inherit">{`Position Y: ${y}`}</Typography>
+              <Typography color="inherit">{`Function: Actuator`}</Typography>
+            </Grid>
+          }
+          >
+            <AirIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+          </Tooltip>
         )}
         <span style ={
           {

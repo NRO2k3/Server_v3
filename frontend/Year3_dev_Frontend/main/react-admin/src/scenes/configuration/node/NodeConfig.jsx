@@ -233,82 +233,89 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                 /> */}
                 <Grid container>
                     <Grid item xs = {6}>
-                        <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "600px", overflowY: "auto"}}>
-                            <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
-                            <Table size="small">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Node id</TableCell>
-                                        <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Position x</TableCell>
-                                        <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Position y</TableCell>
-                                        <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Funtion</TableCell>
-                                        <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Mac Address</TableCell>
-                                        <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Status</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                {configurationNodeAll.map((row) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.node_id}</TableCell>
-                                        <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.x_axis}</TableCell>
-                                        <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.y_axis}</TableCell>
-                                        <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{dict_function[row.function]}</TableCell>
-                                        <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.mac}</TableCell>
-                                        <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.status === "sync" ? "Active" : "Deleted"}</TableCell>
+                        <Grid container direction="column" gap ={2}>
+                            <Grid item>
+                                <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "600px", overflowY: "auto"}}>
+                                    <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
+                                    <Table size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Node id</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Position x</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Position y</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Funtion</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Mac Address</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Status</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                        {configurationNodeAll.map((row) => (
+                                            <TableRow key={row.id}>
+                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.node_id}</TableCell>
+                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.x_axis}</TableCell>
+                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.y_axis}</TableCell>
+                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{dict_function[row.function]}</TableCell>
+                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.mac}</TableCell>
+                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.status === "sync" ? "Active" : "Deleted"}</TableCell>
 
 
-                                        <TableCell
-                                        sx={{
-                                            width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
-                                                "& .MuiInputBase-root": {
-                                                    height: 35
-                                                },
-                                                }}
-                                        >
-                                            <DialogConfirmSettingNode callbackSetSignIn={callbackSetSignIn} 
-                                                NodeConfigLoading={{0: isLoadingNodeConfig, 1: setIsLoadingNodeConfig}}
-                                                row={row}
-                                                configurationNodeAll={configurationNodeAll}
-                                                roomSize={roomSize}
-                                                />
-                                        </TableCell>
-                                        <TableCell
-                                        sx={{
-                                            width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
-                                                "& .MuiInputBase-root": {
-                                                    height: 35
-                                                },
-                                                }}
-                                        >
-                                            {
-                                                row.status === "sync" ?
-                                                <DialogConfirmDeleteNode callbackSetSignIn={callbackSetSignIn} NodeConfigLoading={{0: isLoadingNodeConfig, 1: setIsLoadingNodeConfig}} id={row.node_id}/>
-                                                :
-                                                <></>
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                                </TableBody>
-                            </Table>
-                            {/* <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-                                See more orders
-                            </Link> */}
+                                                <TableCell
+                                                sx={{
+                                                    width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
+                                                        "& .MuiInputBase-root": {
+                                                            height: 35
+                                                        },
+                                                        }}
+                                                >
+                                                    <DialogConfirmSettingNode callbackSetSignIn={callbackSetSignIn} 
+                                                        NodeConfigLoading={{0: isLoadingNodeConfig, 1: setIsLoadingNodeConfig}}
+                                                        row={row}
+                                                        configurationNodeAll={configurationNodeAll}
+                                                        roomSize={roomSize}
+                                                        />
+                                                </TableCell>
+                                                <TableCell
+                                                sx={{
+                                                    width: { xs:"100px", sm: "100px", md: "100px", lg: "100px" },
+                                                        "& .MuiInputBase-root": {
+                                                            height: 35
+                                                        },
+                                                        }}
+                                                >
+                                                    {
+                                                        row.status === "sync" ?
+                                                        <DialogConfirmDeleteNode callbackSetSignIn={callbackSetSignIn} NodeConfigLoading={{0: isLoadingNodeConfig, 1: setIsLoadingNodeConfig}} id={row.node_id}/>
+                                                        :
+                                                        <></>
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                        </TableBody>
+                                    </Table>
+                                    {/* <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
+                                        See more orders
+                                    </Link> */}
 
-                        </TableContainer>
-                        <Algorithm roomIdForNodeConfig={roomIdForNodeConfig}/>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Grid Gird sx={{ height: "900px" }}>
-                            <Options room_id={roomIdForNodeConfig}
-                            callbackSetSignIn={callbackSetSignIn}
-                            configurationNodeAll={configurationNodeAll}
-                            setListNode = {setListNode}
-                            setSeparate = {setSeparate}
-                            isImageFetched = {isImageFetched}
-                            />
+                                </TableContainer>
+                            </Grid>
+                            <Grid item>
+                                <Algorithm roomIdForNodeConfig={roomIdForNodeConfig}/>
+                            </Grid>
                         </Grid>
-                        <Grid>
+                    </Grid>
+                    <Grid item xs = {6}>
+                        <Grid container direction="column" gap ={2}>
+                            <Grid item sx={{ height: "900px" }}>
+                                <Options room_id={roomIdForNodeConfig}
+                                callbackSetSignIn={callbackSetSignIn}
+                                configurationNodeAll={configurationNodeAll}
+                                setListNode = {setListNode}
+                                setSeparate = {setSeparate}
+                                isImageFetched = {isImageFetched}
+                                />
+                            </Grid>
+                            <Grid item>
                             <Button
                                 sx={{
                                     backgroundColor: "#2319b4",
@@ -324,8 +331,11 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             >
                                 SCAN DEVICE
                             </Button>
+                            </Grid>
+                            <Grid item>
+                                <ScanDevice roomIdForNodeConfig={roomIdForNodeConfig}/>
+                            </Grid>
                         </Grid>
-                        <ScanDevice roomIdForNodeConfig={roomIdForNodeConfig}/>
                     </Grid>
                 </Grid>
 
