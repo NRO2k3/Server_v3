@@ -1,21 +1,13 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from "@mui/material";
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import { Box, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slider, Typography} from "@mui/material";
 import { host } from "../../../App";
 
-function SetTemperature({room_id, callbackSetSignIn, idNode, status, selectFunction}) {
-
-  const [temperature, setTemperature] = useState(16);
+function SetLight({room_id, callbackSetSignIn, idNode, status, selectFunction}) {
   const [open, setOpen] = useState(false);
-  const handleIncreTemp = () => {
-    if (temperature === 30) setTemperature(30);
-    else setTemperature(temperature + 1);
-  }
-  const handleDecreTemp = () => {
-    if (temperature === 16) setTemperature(16);
-    else setTemperature(temperature - 1);
-  }
+  const [value, setValue] = useState(50);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const handleAccept = async() => {
       setOpen(false);
@@ -33,49 +25,32 @@ function SetTemperature({room_id, callbackSetSignIn, idNode, status, selectFunct
             "function": selectFunction,
             "mode": "manual",
             "status": status ? 1 : 0,
-            "setpoint": temperature
+            "setpoint": value
           }),
       }
       await fetch(`http://${host}/api/set_actuator`, fetch_option);
   };
   
   return (
-    <Grid container xs={12} sx={{mt: 1}} alignItems="center" justifyContent="center" spacing={1}>
-      <Grid item xs={6} display="flex" justifyContent="center">
-        <Button sx={{
-          height:'60px',
-          borderRadius: '50%',
-          border: "2px solid",
-          borderColor: "black",
-          background: "aqua"
-        }}>
-          <h2 style={{ margin: 0}}>{temperature}&nbsp;°C</h2>
-        </Button>
+    <Grid container xs={12} sx={{ mt: 2 }} alignItems="center" justifyContent="center" spacing={1}>
+      <Grid item>
+        <Typography sx={{ fontWeight: 'bold' }}>Light Percent: {value}%</Typography>
+        <Slider
+          value={value}
+          onChange={handleChange}
+          aria-label="Default"
+          valueLabelDisplay="auto"
+          min={0}
+          max={100}
+          step={25}
+        />
       </Grid>
-      <Grid item xs={6} display="flex" flexDirection="column" justifyContent="center" gap={1}>
-        <Button sx={{
-          width: "5px",
-          height: "40px",
-        }}
-          onClick={handleIncreTemp}
-        >
-          <ArrowCircleUpIcon sx={{ fontSize: "2.5rem" }}/>
-        </Button>
-        <Button sx={{
-          width: "5px",
-          height: "40px",
-        }}
-        onClick={handleDecreTemp}
-        >
-          <ArrowCircleDownIcon sx={{ fontSize: "2.5rem" }}/>
-        </Button>
-      </Grid>
-        { status === true
+      { status === true
         ?
-        <>
+        <Grid item>
           <Button
           sx={{
-                mt:1,
+                mt:2.5,
                 borderRadius: 2,
                 width: "10px",
                 height: "40px",
@@ -104,11 +79,11 @@ function SetTemperature({room_id, callbackSetSignIn, idNode, status, selectFunct
             }}
         >
             <DialogTitle id="alert-dialog-title" variant="h4" fontWeight='bold'>
-            {"Confirm set temperature"}
+            {"Confirm set light"}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description" variant="h5">
-                    {`Are you sure to set temperature at ${temperature}°C ?`}
+                    {`Are you sure to set light at ${value}% ?`}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -116,9 +91,10 @@ function SetTemperature({room_id, callbackSetSignIn, idNode, status, selectFunct
                 <Button style={{fontSize: '14px'}} onClick={handleAccept} autoFocus>Agree</Button>
             </DialogActions>
         </Dialog>
-        </>
+        </Grid>
         : <h3>Actuator is OFF</h3>}
     </Grid>
   )
 }
-export default SetTemperature
+
+export default SetLight;

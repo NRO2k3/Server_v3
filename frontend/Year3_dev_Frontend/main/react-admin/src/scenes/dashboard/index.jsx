@@ -179,7 +179,7 @@ const Dashboard = () => {
                     </Grid>
 
                     {separate && (
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={3} container direction="column" alignItems="center" justify="center">
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={3} container display='flex' direction="column" alignItems="center" justify="center">
                         <DetailNode
                             room_id={room_id}
                             callbackSetSignIn={callbackSetSignIn}

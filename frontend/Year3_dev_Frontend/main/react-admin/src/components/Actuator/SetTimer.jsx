@@ -328,7 +328,7 @@ const SetTimer = ({actuatorStatus,
             </Box>
             
         </Box>
-    </Box>    
+    </Box>
     );
 }
 

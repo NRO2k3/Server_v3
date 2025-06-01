@@ -5,14 +5,6 @@ from .models import RegistrationNode, NodeConfigurationBuffer, ScanDevice
 import os
 import psycopg2
 
-backend_topic_dictionary = {
-                        "node_sync_backend_gateway": "farm/sync_node",
-                        "set_actuator": "farm/set_actuator",
-                        "scan_device": "farm/node/scan",
-                        "add_device": "farm/node/add",
-                        "delete_device": "farm/node/delete",
-                        }
-
 set_actuator = "farm/set_actuator"
 scan_device = "farm/node/scan"
 add_device = "farm/node/add"
@@ -496,30 +488,42 @@ def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
     
     data_query = RegistrationNode.objects.get(node_id = data["node_id"])
 
-    if "temp" not in data:
-        data["temp"] = -1
-    if "start_time" not in data:
-        data["start_time"] = -1
-    if "end_time" not in data:
-        data["end_time"] = -1
+    for key in ["start_time", "end_time", "setpoint", "mode", "status"]:
+        data.setdefault(key, -1)
 
     new_data = {
-        "operator": "server_control",
+        "operator": "actuator_control",
         "status": 1,
         "info": {
             "room_id": data_query.room_id.room_id,
             "node_id": data["node_id"],
-            "function": data_query.function,
-            "setpoint": data["setpoint"],
-            "mode": data["mode"],
-            "temp": data["temp"],
-            "start_time": data["start_time"],
-            "end_time": data["end_time"],
-            "time": int((datetime.datetime.now()).timestamp()) + 7*60*60
+            "function": data["function"],
+            "control_state":{
+                "setpoint": data["setpoint"],
+                "mode": data["mode"],
+                "status": data["status"],
+                "start_time": data["start_time"],
+                "end_time": data["end_time"]
+            }
             }
         }
+
+    new_data_save = {
+    "operator": "actuator_control",
+    "status": 1,
+    "info": {
+        "room_id": data_query.room_id.room_id,
+        "node_id": data["node_id"],
+        "function": data["function"],
+        "setpoint": data["setpoint"],
+        "mode": data["mode"],
+        "status": data["status"],
+        "start_time": data["start_time"],
+        "end_time": data["end_time"]
+        }
+    }
     message_send = json.dumps(new_data)
-    result = client.publish(backend_topic_dictionary["set_actuator"], message_send)
+    result = client.publish(topic_list[0], message_send)
     status = result[0]
 
     if status == 0:
@@ -528,12 +532,11 @@ def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
     else:
         raise Exception("Can't publish data to mqtt")
     
-    new_data["info"]["status"] = 0
     curent_time = int((datetime.datetime.now()).timestamp())
 
     while True:
 
-        if int((datetime.datetime.now()).timestamp()) - curent_time > 20:
+        if int((datetime.datetime.now()).timestamp()) - curent_time > 30:
             break
 
         message_receive = client.message_arrive()
@@ -541,10 +544,9 @@ def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
         if message_receive != None:
             data_receive = json.loads(message_receive)
 
-            if data_receive["operator"] == "server_control_ack":
+            if data_receive["operator"] == "actuator_control_ack":
 
                 if data_receive["status"] == 1:
-                    new_data["info"]["status"] = 1
                     break
 
-    return new_data
+    return new_data_save

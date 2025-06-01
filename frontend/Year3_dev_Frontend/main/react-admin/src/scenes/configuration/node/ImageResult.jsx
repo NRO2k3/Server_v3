@@ -10,7 +10,6 @@ function ImageResult({roomIdForNodeConfig, dataRoom, setData, algorithm, communi
   const fetchAndEncodeImage = async (url_image, cmd) => {
     try {
         url_image= `http://${host}` + url_image
-        console.log(url_image)
         const response = await fetch(url_image);
         const blob = await response.blob();
         const reader = new FileReader();

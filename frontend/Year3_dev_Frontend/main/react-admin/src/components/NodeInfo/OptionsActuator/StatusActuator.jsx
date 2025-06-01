@@ -4,16 +4,33 @@ import { host } from "../../../App";
 import { Box, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from "@mui/material";
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 import Header from "../../Header";
+import { accessToken } from "mapbox-gl";
 
-function StatusActuator({room_id, callbackSetSignIn, idNode, status, setStatus}) {
+function StatusActuator({room_id, callbackSetSignIn, idNode, status, setStatus, selectFunction}) {
   const [speed, setSpeed] = useState(0);
   const [open, setOpen] = useState(false);
 
   const url = idNode ? `http://${host}/api/actuator_status?room_id=${room_id}&node_id=${idNode}` : null;
 
-  const handleAgree = () => {
+  const handleAgree = async() => {
     setOpen(false);
-    alert("Turn off actuator!");
+    const access_token =localStorage.getItem("access");
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${access_token}`,
+    }
+    const fetch_option = {
+        "method": "POST",
+        "headers": headers,
+        "body": JSON.stringify({
+          "room_id": room_id,
+          "node_id": idNode,
+          "function": selectFunction,
+          "mode": "manual",
+          "status": status ? 0 : 1
+        }),
+    }
+    await fetch(`http://${host}/api/set_actuator`, fetch_option);
 };
   const getStatusActuator = async (url, access_token) => {
     const headers = {
@@ -49,7 +66,7 @@ function StatusActuator({room_id, callbackSetSignIn, idNode, status, setStatus})
     },[url]);
 
   return (
-      <Grid container xs={12} alignItems="center" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
+      <Grid container item xs={12} alignItems="center" justifyContent="center" spacing={2} sx={{ mt: 2 }}>
         <Grid item xs={6} sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <Button
             sx={{
@@ -57,11 +74,11 @@ function StatusActuator({room_id, callbackSetSignIn, idNode, status, setStatus})
               height: '60px',
               borderRadius: '50%',
               border: "solid 2px",
-              backgroundColor: status == 0 ? 'red' : "green",
+              backgroundColor: status === 0 ? 'red' : "green",
             }}
             onClick={()=>setOpen(true)}
           >
-            <h3>{status == 0 ? "Off" : "On"}</h3>
+            <h3>{status === 0 ? "Off" : "On"}</h3>
           </Button>
         </Grid>
         <Dialog
@@ -95,11 +112,10 @@ function StatusActuator({room_id, callbackSetSignIn, idNode, status, setStatus})
             <Button sx={{ fontSize: 14 }} onClick={handleAgree} autoFocus>Agree</Button>
           </DialogActions>
         </Dialog>
-
         <Grid item xs={6} sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <ThermostatIcon style={{ fontSize: '3rem' }} />
-            <Header title={`Temperature ${speed}\u00B0C`} fontSize="15px"/>
+            <Header title={`Temperature ${speed}\u00B0C`} fontSize="13px"/>
           </Box>
         </Grid>
       </Grid>

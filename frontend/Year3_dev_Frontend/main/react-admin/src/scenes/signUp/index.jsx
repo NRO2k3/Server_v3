@@ -37,7 +37,7 @@ export default function SignUp({setSignUp}) {
     const create_user = async (data)=> 
     {
         const api = `http://${host}/api/signup`;
-        const fetch_option = 
+        const fetch_option =
         {
             "method": 'POST',
             "headers": {

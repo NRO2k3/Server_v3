@@ -200,7 +200,6 @@ export default function SignIn({setSignUp, setIsSignin, setForgetPassword})
                     </Grid>
                     </Grid>
                 </Box>
-
             </Box>
             </Box>
 

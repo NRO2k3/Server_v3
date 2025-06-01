@@ -2,11 +2,20 @@ import { useState } from "react";
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { Box, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Typography, TextField} from "@mui/material";
 import dayjs from "dayjs";
+import { host } from "../../../App";
+import { MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 
-function SetTimer() {
+function SetTimer({room_id, callbackSetSignIn, idNode, status, selectFunction}) {
   const [valueStartTime, setValueStartTime] = useState(dayjs());
   const [valueEndTime, setValueEndTime] = useState(dayjs().add(1, "minute"));
   const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(16);
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const options = Array.from({ length: 15 }, (_, i) => i + 16);
 
   const handleStartTimeChange = (newValue) => {
     if (newValue) {
@@ -17,10 +26,29 @@ function SetTimer() {
     }
   };
 
-  const handleAccept = () => {
+  const handleAccept = async() => {
     setOpen(false)
     console.log(valueStartTime.valueOf(),valueEndTime.valueOf())
-    alert("Timer accepted!");
+    const access_token =localStorage.getItem("access");
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${access_token}`,
+    }
+    const fetch_option = {
+        "method": "POST",
+        "headers": headers,
+        "body": JSON.stringify({
+          "room_id": room_id,
+          "node_id": idNode,
+          "function": selectFunction,
+          "mode": "timer",
+          "setpoint":value,
+          "status": status ? 1 : 0,
+          "start_time": valueStartTime.valueOf()/1000,
+          "end_time": valueEndTime.valueOf()/1000
+        }),
+    }
+    await fetch(`http://${host}/api/set_actuator`, fetch_option);
   }
 
   return (
@@ -68,16 +96,37 @@ function SetTimer() {
         />
       </Grid>
       <>
-        <Button variant="contained" color="primary" sx={{
-            mt: 2,
-            borderRadius: 2,
-            width: "10px",
-            height: "40px",
-          }}
-          onClick = {() => setOpen(true)}
-          >
-            Send
-        </Button>
+        <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={2}>
+          <Typography id="select-label" fontWeight={"bold"}>Temperature</Typography>
+          <FormControl size="small" sx={{ minWidth: 55 }}>
+            <Select
+              labelId="select-label"
+              value={value}
+              onChange={handleChange}
+              sx={{
+                mt: 1,
+                borderRadius: 2,
+                height: "40px",
+              }}
+            >
+              {options.map((num) => (
+                <MenuItem key={num} value={num}>
+                  {num}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button variant="contained" color="primary" sx={{
+              mt: 1,
+              borderRadius: 2,
+              width: "10px",
+              height: "40px",
+            }}
+            onClick = {() => setOpen(true)}
+            >
+              Send
+          </Button>
+        </Box>
         <Dialog
           open={open}
           onClose={() => setOpen(false)}

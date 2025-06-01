@@ -163,13 +163,11 @@ class ControlSetpoint(models.Model):
                                 )
     node_id = models.IntegerField(null = False, db_column = "node_id",)
     function = models.TextField(null = True, db_column = "function",)
-    setpoint = models.IntegerField(null = True, db_column = "powsetpointer",)
+    setpoint = models.IntegerField(null = True, db_column = "setpoint",)
     mode = models.TextField(null = True, db_column = "mode",)
-    temp = models.IntegerField(null = True, db_column = "temp",)
-    start_time = models.BigIntegerField(null=True, db_column =" start_time")
+    start_time = models.BigIntegerField(null=True, db_column = "start_time")
     end_time = models.BigIntegerField(null = True, db_column = "end_time")
     status = models.IntegerField(null = False, db_column = "status")
-    time = models.BigIntegerField(null = False, db_column = "time")
 
 class ScanDevice(models.Model):
 
