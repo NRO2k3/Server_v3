@@ -212,6 +212,7 @@ function ClickCoordinates({ clickPos }) {
 }
 
 function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, setSeparate}) {
+  console.log(url)
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
 

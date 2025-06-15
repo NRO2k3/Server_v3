@@ -68,8 +68,8 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
         </Grid>
       </Grid>
 
-      <Grid item container direction='row' xs ={12} sx={{ mt: 1 }} justifyContent="space-evenly">
-        <Grid item xs={6} sx={{
+      <Grid item container direction='row' xs ={12} sx={{ mt: 1 }} justifyContent="space-around">
+        <Grid item xs={5.5} sx={{
             border: '1px solid black',
             borderRadius: '8px',
             padding: 1,
@@ -85,7 +85,7 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
             />
         </Grid>
         {selectFunction === "Air"?
-        <Grid item xs={6}
+        <Grid item xs={5.5}
         sx={{
           border: '1px solid black',
           borderRadius: '8px',
@@ -100,7 +100,7 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
             selectFunction={selectFunction}
           />
         </Grid>:
-        <Grid item xs={6}
+        <Grid item xs={5.5}
         sx={{
           border: '1px solid black',
           borderRadius: '8px',
@@ -122,7 +122,9 @@ function ActuatorInfo({room_id, callbackSetSignIn, actuators}) {
       <Grid container xs ={12} sx={{ mt:1,
               border: '1px solid black',
               borderRadius: '8px',
-              padding: 2}} justifyContent="center">
+              padding: 1.5,
+              }}
+              justifyContent="center">
         <Header title = "Set Time Air Conditioner" fontSize="20px"/>
         <SetTimer
           room_id={room_id}

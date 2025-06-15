@@ -9,6 +9,7 @@ import FormGroup from '@mui/material';
 import { tokens } from '../../theme';
 import Checkbox from '@mui/material';
 import verify_and_get_data from '../../function/fetchData';
+import { Margin } from '@mui/icons-material';
 
 export default function FilterNode({setNodeIdFilter, apiInformationTag, callbackSetSignIn, backend_host, setIsLoadingChart}) {
 	const theme = useTheme();
@@ -17,8 +18,9 @@ export default function FilterNode({setNodeIdFilter, apiInformationTag, callback
 	const [sensorNodeIdState, setSensorNodeIdState] = useState(0);
 	const node_id_dict = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6};
 	const handleChange = (event) => {
-		setSensorNodeIdState(event.target.value);
-		setNodeIdFilter(sensorNodeIdState);
+		const selectedValue = event.target.value;
+		setSensorNodeIdState(selectedValue);
+		setNodeIdFilter(selectedValue);
 		setIsLoadingChart(true);
 	};
 	const [sensorNodeInfo, setSensorNodeInfo] = useState([])

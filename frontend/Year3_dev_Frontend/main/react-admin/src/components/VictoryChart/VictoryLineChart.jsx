@@ -36,16 +36,6 @@ const VictoryLineChart = ({data_x, data_y, option_data, parameter_type}) =>
         label_x = data_x;
     }
 
-    let new_label_x;
-    new_label_x = [...label_x];
-    let step = Math.max(Math.round(new_label_x.length / 12), 1);
-    for (let i = new_label_x.length - 2; i >= step; i -= step) {
-        for (let j = i; j >= Math.max(i - step, 0); --j) {
-            new_label_x[j] = "111";
-        }
-}
-
-
     for(let i=0; i<data_x.length; ++i) {
         data.push({x: label_x[i], y: data_y[i]});
     }
@@ -109,7 +99,7 @@ const VictoryLineChart = ({data_x, data_y, option_data, parameter_type}) =>
                     ticks: { stroke: "black", size: 0},
                     tickLabels: {fontSize: 4, padding: 3} //size of label of x-axis value and position of them
                 }}
-                tickCount={4}
+                tickCount={10}
             />
             <VictoryAxis 
                 fixLabelOverlap={false}  

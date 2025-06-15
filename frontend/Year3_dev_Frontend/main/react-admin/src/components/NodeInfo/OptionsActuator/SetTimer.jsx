@@ -52,7 +52,7 @@ function SetTimer({room_id, callbackSetSignIn, idNode, status, selectFunction}) 
   }
 
   return (
-    <Grid container sx={{ mt: 2 }} alignItems="center" justifyContent="center" spacing={0.1}>
+    <Grid container sx={{ mt: 2,}} alignItems="center" justifyContent="center" spacing={0.2}>
       <Grid item xs={6}>
         <Typography variant="h6" sx={{ fontWeight: "bold" }}>Start Time</Typography>
         <MobileDateTimePicker

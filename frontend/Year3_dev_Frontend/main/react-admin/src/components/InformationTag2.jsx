@@ -88,7 +88,7 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
         }
         const response = await fetch(url, option_fetch)
         const data = await response.json()
-        
+        console.log(data)
         if (data) {
             // if(response.status === 200)
             // {

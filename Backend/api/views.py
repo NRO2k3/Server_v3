@@ -24,7 +24,7 @@ from .models import (EmployeePermission, RegistrationNode, Room, AqiRef, RawSens
 from threading import Thread
 from .mqtt_server_to_gateway import SendNodeToGatewayWifi, SendSetUpActuatorToGateway, ScanDeviceToGateWay, CheckScanDeviceToGateWay, SendAddNodeToGatewayBleMesh, SendDeleteNodeToGatewayBleMesh, client
 from .coverage_algorithm import CoverageOptimizationNOAlgorithm, CoverageOptimizationFOAAlgorithm
-
+import os, csv
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -324,7 +324,7 @@ def GetRoomInformation(request, *args, **kwargs):
                     )
                 else:
                     continue
-
+            
             parameter_key_list = {
                 "co2",
                 "temp",
@@ -339,20 +339,16 @@ def GetRoomInformation(request, *args, **kwargs):
                 "motion",
             }
             average_data_to_return = {}
-
             latest_time = max(
                 data["time"] for data in latest_data_of_each_node_id
             )
             average_data_to_return["time"] = latest_time
-
             sum_count = {para: {"sum": 0, "count": 0} for para in parameter_key_list}
-
             for data in latest_data_of_each_node_id:
                 for para in parameter_key_list:
-                    if data[para] != -1:
+                    if data[para] != -1 and data[para]:
                         sum_count[para]["sum"] += data[para]
                         sum_count[para]["count"] += 1
-
             for para in parameter_key_list:
                 average_data_to_return[para] = []
             for para in parameter_key_list:
@@ -362,7 +358,6 @@ def GetRoomInformation(request, *args, **kwargs):
                     )
                 else:
                     average_data_to_return[para] = -1
-
             sensor_node_information_in_this_room_list = RegistrationNodeSerializer(
                 RegistrationNode.objects.filter(
                     room_id = room_id, function = "sensor", status = "sync"
@@ -578,37 +573,23 @@ def GetEnviromentData(request, *args, **kwargs):
         ]
         total_list = []
         if node_id == 0:
-
             for each_node_id in sensor_node_id_list:
-                if (
-                    RawSensorMonitor.objects.filter(
+                data_query = RawSensorMonitor.objects.filter(
                         time__gt = filter_time, room_id = room_id, node_id = each_node_id
-                    ).count()
-                    > 0
-                ):
-                    data = RawSensorMonitorSerializer(
-                        RawSensorMonitor.objects.filter(
-                            time__gt = filter_time, room_id = room_id, node_id = each_node_id
-                        ).order_by("time"),
-                        many=True,
-                    ).data
+                        # time__gt=1746032400, time__lt=1748710800, room_id = room_id, node_id = each_node_id
+                    )
+                if data_query.exists():
+                    data = RawSensorMonitorSerializer(data_query.order_by("time"),many=True,).data
                     total_list.append(data)
         else:
-
-            if (
-                RawSensorMonitor.objects.filter(
-                    time__gt = filter_time, room_id = room_id, node_id = node_id
-                ).count()
-                > 0
-            ):
-                data = RawSensorMonitorSerializer(
-                    RawSensorMonitor.objects.filter(
-                        time__gt = filter_time, room_id = room_id, node_id = node_id
-                    ).order_by("time"),
-                    many=True,
-                ).data
+            print("oke")
+            data_query = RawSensorMonitor.objects.filter(
+                    # time__gt = filter_time, room_id = room_id, node_id = node_id
+                    time__gt=1746032400, time__lt=1748710800, room_id = room_id, node_id = node_id
+                )
+            if data_query.exists():
+                data = RawSensorMonitorSerializer(data_query.order_by("time"),many=True,).data
                 total_list.append(data)
-
         if len(total_list) == 0:
             return_data = {}
             for i in parameter_key_list:
@@ -636,16 +617,18 @@ def GetEnviromentData(request, *args, **kwargs):
 
             for each_element_in_total_list in total_list:
                 for j in parameter_key_list:
-                    if j != "time" and each_element_in_total_list[i][j] >= 0:
-                        buffer[j]["value"] = (
-                            buffer[j]["value"] + each_element_in_total_list[i][j]
-                        )
-                        buffer[j]["number"] = buffer[j]["number"] + 1
+                    if j != "time" and each_element_in_total_list[i][j] is not None:
+                        if( each_element_in_total_list[i][j] >= 0):
+                            buffer[j]["value"] = (
+                                buffer[j]["value"] + each_element_in_total_list[i][j]
+                            )
+                            buffer[j]["number"] = buffer[j]["number"] + 1
+                        else:
+                            continue
                     elif j == "time" and each_element_in_total_list[i][j] >= 0:
                         buffer[j].append(each_element_in_total_list[i][j])
                     else:
                         continue
-
             for j in parameter_key_list:
                 if j == "time":
                     return_data[j].append(max(buffer[j]))
@@ -659,6 +642,22 @@ def GetEnviromentData(request, *args, **kwargs):
                         return_data[j].append(0)
                     buffer[j]["value"] = 0
                     buffer[j]["number"] = 0
+
+        csv_filename = f'{room_id}_node_{node_id}.csv'
+        csv_filepath = os.path.join(settings.BASE_DIR, "exported_csv", csv_filename)
+        os.makedirs(os.path.dirname(csv_filepath), exist_ok=True)
+        parameter_key_list = [
+            "co2",
+            "temp",
+            "hum",
+            "time"
+        ]
+        with open(csv_filepath, mode='w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(parameter_key_list)
+            for i in range(len(return_data["time"])):
+                row = [return_data[key][i] for key in parameter_key_list]
+                writer.writerow(row)
         return Response(return_data, status = status.HTTP_200_OK)
     except:
         return Response(
@@ -836,7 +835,6 @@ def ScanDeviceGateWay(request, *args, **kwargs):
 
     try:
         data = json.loads(request.body)
-        print(data)
         response = CheckScanDeviceToGateWay(client, data)
 
         if response == False:
@@ -885,7 +883,6 @@ def GetAllScanDevice(request, *args, **kwargs):
 def DeleteScanDevice(request, *args, **kwargs):
     try:
         node_id = request.GET["node_id"]
-        print(node_id)
         if (ScanDevice.objects.filter(id = node_id).count() == 0):
             return Response(
                 {"Response": "No data"},
@@ -1035,7 +1032,6 @@ def GetRawDataAllSensor(request, *args, **kwargs):
 def EmployeeNode(request, *args, **kwargs):
     try:
         user_id = request.user.id
-        print(user_id)
         data = EmployeePermission.objects.filter(user_id = user_id)
         data_response = []
         if data.exists():
@@ -1078,7 +1074,6 @@ def CoverageAlgorithm(request, *args, **kwargs):
     try:
         data = json.loads(request.body)
         if data:
-            print(data["algorithm"])
             if data["algorithm"] == "NOA":
                 t = Thread(target = CoverageOptimizationNOAlgorithm, args = (data,))
                 t.start()
@@ -1104,7 +1099,6 @@ def ResultCoverageAlgorithm(request, *args, **kwargs):
     try:
         room_id = request.GET["room_id"]
         algorithm = request.GET["algorithm"]
-        print(room_id, algorithm)
         data = ResultAlgorithm.objects.filter(room_id=room_id, algorithm = algorithm).order_by('-id').first()
         data_serializer = ResultAlgorithmSerializer(data).data
         return Response(

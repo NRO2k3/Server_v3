@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import { Stack, Typography } from "@mui/material"
+import { Box, Stack, Typography } from "@mui/material"
 import Grid from "@mui/material/Grid"
 import {host} from "../App"
 import VictoryLineChart from "../components/VictoryChart/VictoryLineChart"
@@ -104,12 +104,14 @@ const Chart = ({room_id, callbackSetSignIn, timedelay, optionData, apiInformatio
                 <Grid item marginX={4}>
                     <Stack justifyContent='space-between' alignItems='center' direction='row'>
                         <Stack spacing={1} direction='row' justifyContent='flex-start'>
-                            <FilterNode setNodeIdFilter={setNodeIdFilter}
-                                    apiInformationTag={apiInformationTag} 
-                                    callbackSetSignIn={callbackSetSignIn}
-                                    backend_host={backend_host}
-                                    setIsLoadingChart={setIsLoading}
+                            <Box>
+                                <FilterNode setNodeIdFilter={setNodeIdFilter}
+                                        apiInformationTag={apiInformationTag} 
+                                        callbackSetSignIn={callbackSetSignIn}
+                                        backend_host={backend_host}
+                                        setIsLoadingChart={setIsLoading}
                             />
+                            </Box>
                             <FilterParameter setParaFilter={setParaFilter}/>
                         </Stack>
                         <Stack direction='row' justifyContent='flex-end' alignItems='center' pr={2} spacing={1}>
