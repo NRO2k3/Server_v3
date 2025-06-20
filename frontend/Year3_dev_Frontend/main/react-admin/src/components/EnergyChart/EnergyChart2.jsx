@@ -28,9 +28,9 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
     ];
     const url_energy = `http://${backend_host}/api/energy_data_chart?room_id=${room_id}`
 
-    const get_energy_data = async (url, access_token) => 
+    const get_energy_data = async (url, access_token) =>
     {
-        const headers = 
+        const headers =
         {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${access_token}`,
@@ -43,19 +43,13 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
         }
 
         const response = await fetch(url, option_fetch);
-        const data = await response.json();
-        console.log(data)
-        console.log(url_energy)
         let newEnergyData = {
             'time': [],
             'active_energy': []
         };
         if(response.status === 200)
         {
-            // const data = [
-            //     ['3_2024', '4_2024'],
-            //     [1000, 2440]
-            // ]
+            const data = await response.json();
             const startYear = data[0][0].split('_')[1];
             const endYear = data[0][data[0].length - 1].split('_')[1];
             let count = 0;
@@ -71,14 +65,15 @@ const EnergyChart = ({room_id, callbackSetSignIn, time_delay, backend_host}) => 
                     newEnergyData.time.push(`${months[month]} ${year}`)
                 }
             }
+            setEnergyData(newEnergyData);
+            setIsLoading(false)
         }
         else
         {
             newEnergyData['time'].push(0);
             newEnergyData['active_energy'].push(0);
+            setEnergyData(newEnergyData);
         }
-        setEnergyData(newEnergyData);
-        setIsLoading(false)
     }
 
     function getChartData(dataType) {

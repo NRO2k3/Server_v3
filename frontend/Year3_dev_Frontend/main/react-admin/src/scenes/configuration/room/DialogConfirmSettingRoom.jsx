@@ -123,7 +123,7 @@ export default function DialogConfirmSettingRoom({callbackSetSignIn,
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

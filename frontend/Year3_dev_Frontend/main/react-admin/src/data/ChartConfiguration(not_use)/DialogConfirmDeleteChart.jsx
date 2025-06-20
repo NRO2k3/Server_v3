@@ -140,7 +140,7 @@ export default function DialogConfirmDeleteChart({callbackSetSignIn, ChartConfig
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

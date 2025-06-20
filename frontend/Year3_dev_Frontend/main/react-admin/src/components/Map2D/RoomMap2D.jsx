@@ -11,6 +11,7 @@ import verifyRefreshToken from '../../function/verifyRefreshToken';
 import { Html } from '@react-three/drei';
 import { Box3 } from "three";
 import { Tooltip, Grid, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 export let data_max_min = []
 const verify_and_get_data = async (fetch_data_function, callbackSetSignIn, backend_host, url) => {
   const token = { access_token: null, refresh_token: null };
@@ -212,7 +213,6 @@ function ClickCoordinates({ clickPos }) {
 }
 
 function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, setSeparate}) {
-  console.log(url)
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
 
@@ -231,21 +231,31 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
   }))
 
   return (
-      <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
-        <Suspense fallback={null}>
-          <ImagePlane url={url} setClickPos={setClickPos}/>
-          {points.map((point) => (
-            <Point
-              key={point.id} {...point}
-              addSelectedNode={addSelectedNode}
-              callbackSetSignIn={callbackSetSignIn}
-              setSeparate={setSeparate}
-              />
-          ))}
-        </Suspense>
-        <ClickCoordinates clickPos={clickPos} />
-        <MapControls enableRotate={false} screenSpacePanning={true} panSpeed={2} />
-    </Canvas>
+    <Box
+      sx={{
+        border: "2px solid black",
+        borderRadius: "12px",
+        overflow: "hidden",
+        width: "100%",
+        height: "1000px",
+      }}
+    >
+        <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
+          <Suspense fallback={null}>
+            <ImagePlane url={url} setClickPos={setClickPos}/>
+            {points.map((point) => (
+              <Point
+                key={point.id} {...point}
+                addSelectedNode={addSelectedNode}
+                callbackSetSignIn={callbackSetSignIn}
+                setSeparate={setSeparate}
+                />
+            ))}
+          </Suspense>
+          <ClickCoordinates clickPos={clickPos} />
+          <MapControls enableRotate={false} screenSpacePanning={true} panSpeed={2} />
+      </Canvas>
+    </Box>
   );
 }
 

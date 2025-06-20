@@ -135,7 +135,7 @@ export default function Weatherdata({time_delay=0})
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

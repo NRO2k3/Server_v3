@@ -118,7 +118,8 @@ const Dashboard = () => {
                         >
                             <Box 
                                 sx={{boxShadow: 0,
-                                    borderRadius: '5px', 
+                                    border: "1px solid black",
+                                    borderRadius: '15px', 
                                     backgroundColor: theme.palette.background.paper}}
                                 width="100%" height="100%" display="flex"
                                 flexDirection="column" alignContent="center" justifyContent="center"
@@ -127,7 +128,8 @@ const Dashboard = () => {
                             </Box>
                             <Box
                                 sx={{boxShadow: 0,
-                                    borderRadius: '5px',
+                                    border: "1px solid black",
+                                    borderRadius: '15px',
                                     backgroundColor: theme.palette.background.paper}}
                                 width="100%" height="100%"
                                 display="flex"
@@ -147,7 +149,8 @@ const Dashboard = () => {
                             </Box>
                             <Box 
                                 sx={{boxShadow: 0,
-                                    borderRadius: '5px', 
+                                    border: "1px solid black",
+                                    borderRadius: '15px', 
                                     backgroundColor: theme.palette.background.paper}}
                                 width="100%" height="100%"
                                 display="flex"
@@ -200,7 +203,8 @@ const Dashboard = () => {
                     <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
                         <Box 
                             sx={{boxShadow: 0,
-                                borderRadius: '5px', 
+                                border: "1px solid black",
+                                borderRadius: '15px', 
                                 backgroundColor: theme.palette.background.paper}}
                             width="100%" height="100%"
                             display="flex"
@@ -214,7 +218,8 @@ const Dashboard = () => {
                     <Grid item xs={12} sm={12} md={12} lg={6}>
                         <Box 
                             sx={{boxShadow: 0,
-                                borderRadius: '5px', 
+                                borderRadius: '15px',
+                                border: "1px solid black",
                                 backgroundColor: theme.palette.background.paper}}
                             width="100%" height="100%"
                             display="flex"

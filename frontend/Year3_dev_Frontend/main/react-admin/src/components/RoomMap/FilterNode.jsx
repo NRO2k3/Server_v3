@@ -55,15 +55,19 @@ export default function FilterNode({setNodeIdFilter, apiInformationTag, callback
 		
 		if(sensor_room_response.status === 200)
 		{
-			let temp_list = sensor_room_response_data["node_info"]["sensor"];
-			let new_sensorNodeInfo = []
-			temp_list.forEach((i)=>{
-				new_sensorNodeInfo.push(i["node_id"])
-			})
-			new_sensorNodeInfo.sort();	//!< sort the list of all sensor node_id in this room in ascending order
-			new_sensorNodeInfo.unshift(0);	//!< all one more "null" value in the front of the list
-			setSensorNodeInfo(new_sensorNodeInfo);
-			setIsLoading(false);
+			let temp_list = (sensor_room_response_data["node_info"] && sensor_room_response_data["node_info"]["sensor"] != null)
+			? sensor_room_response_data["node_info"]["sensor"]
+			: null;
+			if(temp_list!=null){
+				let new_sensorNodeInfo = []
+				temp_list.forEach((i)=>{
+					new_sensorNodeInfo.push(i["node_id"])
+				})
+				new_sensorNodeInfo.sort();	//!< sort the list of all sensor node_id in this room in ascending order
+				new_sensorNodeInfo.unshift(0);	//!< all one more "null" value in the front of the list
+				setSensorNodeInfo(new_sensorNodeInfo);
+				setIsLoading(false);
+			}
 		}
 		else
 		{

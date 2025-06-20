@@ -163,7 +163,7 @@ const Control = ({room_id, callbackSetSignIn, actuatorStatus}) =>
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

@@ -119,7 +119,14 @@ const AQI = ({room_id, callbackSetSignIn}) =>
         const response = await fetch(api, option_fetch);
         if(response.status == 200)
         {
-            const data = await response.json();
+          let data;
+          try {
+            data = await response.json();
+          } catch (e) {
+            console.error("JSON parse error:", e);
+            return;
+          }
+          
             const new_data = {}
             for(let i = 0; i< rating_dust.length; ++i)
             {

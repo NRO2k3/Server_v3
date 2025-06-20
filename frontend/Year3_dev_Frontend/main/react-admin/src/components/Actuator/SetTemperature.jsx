@@ -179,7 +179,7 @@ export default function SetTemperature({actuatorStatus, node_id, callbackSetSign
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

@@ -155,7 +155,7 @@ export default function NodeChange({configurationNodeAll, callbackSetSignIn, nod
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

@@ -88,7 +88,6 @@ const RoomMap = ({room_id, callbackSetSignIn}) =>
         if(response && response.status === 200)
         {   
             data_response = await response.json();
-            console.log(data_response);
             const {boxWidth, boxHeigth, currentImageWidth, currentImageHeigth} = size_object;
             const {x_length, y_length} = data_response["room_size"];
             let node_array_to_iterate = []

@@ -40,7 +40,6 @@ export default function DialogConfirmSettingChart({callbackSetSignIn,
 {
 
     let remain_node_id_configurationChartAll = [];
-    console.log(configurationChartAll)
     if(configurationChartAll !== undefined && configurationChartAll.length > 0)
     {
         for(let i=0; i<configurationChartAll.length; ++i)
@@ -183,7 +182,7 @@ export default function DialogConfirmSettingChart({callbackSetSignIn,
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {
@@ -208,7 +207,6 @@ export default function DialogConfirmSettingChart({callbackSetSignIn,
     };
 
     const handleConfirm = () => {
-        console.log(dataNodeSetting)
         verify_and_get_data(settingNode, callbackSetSignIn, host, api, dataNodeSetting, ChartConfigLoading)
         setOpen(false);
     }

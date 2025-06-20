@@ -149,7 +149,7 @@ export default function Actuator({room_id, callbackSetSignIn})
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

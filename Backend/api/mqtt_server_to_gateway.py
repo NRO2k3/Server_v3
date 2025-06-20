@@ -5,7 +5,7 @@ from .models import RegistrationNode, NodeConfigurationBuffer, ScanDevice
 import os
 import psycopg2
 
-set_actuator = "farm/set_actuator"
+set_actuator = "farm/control"
 scan_device = "farm/node/scan"
 add_device = "farm/node/add"
 delete_device = "farm/node/delete"
@@ -496,6 +496,7 @@ def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
         "status": 1,
         "info": {
             "room_id": data_query.room_id.room_id,
+            "protocol":"ble_mesh",
             "node_id": data["node_id"],
             "function": data["function"],
             "control_state":{

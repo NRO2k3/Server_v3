@@ -189,7 +189,7 @@ export default function AqiRef({callbackSetSignIn, time_delay})
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

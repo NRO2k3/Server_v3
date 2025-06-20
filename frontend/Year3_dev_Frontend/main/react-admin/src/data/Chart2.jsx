@@ -24,7 +24,7 @@ const Chart = ({room_id, callbackSetSignIn, timedelay, optionData, apiInformatio
 
     const get_chart_data = async (url, access_token) => 
     {
-        const headers = 
+        const headers =
         {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${access_token}`,

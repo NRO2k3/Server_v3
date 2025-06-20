@@ -91,7 +91,7 @@ export default function RoomChange({configurationRoomAll, callbackSetSignIn, Roo
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

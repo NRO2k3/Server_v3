@@ -5,7 +5,7 @@ import ThermostatIcon from '@mui/icons-material/Thermostat';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import FilterDramaIcon from '@mui/icons-material/FilterDrama';
 import SpeedIcon from '@mui/icons-material/Speed';
-
+import Divider from '@mui/material/Divider';
 import { host } from "../../App";
 import verify_and_get_data from "../../function/fetchData";
 import { useTranslation } from "react-i18next";
@@ -114,9 +114,9 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                     </Grid>
                     <Grid item xs={12} >
                         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                            <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}` }}>
+                            <Paper style={{ flex: 1, backgroundColor: theme.palette.background.paper, padding: '10px' }} sx={{ boxShadow: "0px 0px 0px 0px", border: `1px solid ${theme.palette.grey[400]}`, m:2, borderRadius: "15px" }}>
                             <Grid container spacing={2} marginY={0.5} px='10px'>
-                                <Grid item xs={6} container display="flex" flexDirection="column" justifyItems='center' textAlign='center'>
+                                <Grid item xs={5.5} container display="flex" flexDirection="column" justifyItems='center' textAlign='center'>
                                     <Grid container item justifyContent='center' alignContent='center'>
                                         <Tooltip style={{
                                             fontSize: theme.typography.pxToRem(24),
@@ -164,7 +164,14 @@ export default function AqiRef({ callbackSetSignIn, time_delay }) {
                                         <Typography fontWeight='bold' variant='h3'>{t(data['rating']['rate'])}</Typography>
                                     </Grid>
                                 </Grid>
-                                <Grid item xs>
+                                <Divider
+                                    orientation="vertical"
+                                    flexItem
+                                    sx={{
+                                    borderColor: theme.palette.grey[600],
+                                    }}
+                                />
+                                <Grid item xs={5.5}>
                                     <Typography
                                         variant="h5"
                                         display="flex"

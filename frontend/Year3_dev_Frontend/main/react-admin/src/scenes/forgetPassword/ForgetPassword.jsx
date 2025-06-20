@@ -4,7 +4,6 @@ import { host } from "../../App"
 function ForgetPassword({setForgetPassword}) {
   const [email, setEmail] = useState("")
   const handleSend = async () => {
-    console.log(email);
     let response;
     try {
       response = await fetch(`http://${host}/api/reset_password`, {

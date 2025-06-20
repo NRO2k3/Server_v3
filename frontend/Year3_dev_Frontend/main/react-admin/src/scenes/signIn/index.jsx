@@ -125,7 +125,6 @@ export default function SignIn({setSignUp, setIsSignin, setForgetPassword})
     useEffect(()=>{
         checkIfAlreadySignIn();
     }, []);
-    console.log(isLoading)
     return (
         <>
         {

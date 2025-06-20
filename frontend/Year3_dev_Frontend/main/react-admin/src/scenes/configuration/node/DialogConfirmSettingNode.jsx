@@ -125,7 +125,7 @@ export default function DialogConfirmSettingNode({callbackSetSignIn,
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

@@ -167,7 +167,7 @@ export default function ChartConfig({roomIdForChartConfig, setConfig, roomSize})
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

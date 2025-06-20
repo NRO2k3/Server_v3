@@ -86,9 +86,24 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
             "headers": headers,
             "body": null,
         }
-        const response = await fetch(url, option_fetch)
-        const data = await response.json()
-        console.log(data)
+        let data;
+        try {
+        const response = await fetch(url, option_fetch);
+        if (!response.ok) {
+            console.error(`Error ${response.status}: ${response.statusText}`);
+            return;
+        }
+        const text = await response.text();
+        if (!text) {
+            console.warn("Empty response body");
+            return;
+        }
+        data = JSON.parse(text);
+        } catch (err) {
+        console.error("Fetch or JSON parse error:", err);
+        return;
+        }
+
         if (data) {
             // if(response.status === 200)
             // {
@@ -157,9 +172,13 @@ const InformationTag = ({ url, callbackSetSignIn, time_delay, room_id, setActuat
             newInfoData["time"] = parseInt(data["time"]);
             getInfoData(newInfoData);
             let newNodeData = {};
-            newNodeData["sensor"] = data["node_info"]["sensor"];
-            newNodeData["actuator"] = data["node_info"]["actuator"];
-            setActuatorInfoOfRoom(newNodeData["actuator"]);
+            if (data?.node_info?.sensor) {
+                newNodeData["sensor"] = data["node_info"]["sensor"];
+            }
+            if (data?.node_info?.actuator) {
+                newNodeData["actuator"] = data.node_info.actuator;
+                setActuatorInfoOfRoom(data.node_info.actuator);
+            }
             getNodeData(newNodeData);
             setIsLoading(false);
         }

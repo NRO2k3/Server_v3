@@ -39,7 +39,11 @@ const Energy = ({room_id, callbackSetSignIn, time_delay, backend_host}) =>{
         }
 
         const response = await fetch(url, option_fetch);
-        const data = await response.json(); // data la cai j?
+        if (!response.ok) {
+            console.error("HTTP Error:", response.status);
+            return;
+        }
+        const data = await response.json();
         if (data) {
             let newEnergyData = {
                 'voltage': null,
@@ -76,6 +80,7 @@ const Energy = ({room_id, callbackSetSignIn, time_delay, backend_host}) =>{
                         if (fetch_data < 0 || fetch_data > 100) {
                             fetch_data = 'NULL';
                         }
+                        break;
                     case 7:
                         if (fetch_data < 0) {
                             fetch_data = 'NULL';

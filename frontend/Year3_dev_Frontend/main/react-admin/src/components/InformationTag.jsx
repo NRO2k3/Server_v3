@@ -267,7 +267,7 @@ const InformationTag = ({url, callbackSetSignIn, time_delay, room_id, setActuato
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

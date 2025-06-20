@@ -403,6 +403,10 @@ def GetEnergyData(request, *args, **kwargs):
     try:
         room_id = request.GET["room_id"]
         data_energy = EnergyData.objects.filter(room_id = room_id).order_by("-time").first()
+
+        if data_energy is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         data_energy_serializer = EnergyDataSerializer(data_energy)
         data_energy_array = [
             value
@@ -576,17 +580,17 @@ def GetEnviromentData(request, *args, **kwargs):
             for each_node_id in sensor_node_id_list:
                 data_query = RawSensorMonitor.objects.filter(
                         time__gt = filter_time, room_id = room_id, node_id = each_node_id
-                        # time__gt=1746032400, time__lt=1748710800, room_id = room_id, node_id = each_node_id
-                    )
+                        # time__gt=1746082800, time__lt=1748710800, room_id = room_id, node_id = each_node_id
+                    ).order_by('time').distinct('time')
                 if data_query.exists():
                     data = RawSensorMonitorSerializer(data_query.order_by("time"),many=True,).data
                     total_list.append(data)
         else:
             print("oke")
             data_query = RawSensorMonitor.objects.filter(
-                    # time__gt = filter_time, room_id = room_id, node_id = node_id
-                    time__gt=1746032400, time__lt=1748710800, room_id = room_id, node_id = node_id
-                )
+                    time__gt = filter_time, room_id = room_id, node_id = node_id
+                    # time__gt=1746082800, time__lt=1748710800, room_id = room_id, node_id = node_id
+                ).order_by('time').distinct('time')
             if data_query.exists():
                 data = RawSensorMonitorSerializer(data_query.order_by("time"),many=True,).data
                 total_list.append(data)

@@ -65,7 +65,6 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
         {
             if(data_response["Response"]["state"] === 1)
             {
-                console.log(data_response);
                 setStatus(1);
                 let newActuatorStatus = actuatorStatus;
                 newActuatorStatus[node_id] = 1;
@@ -74,7 +73,6 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
                 {
                     setSpeed(data_response["Response"]["current_value"]);
                 }
-                console.log(status);
                 setIsLoading(false);
             }
             else
@@ -84,7 +82,6 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
                 newActuatorStatus[node_id] = 0;
                 setActuatorStatus(newActuatorStatus);
                 setSpeed(0);
-                console.log(status);
                 setIsLoading(false);
             }
         }
@@ -244,7 +241,7 @@ const ActuatorStatus = ({room_id, setActuatorStatus, callbackSetSignIn,
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

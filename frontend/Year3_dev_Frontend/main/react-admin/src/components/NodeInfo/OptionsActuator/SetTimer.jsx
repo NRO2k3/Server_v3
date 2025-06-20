@@ -28,7 +28,6 @@ function SetTimer({room_id, callbackSetSignIn, idNode, status, selectFunction}) 
 
   const handleAccept = async() => {
     setOpen(false)
-    console.log(valueStartTime.valueOf(),valueEndTime.valueOf())
     const access_token =localStorage.getItem("access");
     const headers = {
       "Content-Type": "application/json",

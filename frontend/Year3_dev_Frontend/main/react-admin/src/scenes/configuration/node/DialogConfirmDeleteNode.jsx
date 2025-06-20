@@ -74,7 +74,7 @@ export default function DialogConfirmDeleteNode({callbackSetSignIn, NodeConfigLo
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

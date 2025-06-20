@@ -72,7 +72,7 @@ export default function DialogConfirmDelete({callbackSetSignIn, RoomConfigLoadin
             }
             catch(err)
             {
-                alert(err);
+                console.log(err);
             }
             if(verifyRefreshToken_response === true)
             {

@@ -46,7 +46,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
         <Box
             sx={{
                 boxShadow: 0,
-                borderRadius: '5px',
+                borderRadius: '15px',
                 backgroundColor: theme.palette.background.paper,
                 mb : 6
             }}
