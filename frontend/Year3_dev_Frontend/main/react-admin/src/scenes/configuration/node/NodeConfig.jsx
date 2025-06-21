@@ -232,10 +232,10 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             roomSize={roomSize}
                 /> */}
                 <Grid container>
-                    <Grid item xs = {6}>
+                    <Grid item xs = {5}>
                         <Grid container direction="column" gap ={2}>
                             <Grid item>
-                                <TableContainer sx={{ maxWidth: "100%", overflowX: "auto", backgroundColor: "white",  maxHeight: "600px", overflowY: "auto"}}>
+                                <TableContainer sx={{ maxWidth: "630px", overflowX: "auto", backgroundColor: "white",  height: "600px", overflowY: "auto"}}>
                                     <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                                     <Table size="small">
                                         <TableHead>
@@ -304,7 +304,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item xs = {6}>
+                    <Grid item xs = {7}>
                         <Grid container direction="column" gap ={2}>
                             <Grid item sx={{ height: "900px" }}>
                                 <Options room_id={roomIdForNodeConfig}
@@ -313,6 +313,8 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                                 setListNode = {setListNode}
                                 setSeparate = {setSeparate}
                                 isImageFetched = {isImageFetched}
+                                widthMap="600px"
+                                heightMap="800px"
                                 />
                             </Grid>
                             <Grid item>

@@ -8,7 +8,7 @@ import RoomMapConnections from "../RoomMap/RoomMapConnections";
 import { useTranslation } from "react-i18next";
 import "../../utils/i18n"
 
-function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate, isImageFetched}) {
+function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate, isImageFetched, widthMap, heightMap}) {
     const {t} = useTranslation()
     const theme = useTheme();
     const [status, setStatus] = useState(true);
@@ -139,7 +139,7 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             </Grid>
             {status? (
                 <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setListNode={setListNode}
-                callbackSetSignIn = {callbackSetSignIn} setSeparate = {setSeparate}/>
+                callbackSetSignIn = {callbackSetSignIn} setSeparate = {setSeparate} widthMap={widthMap} heightMap={heightMap}/>
             ) : (statusConnections ?
                 <RoomMapConnections
                 room_id={room_id}

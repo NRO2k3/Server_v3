@@ -212,7 +212,7 @@ function ClickCoordinates({ clickPos }) {
   ) : null;
 }
 
-function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, setSeparate}) {
+function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, setSeparate, widthMap, heightMap}) {
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
 
@@ -236,8 +236,8 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
         border: "2px solid black",
         borderRadius: "12px",
         overflow: "hidden",
-        width: "100%",
-        height: "1000px",
+        width: widthMap ? widthMap :"100%",
+        height: heightMap? heightMap :"1000px",
       }}
     >
         <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
