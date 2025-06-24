@@ -63,7 +63,7 @@ export default function Algorithm({roomIdForNodeConfig}) {
 };
   return (
     <Grid>
-          <Paper sx={{mt:4, p:2, width: "100%", maxWidth: "630px",height:"650px"}}>
+          <Paper sx={{mt:4, p:2, width: "100%", maxWidth: "600px",height:"650px", border: "1px solid black", borderRadius: '15px', }}>
       <Typography variant="h2" align="center" fontWeight="bold">
         Coverage Optimization Algorithm
       </Typography>

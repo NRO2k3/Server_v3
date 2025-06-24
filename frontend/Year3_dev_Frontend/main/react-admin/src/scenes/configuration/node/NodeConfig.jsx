@@ -180,7 +180,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
         isLoadingNodeConfig === true ?
             <h1>Loading ...</h1>
             :
-            <Container sx={{ p: 0, m: 0, width: "100vw" }}
+            <Container sx={{ p: 0, m: 0, width: "100%" }}
                         maxWidth={false}
                         disableGutters>
                 <Grid container gap = {2}>
@@ -235,7 +235,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                     <Grid item xs = {5}>
                         <Grid container direction="column" gap ={2}>
                             <Grid item>
-                                <TableContainer sx={{ maxWidth: "630px", overflowX: "auto", backgroundColor: "white",  height: "600px", overflowY: "auto"}}>
+                                <TableContainer sx={{ maxWidth: "560px", overflowX: "auto", backgroundColor: "white",  height: "600px", overflowY: "auto", border: "1px solid black", borderRadius: '15px', p:3, m:2}}>
                                     <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                                     <Table size="small">
                                         <TableHead>
@@ -306,7 +306,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                     </Grid>
                     <Grid item xs = {7}>
                         <Grid container direction="column" gap ={2}>
-                            <Grid item sx={{ height: "900px" }}>
+                            <Grid item sx={{ height: "900px", width:"880px"}}>
                                 <Options room_id={roomIdForNodeConfig}
                                 callbackSetSignIn={callbackSetSignIn}
                                 configurationNodeAll={configurationNodeAll}
@@ -315,6 +315,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                                 isImageFetched = {isImageFetched}
                                 widthMap="600px"
                                 heightMap="800px"
+                                data_passed_from_landingpage={{"x_length": roomSize.x,"y_length": roomSize.y}}
                                 />
                             </Grid>
                             <Grid item>

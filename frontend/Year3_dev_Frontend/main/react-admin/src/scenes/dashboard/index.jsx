@@ -17,8 +17,7 @@ import DetailNode from "../../components/NodeInfo/DetailNode";
 
 const Dashboard = () => {
     const backend_host = host;
-    const location = useLocation(); /*!< This is used to get the "state" component that is passed into <Link> */
-    // console.log(location)
+    const location = useLocation();
     const data_passed_from_landingpage = location.state;
     let room_id = data_passed_from_landingpage == null ? 1 : data_passed_from_landingpage.room_id
     const url_image = data_passed_from_landingpage.image_url
@@ -111,7 +110,7 @@ const Dashboard = () => {
                             // backgroundColor: "red"
                         }}
                 >
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={3.5} container>
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={3.5} >
                         <Box
                             width="100%" height="100%" display="flex"
                             flexDirection="column" alignItems="center" justifyContent="center"
@@ -166,7 +165,7 @@ const Dashboard = () => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={separate > 0 ? 5.5 : 8.5} container
+                    <Grid item xs={12} sm={12} md={12} lg={12} xl={separate > 0 ? 5.5 : 8.5} sx={{height:"1150px"}}
                         direction="column"
                         alignItems="center"
                         justify="center"
@@ -178,6 +177,8 @@ const Dashboard = () => {
                             setListNode = {setListNode}
                             setSeparate = {setSeparate}
                             isImageFetched = {isImageFetched}
+                            widthMap= {separate?null:"920px"}
+                            data_passed_from_landingpage={data_passed_from_landingpage}
                         />
                     </Grid>
 

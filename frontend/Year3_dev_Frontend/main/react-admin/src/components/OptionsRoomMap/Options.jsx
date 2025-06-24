@@ -8,7 +8,7 @@ import RoomMapConnections from "../RoomMap/RoomMapConnections";
 import { useTranslation } from "react-i18next";
 import "../../utils/i18n"
 
-function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate, isImageFetched, widthMap, heightMap}) {
+function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate, isImageFetched, widthMap, heightMap, data_passed_from_landingpage}) {
     const {t} = useTranslation()
     const theme = useTheme();
     const [status, setStatus] = useState(true);
@@ -46,8 +46,10 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
         <Box
             sx={{
                 boxShadow: 0,
+                border: "1px solid black",
                 borderRadius: '15px',
                 backgroundColor: theme.palette.background.paper,
+                p:1,
                 mb : 6
             }}
             width="100%" height="100%"
@@ -139,14 +141,25 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
             </Grid>
             {status? (
                 <RoomMap2D url={image} configurationNodeAll={configurationNodeAll} setListNode={setListNode}
-                callbackSetSignIn = {callbackSetSignIn} setSeparate = {setSeparate} widthMap={widthMap} heightMap={heightMap}/>
+                callbackSetSignIn = {callbackSetSignIn} setSeparate = {setSeparate} widthMap={widthMap} heightMap={heightMap} data_passed_from_landingpage={data_passed_from_landingpage}/>
             ) : (statusConnections ?
-                <RoomMapConnections
-                room_id={room_id}
-                callbackSetSignIn={callbackSetSignIn}
-                backend_host={host}
-                setSeparate = {setSeparate}
-                />
+                // <RoomMapConnections
+                // room_id={room_id}
+                // callbackSetSignIn={callbackSetSignIn}
+                // backend_host={host}
+                // setSeparate = {setSeparate}
+                // />
+                <RoomMap2D
+                    url={image}
+                    configurationNodeAll={configurationNodeAll}
+                    setListNode={setListNode}
+                    callbackSetSignIn = {callbackSetSignIn}
+                    setSeparate = {setSeparate}
+                    widthMap={widthMap}
+                    heightMap={heightMap}
+                    statusConnections={statusConnections}
+                    data_passed_from_landingpage={data_passed_from_landingpage}
+                    />
                 :
                 <RoomMap
                 room_id={room_id}

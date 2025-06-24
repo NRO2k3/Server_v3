@@ -61,7 +61,9 @@ const Landing = () => {
                             "image": image_room[room["room_id"]],
                             "room_id": room["room_id"],
                             "info": room["information"],
-                            "image_url": room["image"]
+                            "image_url": room["image"],
+                            "x_length":room["x_length"],
+                            "y_length":room["y_length"],
                         })
                     
                 })

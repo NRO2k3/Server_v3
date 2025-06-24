@@ -65,16 +65,17 @@ export default function DialogConfirmSettingRoom({callbackSetSignIn,
     const api = `http://${host}/api/configuration_room/${row.id}`;
     const settingRoom = async (url, access_token, data, RoomConfigLoading) => 
     {
-        const headers = 
+        const { image, ...dataWithoutImage } = data;
+        const headers =
         {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${access_token}`,
         }
-        const option_fetch = 
+        const option_fetch =
         {
             "method": "PUT",
             "headers": headers,
-            "body": JSON.stringify(data),
+            "body": JSON.stringify(dataWithoutImage),
         }
         const response = await fetch(url, option_fetch);
         if(response.status == 200)

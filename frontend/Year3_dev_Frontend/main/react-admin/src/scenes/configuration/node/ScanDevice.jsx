@@ -170,7 +170,7 @@ export default function ScanDevice({roomIdForNodeConfig}) {
     return () => clearInterval(timer);
   },[])
   return (
-  <TableContainer sx={{ maxWidth: "880px", overflowX: "auto", backgroundColor: "white"}}>
+  <TableContainer sx={{ maxWidth: "880px", overflowX: "auto", backgroundColor: "white", height:"340px",border: "1px solid black", borderRadius: '15px',p:2, alignItems: 'center', justifyContent: 'center',}} >
     <Header title={`Unprovisioned device in room ${roomIdForNodeConfig}`} fontSize="20px"/>
     <Table size="small">
         <TableHead>

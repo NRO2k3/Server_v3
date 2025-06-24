@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { styled } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
 import { AddCircleOutline } from '@mui/icons-material';
@@ -7,15 +7,17 @@ import AirIcon from '@mui/icons-material/Air';
 
 const MapConnectionsContainer = styled('div')({
   position: 'relative',
-  width: '1100px',
+  width: '100%',
+  maxWidth: '1100px',
   height: '800px',
+  border: '1px solid #ccc',
 });
 
 const MapConnectionsImg = styled('img')({
   width: '100%',
   height: '100%',
-  objectFit: 'cover',
-  position: 'absolute'
+  objectFit: 'contain',
+  position: 'absolute',
 });
 
 const SensorButton = styled(IconButton)({
@@ -24,9 +26,7 @@ const SensorButton = styled(IconButton)({
   padding: '8px',
   fontSize: '1.5rem',
   position: 'absolute',
-  '& .MuiButton-startIcon': {
-    position: 'relative',
-  },
+  transform: 'translate(-50%, -50%)',
   '& .sensor-label': {
     position: 'absolute',
     top: '-10px',
@@ -49,44 +49,74 @@ const SvgOverlay = styled('svg')({
   left: 0,
   width: '100%',
   height: '100%',
+  pointerEvents: 'none',
 });
 
-const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction, pic_src, offset}) => {
-  const sensor_radius = 5
-  const communication_radius = 9
-  const one_meter_to_width = 1100/sizeRoom[0]
-  const one_meter_to_height = 800/sizeRoom[1]
-  const getDistance = (node_1, node_2) =>{
-    if(!node_1 || !node_2) return null
-    return Math.sqrt(((node_1.x-node_2.x)/one_meter_to_width)**2 + ((node_1.y-node_2.y)/one_meter_to_height)**2)
-  }
-  const connections = []
-  for(let i = 0; i < nodeData.length; i++){
-    for(let j = i + 1; j < nodeData.length; j++){
-      const dist = getDistance(nodeData[i], nodeData[j])
-      if( dist <= communication_radius){
-        connections.push({  "from": nodeData[i],
-                            "to": nodeData[j],
-                            "key": `${i}-${j}`,
-                            "distance": dist
-                          })}
+const RoomMapConnectionsComponent = ({ sizeRoom, nodeData, nodeList, nodeFunction, pic_src, offset = 0 }) => {
+  const imgRef = useRef(null);
+  const [imageSize, setImageSize] = useState({ width: 1100, height: 800 });
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (imgRef.current) {
+        setImageSize({
+          width: imgRef.current.offsetWidth,
+          height: imgRef.current.offsetHeight,
+        });
+      }
+    };
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  const one_meter_to_width = imageSize.width / sizeRoom[0];
+  const one_meter_to_height = imageSize.height / sizeRoom[1];
+
+  const getDistance = (node1, node2) => {
+    if (!node1 || !node2) return null;
+    return Math.sqrt(
+      ((node1.x - node2.x) / one_meter_to_width) ** 2 +
+      ((node1.y - node2.y) / one_meter_to_height) ** 2
+    );
+  };
+
+  const connections = useMemo(() => {
+    const comm_radius = 9;
+    const conn = [];
+    for (let i = 0; i < nodeData.length; i++) {
+      for (let j = i + 1; j < nodeData.length; j++) {
+        const dist = getDistance(nodeData[i], nodeData[j]);
+        if (dist <= comm_radius) {
+          conn.push({
+            from: nodeData[i],
+            to: nodeData[j],
+            key: `${i}-${j}`,
+            distance: dist,
+          });
+        }
+      }
     }
-  }
+    return conn;
+  }, [nodeData, one_meter_to_width, one_meter_to_height]);
+
+  const sensor_radius = 20;
 
   return (
     <MapConnectionsContainer>
-      <MapConnectionsImg src={pic_src} alt="Map view" />
-      <SvgOverlay>
+      <MapConnectionsImg src={pic_src} alt="Map view" ref={imgRef} />
 
-        {connections.map(line_node => (
+      <SvgOverlay width={imageSize.width} height={imageSize.height}>
+        {connections.map((line_node) => (
           <line
-            key = {line_node.key}
-            x1 = {line_node.from.x + offset}
-            y1 = {line_node.from.y + offset}
-            x2 = {line_node.to.x + offset}
-            y2 = {line_node.to.y + offset}
-            stroke = "red"
-            strokeWidth = "2"
+            key={line_node.key}
+            x1={line_node.from.x + offset}
+            y1={line_node.from.y + offset}
+            x2={line_node.to.x + offset}
+            y2={line_node.to.y + offset}
+            stroke="red"
+            strokeWidth="2"
           />
         ))}
 
@@ -101,27 +131,29 @@ const RoomMapConnectionsComponent = ({sizeRoom, nodeData, nodeList, nodeFunction
             strokeWidth="2"
             fill="none"
           />
-
-  ))}
+        ))}
       </SvgOverlay>
+
       {nodeData.map((sensor, index) => (
-          <SensorButton
-            size='large'
-            key={index}
-            variant="contained"
-            color="primary"
-            style={{ top: sensor.y, left: sensor.x , backgroundColor: (nodeFunction[index] === 'sensor' ? 'white' : 'aqua') }} 
-            startIcon={<AddCircleOutline />}
-          >
-            {nodeFunction[index] === 'sensor' ?
-            <SensorsIcon fontSize='inherit' />
-            :
-            <AirIcon fontSize='inherit' />
-            }
-            <span className="sensor-label">{nodeList[index]}</span>
-          </SensorButton>
+        <SensorButton
+          size="large"
+          key={index}
+          color="primary"
+          style={{
+            top: sensor.y + offset,
+            left: sensor.x + offset,
+            backgroundColor: nodeFunction[index] === 'sensor' ? 'white' : 'aqua',
+          }}
+          title={`Node ${nodeList[index]} (${nodeFunction[index]})`}
+        >
+          {nodeFunction[index] === 'sensor' ? (
+            <SensorsIcon fontSize="inherit" />
+          ) : (
+            <AirIcon fontSize="inherit" />
+          )}
+          <span className="sensor-label">{nodeList[index]}</span>
+        </SensorButton>
       ))}
-      
     </MapConnectionsContainer>
   );
 };
