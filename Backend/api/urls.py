@@ -39,4 +39,5 @@ urlpatterns=[
     path('room_image', views.RoomImage, name = 'room_image'),
     path('coverage_algorithm', views.CoverageAlgorithm, name = 'coverage_algorithm'),
     path('result_coverage_algorithm', views.ResultCoverageAlgorithm, name = 'result_coverage_algorithm'),
+    path('data_all_node', views.DataAllNodeInRoom, name = 'data_all_node_in_room'),
 ]

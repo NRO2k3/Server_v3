@@ -1114,3 +1114,19 @@ def ResultCoverageAlgorithm(request, *args, **kwargs):
             {"Response": "Error on server!"},
             status = status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
+    
+@api_view(["GET"])
+def DataAllNodeInRoom(request, *args, **kwargs):
+
+    try:
+        room_id = request.GET["room_id"]
+        raw_data =RawSensorMonitorSerializer(RawSensorMonitor.objects.filter(room_id=room_id).order_by('-time')[:10000], many = True)
+        return Response(
+            raw_data.data,
+            status=status.HTTP_200_OK,
+        )
+    except:
+        return Response(
+            {"Response": "Error on server!"},
+            status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

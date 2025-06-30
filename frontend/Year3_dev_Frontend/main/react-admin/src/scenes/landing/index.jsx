@@ -13,7 +13,9 @@ import plan_409 from "../../assets/409.svg";
 import plan_410 from "../../assets/410.svg";
 import plan_411 from "../../assets/411.svg";
 import verify_and_get_data from "../../function/fetchData";
-
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 const Landing = () => {
     const callbackSetSignIn = useContext(UserContext);
     const theme = useTheme();
@@ -79,6 +81,30 @@ const Landing = () => {
         {
             alert(`Can not call to server! Error code: ${response_room_data.status}`);
         }
+    }
+
+    const handleExportData = async (room_id)=>{
+        const headers = {
+            'Content-Type':'application/json',
+            };
+        const option_data = {
+            'method':'GET',
+            "headers": headers,
+            "body": null,
+            };
+        const response_data = await fetch(`http://${backend_host}/api/data_all_node?room_id=${room_id}`, option_data);
+        if(response_data.status === 200){
+            const response_data_json = await response_data.json();
+            const worksheet = XLSX.utils.json_to_sheet(response_data_json);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+            const blob = new Blob([excelBuffer], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            saveAs(blob, "data.xlsx");
+        }
+        
     }
 
     useEffect(()=>{
@@ -160,6 +186,20 @@ const Landing = () => {
                                     {/* <Button size="small">View</Button>
                                     <Button size="small">Edit</Button> */}
                                 </Link>
+                                <Button
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: "black",
+                                        color: "white",
+                                        fontSize: "12px",
+                                        fontWeight: "bold",
+                                        padding: "5px 8px",
+                                    }}
+                                    onClick={()=>handleExportData(room.room_id)}
+                                    >
+                                        <ArrowDownwardIcon sx={{ mr: "10px" }}/>
+                                        Export Data
+                                </Button>
                             </CardActions>
                             </Card>
                         </Grid>

@@ -2,3 +2,4 @@ venv/
 supervisord.log
 supervisord.pid
 exported_csv/
+media/

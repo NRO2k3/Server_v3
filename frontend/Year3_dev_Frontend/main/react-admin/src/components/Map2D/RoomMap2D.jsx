@@ -3,6 +3,7 @@ import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { Suspense, useRef, useLayoutEffect, useState } from 'react';
 import { MapControls, Html } from '@react-three/drei';
 import SensorsIcon from '@mui/icons-material/Sensors';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AirIcon from '@mui/icons-material/Air';
 import './styles.css';
 import { host } from '../../App';
@@ -68,7 +69,7 @@ function ImagePlane({ url, setClickPos }) {
   );
 }
 
-function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn }) {
+function Point({ id, x, y, type, status, addSelectedNode, callbackSetSignIn }) {
   const backend_host = host;
   const api = `http://${backend_host}/api/employee_node`;
   const [clicked, setClicked] = useState(false);
@@ -136,7 +137,8 @@ function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn }) {
               <Typography>{`Function: Sensor`}</Typography>
             </Grid>
           }>
-            <SensorsIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+            {status === "sync" ?<SensorsIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />:
+            <ReportProblemIcon style={{ color: "red", fontSize: clicked ? "32px" : "24px" }} />}
           </Tooltip>
         ) : (
           <Tooltip title={
@@ -147,7 +149,8 @@ function Point({ id, x, y, type, addSelectedNode, callbackSetSignIn }) {
               <Typography>{`Function: Actuator`}</Typography>
             </Grid>
           }>
-            <AirIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />
+            {status === "sync" ?<AirIcon style={{ color: "black", fontSize: clicked ? "32px" : "24px" }} />:
+            <ReportProblemIcon style={{ color: "red", fontSize: clicked ? "32px" : "24px" }} />}
           </Tooltip>
         )}
         <span style={{
@@ -195,7 +198,8 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
     id: point.node_id,
     x: point.x_axis,
     y: point.y_axis,
-    type: point.function
+    type: point.function,
+    status: point.status
   }));
 
   const nodeConnections = statusConnections
