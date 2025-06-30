@@ -5,7 +5,9 @@ services:
     build:
       context: ./frontend/Year3_dev_Frontend/main/react-admin/nginx
     ports:
-      - 8080:80
+      - 3000:80
+    depends_on:
+      - backend
     volumes:
       - ./frontend/Year3_dev_Frontend/main/react-admin/build:/usr/share/nginx/html
       - ./frontend/Year3_dev_Frontend/main/react-admin/nginx/default.conf:/etc/nginx/conf.d/default.conf
@@ -23,6 +25,7 @@ services:
     expose:
       - 8000
     depends_on:
+      - mosquitto
       - my-postgres
     env_file:
       - ./Backend/.env
@@ -36,6 +39,16 @@ services:
       - psql-db:/var/lib/postgresql/data
     env_file:
       - ./Backend/.env
+    networks:
+      - mynetwork
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - "1800:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
     networks:
       - mynetwork
 

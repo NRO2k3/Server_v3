@@ -16,10 +16,15 @@ client = ClientMQTT(topic_list)
 
 broker = os.environ.get('SERVER_BROKER')
 port = 1883
-client.connect(broker, port)
-client.loop_start()
+# client.connect(broker, port)
+# client.loop_start()
 
 def CheckScanDeviceToGateWay(client: ClientMQTT, data: dict):
+
+    client = ClientMQTT([scan_device])
+    client.connect(broker, port)
+    client.loop_start()
+
     message_send = json.dumps(data)
     result = client.publish(scan_device, message_send)
     status = result[0]
@@ -132,6 +137,10 @@ def ScanDeviceToGateWay(client: ClientMQTT):
     print("Time out scan !!!")
 
 def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
+
+    client = ClientMQTT([add_device])
+    client.connect(broker, port)
+    client.loop_start()
 
     action = 1 if command == "add" else 0
     topic = [add_device, new_node_topic]
@@ -265,6 +274,11 @@ def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
     return None
 
 def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
+    
+    client = ClientMQTT([delete_device])
+    client.connect(broker, port)
+    client.loop_start()
+
     action = 0 if command == "delete" else 0
     topic = [delete_device]
 
@@ -326,6 +340,10 @@ def SendDeleteNodeToGatewayBleMesh(client: ClientMQTT, command: str):
                         break
 
 def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
+
+    client = ClientMQTT([add_device])
+    client.connect(broker, port)
+    client.loop_start()
 
     action = 1 if command == "add" else 0
     result = 0
@@ -390,7 +408,6 @@ def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
                     print("Gateway does not response, finish deleting add data in buffer")
                 break
 
-            client.subscribe(topic)
             time.sleep(2)
             message_receive = client.message_arrive()
 
@@ -486,6 +503,10 @@ def SendNodeToGatewayWifi(client: ClientMQTT, command: str):
 
 def SendSetUpActuatorToGateway(client: ClientMQTT, data: dict):
     
+    client = ClientMQTT([set_actuator])
+    client.connect(broker, port)
+    client.loop_start()
+
     data_query = RegistrationNode.objects.get(node_id = data["node_id"])
 
     for key in ["start_time", "end_time", "setpoint", "mode", "status"]:

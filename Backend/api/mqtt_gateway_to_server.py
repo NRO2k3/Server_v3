@@ -285,11 +285,56 @@ def DataFromActuator():
         except:
             print("Something was wrong while inserting to database !!!")
 
+def HealthCheckNode():
+
+    client = ClientMQTT([backend_topic_dictionary["health_check"]],)
+    client.connect(broker, port)
+    client.loop_start()
+
+    while True:
+        try:
+            message_receive = client.message_arrive()
+
+            if message_receive != None:
+                print(f"Received `{message_receive}`")
+                data_receive = json.loads(message_receive)
+
+                if data_receive["operator"] == "health_check":
+
+                    try:
+                        connect_to_database = psycopg2.connect(
+                            database = os.environ.get('POSTGRES_DB'),
+                            user = os.environ.get('POSTGRES_USER'),
+                            password = os.environ.get('POSTGRES_PASSWORD'),
+                            host = os.environ.get('HOST_NAME'),
+                            port = "5432",
+                        )
+                        print("Successfully to connect database in function DataFromActuator")
+                    except psycopg2.OperationalError as e:
+                        connect_to_database = None
+                        print(e)
+
+                    connect_to_database.autocommit = True
+                    cursor = connect_to_database.cursor()
+                    query = f"""UPDATE api_registrationnode SET status = %s WHERE node_id = %s"""
+                    record = (data_receive["info"]["status"],data_receive["info"]["node_id"])
+                    print(record)
+                    cursor.execute(query, record)
+                    print("Successfully update api_registrationnode to PostgreSQL")
+                    cursor.close()
+                    connect_to_database.close()
+                else:
+                    print("Message doesn't belong to this function HealthCheckNode")
+
+        except:
+            print("Something was wrong while inserting to database !!!")
+
 if __name__ == "__main__":
     process_list = []
     process_list.append(multiprocessing.Process(target = DataFromSensorNode))
     process_list.append(multiprocessing.Process(target = DataFromActuator))
     process_list.append(multiprocessing.Process(target = DataForAqiRef))
+    process_list.append(multiprocessing.Process(target = HealthCheckNode))
 
     for i in process_list:
         i.start()
