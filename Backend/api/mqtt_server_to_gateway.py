@@ -78,7 +78,7 @@ def ScanDeviceToGateWay(client: ClientMQTT):
     connect_to_database.close()
     current_time = int((datetime.datetime.now()).timestamp())
 
-    while int((datetime.datetime.now()).timestamp()) - current_time <= 60:
+    while int((datetime.datetime.now()).timestamp()) - current_time <= 300:
         
         message_receive = client.message_arrive()
 
@@ -138,7 +138,7 @@ def ScanDeviceToGateWay(client: ClientMQTT):
 
 def SendAddNodeToGatewayBleMesh(client: ClientMQTT, command: str):
 
-    client = ClientMQTT([add_device])
+    client = ClientMQTT([add_device, new_node_topic])
     client.connect(broker, port)
     client.loop_start()
 

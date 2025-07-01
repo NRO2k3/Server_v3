@@ -29,6 +29,7 @@ import Options from '../../../components/OptionsRoomMap/Options';
 import { Box} from "@mui/material";
 import Algorithm from './Algorithm';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import Chip from '@mui/material/Chip';
 
 export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
     
@@ -235,7 +236,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                     <Grid item xs = {5}>
                         <Grid container direction="column" gap ={2}>
                             <Grid item>
-                                <TableContainer sx={{ maxWidth: "560px", overflowX: "auto", backgroundColor: "white",  height: "600px", overflowY: "auto", border: "1px solid black", borderRadius: '15px', p:3, m:2}}>
+                                <TableContainer sx={{ maxWidth: "580px", overflowX: "auto", backgroundColor: "white",  height: "600px", overflowY: "auto", border: "1px solid black", borderRadius: '15px', p:3, m:2}}>
                                     <Header title={`All node records in room ${roomIdForNodeConfig}`} fontSize="20px"/>
                                     <Table size="small">
                                         <TableHead>
@@ -243,9 +244,9 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                                                 <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Node id</TableCell>
                                                 <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Position x</TableCell>
                                                 <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Position y</TableCell>
-                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Funtion</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Function</TableCell>
                                                 <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Mac Address</TableCell>
-                                                <TableCell sx={{"font-weight": "600", "font-size": "15px"}}>Status</TableCell>
+                                                <TableCell sx={{"font-weight": "600", "font-size": "14px"}}>Status</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -256,8 +257,13 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                                                 <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.y_axis}</TableCell>
                                                 <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{dict_function[row.function]}</TableCell>
                                                 <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.mac}</TableCell>
-                                                <TableCell sx={{"font-weight": "400", "font-size": "13px"}}>{row.status === "sync" ? "Active" : "Deleted"}</TableCell>
-
+                                                <TableCell>
+                                                <Chip
+                                                    label={row.status === "sync" ? "Active" : "Inactive"}
+                                                    color={row.status === "sync" ? "success" : "error"}
+                                                    sx={{ fontSize: "12px", width:'68px', fontWeight:'bold' }}
+                                                />
+                                                </TableCell>
 
                                                 <TableCell
                                                 sx={{
@@ -282,12 +288,7 @@ export default function NodeConfig({roomIdForNodeConfig, setConfig, roomSize}) {
                                                         },
                                                         }}
                                                 >
-                                                    {
-                                                        row.status === "sync" ?
-                                                        <DialogConfirmDeleteNode callbackSetSignIn={callbackSetSignIn} NodeConfigLoading={{0: isLoadingNodeConfig, 1: setIsLoadingNodeConfig}} id={row.node_id}/>
-                                                        :
-                                                        <></>
-                                                    }
+                                                    <DialogConfirmDeleteNode callbackSetSignIn={callbackSetSignIn} NodeConfigLoading={{0: isLoadingNodeConfig, 1: setIsLoadingNodeConfig}} id={row.node_id}/>
                                                 </TableCell>
                                             </TableRow>
                                         ))}

@@ -16,6 +16,7 @@ _ONE_HOUR = 60 * _ONE_MINUTE
 backend_topic_dictionary = {
                         "sensor_data": "farm/monitor/sensor",
                         "actuator_data": "farm/monitor/actuator",
+                        "health_check": "farm/monitor/alive"
                         }
 
 broker = os.environ.get('SERVER_BROKER')
@@ -299,8 +300,7 @@ def HealthCheckNode():
                 print(f"Received `{message_receive}`")
                 data_receive = json.loads(message_receive)
 
-                if data_receive["operator"] == "health_check":
-
+                if data_receive["operator"] == "keepalive_node":
                     try:
                         connect_to_database = psycopg2.connect(
                             database = os.environ.get('POSTGRES_DB'),
@@ -317,7 +317,7 @@ def HealthCheckNode():
                     connect_to_database.autocommit = True
                     cursor = connect_to_database.cursor()
                     query = f"""UPDATE api_registrationnode SET status = %s WHERE node_id = %s"""
-                    record = (data_receive["info"]["status"],data_receive["info"]["node_id"])
+                    record = (data_receive["info"]["node_status"],data_receive["info"]["node_id"])
                     print(record)
                     cursor.execute(query, record)
                     print("Successfully update api_registrationnode to PostgreSQL")

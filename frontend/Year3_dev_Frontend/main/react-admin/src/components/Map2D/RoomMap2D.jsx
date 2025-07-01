@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Canvas, useLoader, useThree } from '@react-three/fiber';
 import { Suspense, useRef, useLayoutEffect, useState } from 'react';
-import { MapControls, Html } from '@react-three/drei';
+import { MapControls, Html, OrbitControls } from '@react-three/drei';
 import SensorsIcon from '@mui/icons-material/Sensors';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AirIcon from '@mui/icons-material/Air';
@@ -237,6 +237,7 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
       height: heightMap ? heightMap : "1000px",
     }}>
       <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
+      <OrbitControls minZoom={200} maxZoom={600} />
         <Suspense fallback={null}>
           <ImagePlane url={url} setClickPos={setClickPos} />
           {statusConnections &&
