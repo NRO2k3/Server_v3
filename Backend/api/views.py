@@ -251,7 +251,6 @@ def SetActuator(request, *args, **kwargs):
 
     data = json.loads(request.body)
     check_node = RegistrationNode.objects.filter(node_id = data["node_id"])
-
     if not check_node.exists():
         return Response({"Errors": "Node doesn't exist please singup first"}, status = status.HTTP_400_BAD_REQUEST)
 

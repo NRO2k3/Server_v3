@@ -18,13 +18,17 @@ urlpatterns=[
 
     path('configuration_room', views.RoomAPIView.as_view(), name = 'list_post_room'),
     path('configuration_room/<int:pk>', views.RoomAPIView.as_view(), name = 'delete_update_room'),
+
 ## Wifi
     path('configuration_node', views.ConfigurationNodeWifi, name = 'configuration_node'),
+
 ## Ble Mesh
     path('scan_device', views.ScanDeviceGateWay, name = 'scan_device'),
     path('all_scan_device', views.GetAllScanDevice, name = 'all_scan_device'),
     path('delete_device', views.DeleteScanDevice, name = 'delete_device'),
     path('configuration_node_ble_mesh', views.ConfigurationNodeBleMesh, name = 'configuration_node_ble_mesh'),
+
+# Hiển thị giao diện cho người 
 
     path('set_actuator', views.SetActuator, name = 'set_actuator'),
     path('aqi_ref', views.GetAqiRef, name = 'aqi_ref'),
