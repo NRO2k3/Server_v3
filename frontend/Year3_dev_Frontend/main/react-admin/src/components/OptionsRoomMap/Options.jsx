@@ -7,13 +7,14 @@ import RoomMap from "../RoomMap/RoomMap2";
 import RoomMapConnections from "../RoomMap/RoomMapConnections";
 import { useTranslation } from "react-i18next";
 import "../../utils/i18n"
+import { getStoredRoomImage, saveRoomImage } from "../../utils/roomImage";
 
 function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode, setSeparate, isImageFetched, widthMap, heightMap, data_passed_from_landingpage}) {
     const {t} = useTranslation()
     const theme = useTheme();
     const [status, setStatus] = useState(true);
     const [statusConnections, setStatusConnections] = useState(false);
-    const [image, setImage] = useState(localStorage.getItem("uploadedImage") || "/room2.png");
+    const [image, setImage] = useState(() => getStoredRoomImage());
 
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -29,17 +30,12 @@ function Options({ room_id, callbackSetSignIn, configurationNodeAll, setListNode
         const file = event.target.files[0];
         if (file) {
             const base64 = await convertToBase64(file);
-            setImage(base64);
-            localStorage.setItem("uploadedImage", base64);
+            setImage(saveRoomImage(base64));
         }
     };
 
     useEffect(() => {
-        if (!isImageFetched) {
-            setImage(localStorage.getItem("uploadedImage") || "/room2.png");
-        } else {
-            setImage(localStorage.getItem("uploadedImage"));
-        }
+        setImage(getStoredRoomImage());
     }, [isImageFetched]);
 
     return (

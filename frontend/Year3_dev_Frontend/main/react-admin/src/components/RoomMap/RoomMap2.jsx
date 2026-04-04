@@ -4,6 +4,7 @@ import { React, useState, useEffect, useRef } from "react";
 import verify_and_get_data from "../../function/fetchData";
 import HeatmapComponent from "./HeatmapComponent";
 import { data_max_min } from "../Map2D/RoomMap2D";
+import { getStoredRoomImage } from "../../utils/roomImage";
 
 const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
     setSeparate(false)
@@ -14,7 +15,7 @@ const RoomMap = ({ room_id, callbackSetSignIn, backend_host, setSeparate}) => {
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
     const api_to_fetch = `http://${backend_host}/api/heatmap?room_id=${room_id}`;
-    const image = localStorage.getItem("uploadedImage") || "/room2.png";
+    const image = getStoredRoomImage();
     const offset = 25
     const fetch_data_function = async (url, access_token) => {
         const headers =

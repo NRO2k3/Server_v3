@@ -11,6 +11,7 @@ import verifyAccessToken from '../../function/verifyAccessToken';
 import verifyRefreshToken from '../../function/verifyRefreshToken';
 import { Box3 } from "three";
 import { Tooltip, Grid, Typography, Box } from "@mui/material";
+import { DEFAULT_ROOM_IMAGE, sanitizeRoomImage } from "../../utils/roomImage";
 
 export let data_max_min = []
 
@@ -183,6 +184,7 @@ function ClickCoordinates({ clickPos }) {
 function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, setSeparate, widthMap, heightMap, statusConnections, data_passed_from_landingpage }) {
   const [clickPos, setClickPos] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
+  const safeImageUrl = sanitizeRoomImage(url) || DEFAULT_ROOM_IMAGE;
 
   const addSelectedNode = (id, type) => {
     setSelectedNodes((prevData) => {
@@ -207,9 +209,15 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
       const lines = [];
       const CONNECTION_RADIUS = 40;
       const [xMin, xMax, yMin, yMax] = data_max_min;
-      const sizeRoom = [data_passed_from_landingpage.x_length, data_passed_from_landingpage.y_length];
+      const sizeRoom = [
+        Number(data_passed_from_landingpage?.x_length) || 1,
+        Number(data_passed_from_landingpage?.y_length) || 1
+      ];
       const one_meter_to_width = (xMax - xMin) / sizeRoom[0];
       const one_meter_to_height = (yMax - yMin) / sizeRoom[1];
+      if (!Number.isFinite(one_meter_to_width) || !Number.isFinite(one_meter_to_height) || one_meter_to_width === 0 || one_meter_to_height === 0) {
+        return lines;
+      }
       for (let i = 0; i < points.length; i++) {
         for (let j = i + 1; j < points.length; j++) {
           const dx = (points[i].x - points[j].x) / one_meter_to_width;
@@ -239,7 +247,7 @@ function RoomMap2D({ url, configurationNodeAll, setListNode, callbackSetSignIn, 
       <Canvas orthographic camera={{ position: [0, 0, 10], up: [0, 1, 0], near: 0.1, far: 100 }}>
       <OrbitControls minZoom={200} maxZoom={600} />
         <Suspense fallback={null}>
-          <ImagePlane url={url} setClickPos={setClickPos} />
+          <ImagePlane url={safeImageUrl} setClickPos={setClickPos} />
           {statusConnections &&
             nodeConnections.map((conn) => (
               <line key={conn.key}>

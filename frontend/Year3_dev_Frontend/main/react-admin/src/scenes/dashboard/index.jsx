@@ -13,14 +13,15 @@ import EnergyChart from "../../components/EnergyChart/EnergyChart2";
 import Options from "../../components/OptionsRoomMap/Options";
 import verify_and_get_data from "../../function/fetchData";
 import DetailNode from "../../components/NodeInfo/DetailNode";
+import { DEFAULT_ROOM_IMAGE, fetchRoomImageAsDataUrl, saveRoomImage } from "../../utils/roomImage";
 
 
 const Dashboard = () => {
     const backend_host = host;
     const location = useLocation();
-    const data_passed_from_landingpage = location.state;
+    const data_passed_from_landingpage = location.state ?? null;
     let room_id = data_passed_from_landingpage == null ? 1 : data_passed_from_landingpage.room_id
-    const url_image = data_passed_from_landingpage.image_url
+    const url_image = data_passed_from_landingpage?.image_url ?? null;
     const theme = useTheme();
     const callbackSetSignIn = useContext(UserContext);
     const [id, setId] = useState(1);
@@ -65,19 +66,15 @@ const Dashboard = () => {
 
     const fetchAndEncodeImage = async () => {
         try {
-            const response = await fetch(url_image);
-            const blob = await response.blob();
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-
-            reader.onload = () => {
-                const base64 = reader.result;
-                localStorage.setItem("uploadedImage", base64);
-                setIsImageFetched(true)
-            };
+            setIsImageFetched(false);
+            const imageSource = await fetchRoomImageAsDataUrl(url_image, backend_host);
+            saveRoomImage(imageSource);
+            setIsImageFetched(true);
         } catch (error) {
-            console.error("Error:", error);
-            }
+            console.error("Error while loading room image:", error);
+            saveRoomImage(DEFAULT_ROOM_IMAGE);
+            setIsImageFetched(true);
+        }
         };
 
     useEffect(()=>{
@@ -87,7 +84,7 @@ const Dashboard = () => {
             verify_and_get_data(getConfigurationNodeAllData, callbackSetSignIn, backend_host, api);
         }, 20000);
         return () => clearInterval(timer);
-    },[])
+    }, [api, backend_host, callbackSetSignIn, url_image])
     return (
     <>
     <Box 
@@ -256,4 +253,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard;
-
